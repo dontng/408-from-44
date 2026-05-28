@@ -32,8 +32,8 @@ CHAPTERS = {
         ("4.2 串的模式匹配", 129, 130),
     ],
     "ch05_树与二叉树": [
-        ("5.1 树的基本概念", 137, 138),
-        ("5.2 二叉树的概念", 144, 146),
+        ("5.1 树的基本概念", 137, 139),
+        ("5.2 二叉树的概念", 144, 148),
         ("5.3 二叉树的遍历和线索二叉树", 157, 161),
         ("5.4 树、森林", 183, 185),
         ("5.5 树与二叉树的应用", 196, 198),
@@ -47,8 +47,8 @@ CHAPTERS = {
     "ch07_查找": [
         ("7.2 顺序查找和折半查找", 281, 283),
         ("7.3 树形查找", 303, 307),
-        ("7.4 B树和B+树", 320, 322),
-        ("7.5 散列表", 332, 335),
+        ("7.4 B树和B+树", 320, 326),
+        ("7.5 散列表", 332, 337),
     ],
     "ch08_排序": [
         ("8.1 排序的基本概念", 343, 344),
@@ -57,7 +57,7 @@ CHAPTERS = {
         ("8.4 选择排序", 365, 368),
         ("8.5 归并排序基数排序和计数排序", 378, 381),
         ("8.6 各种内部排序算法的比较及应用", 385, 388),
-        ("8.7 外部排序", 396, 397),
+        ("8.7 外部排序", 395, 400),
     ],
 }
 
@@ -76,10 +76,10 @@ def ocr_pages(start: int, end: int, tmp_prefix: str) -> str:
         if not os.path.exists(img):
             continue
         result = subprocess.run(
-            ["tesseract", img, "stdout", "-l", "chi_sim"],
+            ["tesseract", img, "stdout", "-l", "chi_sim", "--psm", "4"],
             capture_output=True, text=True
         )
-        texts.append(result.stdout)
+        texts.append(repair_separated_columns(result.stdout))
     return "\n".join(texts)
 
 
@@ -148,14 +148,25 @@ def repair_separated_columns(raw_text: str) -> str:
     rest_lines = lines[rest_start:]
 
     # Split rest_lines into question blocks by detecting option patterns
-    # A block boundary: previous block had D. option, or we see a new question-like line
+    # A block boundary: previous block had D option (on its own line or within a multi-option line)
+    def _block_has_D(block):
+        for l in block:
+            if l.startswith('D') and re.match(r'^D[.．，]', l):
+                return True
+            # D option embedded in multi-option line: "A. ... B. ... C. ... D. ..."
+            if re.search(r'(?<![A-Za-z])D[.．，]', l) and re.match(r'^[ABCD][.．，]', l):
+                return True
+        return False
+
     blocks = []
     current_block = []
     for line in rest_lines:
         if not line:
             continue
-        # New block: line doesn't start with A/B/C/D options and current block has D. option
-        has_D = any(l.startswith('D') and re.match(r'^D[.．，]', l) for l in current_block)
+        # Skip page-header lines that sneak in between columns
+        if re.match(r'^(第\d+章|2027|购买王道|\d{3,})', line):
+            continue
+        has_D = _block_has_D(current_block)
         is_option = re.match(r'^[ABCD][.．，]', line)
         if has_D and not is_option and current_block:
             blocks.append(current_block)
@@ -196,7 +207,7 @@ def parse_questions(raw_text: str) -> list[dict]:
     current_opt = None
     in_question_section = False  # only parse after 单项选择题 header
 
-    q_start = re.compile(r'^(\d{1,2})[．.、，]\s*(.+)')
+    q_start = re.compile(r'^(\d[S5s]?\d?)[．.、，]\s*(.+)')
     single_opt = re.compile(r'^([ABCD])[．.、，]\s*(.+)')
 
     section_markers = ('项选择', '本选择', '元选择')  # handles OCR variants: 单项/音项/单本/单元
@@ -234,7 +245,7 @@ def parse_questions(raw_text: str) -> list[dict]:
                 questions.append(current_q)
             stem_raw = q_match.group(2).strip().lstrip('，,、．. ')
             current_q = {
-                "num": int(q_match.group(1)),
+                "num": int(q_match.group(1).upper().replace('S', '5')),
                 "stem": stem_raw,
                 "options": {}
             }
