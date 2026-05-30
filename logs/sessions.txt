@@ -1,13 +1,13 @@
 /********************* pinned *********************/
 
-2026/05/30 10:37  ?  extract
-    新增 scripts/README.md：操作指南
+2026/05/30 22:25  OS  ocr-fix
+    修复OS ch03：内容层面OCR纠错（第二轮）
 
-2026/05/30 10:37  OS  ocr-fix
-    修复OS ch02 遗留OCR问题（二轮补丁）
+2026/05/30 22:43  OS  ocr-fix
+    修复OS ch04：内容纠错与重复题号处理
 
-2026/05/30 11:01  OS  ocr-fix
-    修复ch02+ch03重复题号，完善2.3 Q33格式
+2026/05/30 22:50  OS  ocr-fix
+    修复OS ch03+ch05：两遍OCR纠错
 
 /******************* log for may *******************/
 
@@ -55,3 +55,24 @@
 
 2026/05/30 10:34  ?  other
     wish: 0530/wish-01 [running]
+
+2026/05/30 10:37  ?  extract
+    新增 scripts/README.md：操作指南
+
+2026/05/30 10:37  OS  ocr-fix
+    修复OS ch02 遗留OCR问题（二轮补丁）
+
+2026/05/30 11:01  OS  ocr-fix
+    修复ch02+ch03重复题号，完善2.3 Q33格式
+
+2026/05/30 11:08  OS  other
+    phantasm: 0530/wish-01 [failed]
+
+2026/05/30 14:18  ?  other
+    0530 wish02 commit
+
+2026/05/30 22:19  ?  other
+    gitignore: 排除 knight.log
+
+2026/05/30 22:20  ?  other
+    wish: 0530/wish-02 [running]
