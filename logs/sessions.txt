@@ -1,13 +1,13 @@
 /********************* pinned *********************/
 
-2026/05/30 22:25  OS  ocr-fix
-    修复OS ch03：内容层面OCR纠错（第二轮）
+2026/05/31 21:17  ?  other
+    knight: vscode打开项目自动启动，锁文件防重复
 
-2026/05/30 22:43  OS  ocr-fix
-    修复OS ch04：内容纠错与重复题号处理
+2026/05/31 21:33  ?  other
+    recover: reset token-limited wishes to [pending]
 
-2026/05/30 22:50  OS  ocr-fix
-    修复OS ch03+ch05：两遍OCR纠错
+2026/05/31 21:33  ?  other
+    wish: 0531/wish-01 [running]
 
 /******************* log for may *******************/
 
@@ -76,3 +76,45 @@
 
 2026/05/30 22:20  ?  other
     wish: 0530/wish-02 [running]
+
+2026/05/30 22:25  OS  ocr-fix
+    修复OS ch03：内容层面OCR纠错（第二轮）
+
+2026/05/30 22:43  OS  ocr-fix
+    修复OS ch04：内容纠错与重复题号处理
+
+2026/05/30 22:50  OS  ocr-fix
+    修复OS ch03+ch05：两遍OCR纠错
+
+2026/05/30 22:50  ?  other
+    phantasm: 0530/wish-02 [done]
+
+2026/05/30 22:53  OS  ocr-fix
+    修复OS ch05：输入输出管理OCR纠错
+
+2026/05/31 00:20  ?  other
+    wish: 0531/wish-01 [running]
+
+2026/05/31 00:21  OS  other
+    phantasm: 0531/wish-01 [failed]
+
+2026/05/31 15:33  ?  other
+    knight: token限额自动恢复与精确解限时间
+
+2026/05/31 16:00  CO  extract
+    提取组成原理单选题：7章23节541题
+
+2026/05/31 16:47  CO  ocr-fix
+    修复计算机组成原理ch05中央处理器OCR错误
+
+2026/05/31 20:52  CN  ocr-fix
+    提取并修复计算机网络单选题：6章28节502题
+
+2026/05/31 20:53  CO  ocr-fix
+    修复组成原理单选题OCR纠错：全7章23节
+
+2026/05/31 20:57  ?  other
+    auto_wish: token耗尽时自动创建wish接力执行
+
+2026/05/31 21:01  ?  other
+    auto_wish: add stdin debug log
