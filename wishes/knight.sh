@@ -20,7 +20,7 @@ if [ -f "$LOCK_FILE" ] && kill -0 "$(cat "$LOCK_FILE")" 2>/dev/null; then
     exit 0
 fi
 echo $$ > "$LOCK_FILE"
-trap 'rm -f "$LOCK_FILE"' EXIT
+trap 'rm -f "$LOCK_FILE"; kill -- -$$ 2>/dev/null' EXIT
 
 # ── spell file helpers ────────────────────────────────────────────────────────
 
