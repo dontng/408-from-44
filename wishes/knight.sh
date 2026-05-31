@@ -6,7 +6,7 @@
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SPELL_DIR="$REPO_DIR/wishes/spell"
 PHANTASM_DIR="$REPO_DIR/wishes/phantasm"
-POLL_INTERVAL="${POLL_INTERVAL:-1800}"
+POLL_INTERVAL="${POLL_INTERVAL:-600}"
 
 cd "$REPO_DIR"
 
@@ -42,6 +42,123 @@ with open(file, encoding='utf-8') as f:
 with open(file, 'w', encoding='utf-8') as f:
     f.write(text.replace(f'--- {wish_id} [{from_s}]', f'--- {wish_id} [{to_s}]', 1))
 EOF
+}
+get_dynamic_sleep() {
+    python3 - "$1" <<'EOF'
+import sys, re, datetime
+
+text = sys.argv[1]
+m = re.search(r'resets\s+(\d{1,2})(?::(\d{2}))?(am|pm)', text, re.IGNORECASE)
+if not m:
+    sys.exit(1)
+
+hr = int(m.group(1))
+mn = int(m.group(2)) if m.group(2) else 0
+meridian = m.group(3).lower()
+
+if meridian == 'pm' and hr != 12:
+    hr += 12
+elif meridian == 'am' and hr == 12:
+    hr = 0
+
+now = datetime.datetime.now()
+target = now.replace(hour=hr, minute=mn + 1, second=0, microsecond=0)
+
+if target <= now:
+    target += datetime.timedelta(days=1)
+
+print(int((target - now).total_seconds()))
+EOF
+}
+
+recover_failed_wishes() {
+    local any_recovered=false
+
+    for spell_file in "$SPELL_DIR"/*.md; do
+        [ -f "$spell_file" ] || continue
+        local date_str
+        date_str=$(basename "$spell_file" .md)
+        local phantasm_file="$PHANTASM_DIR/${date_str}.md"
+        [ -f "$phantasm_file" ] || continue
+
+        local recovered
+        recovered=$(python3 - "$spell_file" "$phantasm_file" <<'EOF'
+import sys, re, datetime
+
+spell_file, phantasm_file = sys.argv[1:]
+
+with open(spell_file, encoding='utf-8') as f:
+    spell_content = f.read()
+with open(phantasm_file, encoding='utf-8') as f:
+    phantasm_content = f.read()
+
+now = datetime.datetime.now()
+threshold = datetime.timedelta(hours=26)
+
+failed_wishes = re.findall(r'^--- (wish-\S+) \[failed\]', spell_content, re.MULTILINE)
+
+recovered = []
+for wish_id in failed_wishes:
+    entries = list(re.finditer(
+        rf'^--- {re.escape(wish_id)} \[(\S+)\]\n(.*?)(?=^--- wish-|\Z)',
+        phantasm_content, re.MULTILINE | re.DOTALL
+    ))
+    if not entries:
+        continue
+    last = entries[-1]
+    if last.group(1) != 'failed':
+        continue
+    block = last.group(2)
+
+    end_m = re.search(r'end\s+(\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})', block)
+    if not end_m:
+        continue
+    end_time = datetime.datetime.strptime(end_m.group(1), '%Y/%m/%d %H:%M:%S')
+    if now - end_time > threshold:
+        continue
+
+    reset_m = re.search(r'resets\s+(\d{1,2})(?::(\d{2}))?(am|pm)', block, re.IGNORECASE)
+    if not reset_m:
+        continue
+    hr = int(reset_m.group(1))
+    mn = int(reset_m.group(2)) if reset_m.group(2) else 0
+    meridian = reset_m.group(3).lower()
+    if meridian == 'pm' and hr != 12:
+        hr += 12
+    elif meridian == 'am' and hr == 12:
+        hr = 0
+    reset_time = end_time.replace(hour=hr, minute=mn + 1, second=0, microsecond=0)
+    if reset_time <= end_time:
+        reset_time += datetime.timedelta(days=1)
+    if reset_time > now:
+        continue
+
+    recovered.append(wish_id)
+
+if recovered:
+    content = spell_content
+    for wish_id in recovered:
+        content = content.replace(f'--- {wish_id} [failed]', f'--- {wish_id} [pending]', 1)
+    with open(spell_file, 'w', encoding='utf-8') as f:
+        f.write(content)
+    for wish_id in recovered:
+        print(wish_id)
+EOF
+        ) || continue
+
+        if [ -n "$recovered" ]; then
+            while IFS= read -r wish_id; do
+                log "recover: ${date_str}/${wish_id} → [pending]"
+            done <<< "$recovered"
+            git add "wishes/spell/${date_str}.md"
+            any_recovered=true
+        fi
+    done
+
+    if [ "$any_recovered" = true ]; then
+        git commit -m "recover: reset token-limited wishes to [pending]"
+        git push
+    fi
 }
 
 # ── execution ─────────────────────────────────────────────────────────────────
@@ -85,8 +202,22 @@ process_wish() {
     # Determine final status
     if [ "$exit_code" -eq 0 ]; then
         status="done"
-    elif printf '%s' "$cc_output" | grep -qiE "token|context.?window|rate.?limit"; then
-        status="exhausted"
+    elif printf '%s' "$cc_output" | grep -qiE "token|context.?window|rate.?limit|session.?limit"; then
+        local sleep_secs
+        if sleep_secs=$(get_dynamic_sleep "$cc_output"); then
+            log "$date_str / $wish_id → 触发 API 限额！识别到具体解限时间，休眠 ${sleep_secs} 秒..."
+            
+            set_status "$spell_file" "$wish_id" "running" "pending"
+            git add "wishes/spell/${date_str}.md"
+            git commit -m "wish: ${date_str}/${wish_id} [reverted: sleeping ${sleep_secs}s for reset]"
+            git push
+            
+            sleep "$sleep_secs"
+            return 0
+        else
+            log "$date_str / $wish_id → 触发限额，但未能解析到 resets 时间，标记为 failed。"
+            status="failed"
+        fi
     else
         status="failed"
     fi
@@ -126,6 +257,8 @@ main() {
 
     while true; do
         git pull --rebase 2>/dev/null || log "git pull failed, will retry"
+
+        recover_failed_wishes
 
         local any=false
         for spell_file in "$SPELL_DIR"/*.md; do
