@@ -238,7 +238,7 @@ process_wish() {
     # Append phantasm record
     local phantasm_file="$PHANTASM_DIR/${date_str}.md"
     {
-        printf '\n--- %s [%s]\n' "$wish_id" "$status"
+        printf '\n--- %s [%s]\n\n' "$wish_id" "$status"
         printf '    start    %s\n' "$start_time"
         printf '    end      %s\n' "$end_time"
         printf '    exit     %s\n' "$exit_code"

@@ -1,13 +1,13 @@
 /********************* pinned *********************/
 
-2026/05/31 21:17  ?  other
-    knight: vscode打开项目自动启动，锁文件防重复
+2026/06/01 01:54  ?  other
+    wish: 0601/wish-01 [running]
 
-2026/05/31 21:33  ?  other
-    recover: reset token-limited wishes to [pending]
+2026/06/01 01:57  CO  ocr-fix
+    组成原理二轮精修：消除11处[OCR]标注
 
-2026/05/31 21:33  ?  other
-    wish: 0531/wish-01 [running]
+2026/06/01 01:58  ?  other
+    wish: 0601/wish-01 prompt优化 — 复用/tmp缓存图片节省token
 
 /******************* log for may *******************/
 
@@ -118,3 +118,29 @@
 
 2026/05/31 21:01  ?  other
     auto_wish: add stdin debug log
+
+2026/05/31 21:17  ?  other
+    knight: vscode打开项目自动启动，锁文件防重复
+
+2026/05/31 21:33  ?  other
+    recover: reset token-limited wishes to [pending]
+
+2026/05/31 21:33  ?  other
+    wish: 0531/wish-01 [running]
+
+2026/05/31 21:46  ?  other
+    phantasm: 0531/wish-01 [done]
+
+2026/05/31 22:27  ?  other
+    recover: 层1+层2中断恢复机制
+
+2026/05/31 23:05  ?  other
+    knight: 退出时杀掉子进程组，防止孤儿 claude 进程
+
+/****************** log for june ******************/
+
+2026/06/01 00:56  CN  ocr-fix
+    修复CN：清理剩余OCR错误（IP/耳/岂等15处）
+
+2026/06/01 01:54  ?  ocr-fix
+    wish: 0601/wish-01 [pending] — CN两遍OCR纠错修复
