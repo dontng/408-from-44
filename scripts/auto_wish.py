@@ -77,9 +77,16 @@ def create_wish(prompt):
 
 def main():
     try:
-        stdin_data = json.loads(sys.stdin.read() or '{}')
+        raw = sys.stdin.read() or '{}'
+        stdin_data = json.loads(raw)
     except Exception:
         stdin_data = {}
+        raw = ''
+
+    # debug: log stdin keys so we can verify session identification
+    log = REPO_DIR / '.auto_wish_debug.log'
+    with open(log, 'a') as f:
+        f.write(f"{datetime.now()} stdin_keys={list(stdin_data.keys())} raw_prefix={raw[:200]}\n")
 
     jsonl = find_session_jsonl(stdin_data)
     if not jsonl:
