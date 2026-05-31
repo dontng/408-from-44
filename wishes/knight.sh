@@ -261,9 +261,48 @@ process_wish() {
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
+reset_stale_running() {
+    local any=false
+    for spell_file in "$SPELL_DIR"/*.md; do
+        [ -f "$spell_file" ] || continue
+        local date_str
+        date_str=$(basename "$spell_file" .md)
+        local reset
+        reset=$(python3 - "$spell_file" <<'EOF'
+import sys, re
+from pathlib import Path
+
+spell_file = Path(sys.argv[1])
+content = spell_file.read_text(encoding='utf-8')
+running = re.findall(r'^--- (wish-\S+) \[running\]', content, re.MULTILINE)
+if not running:
+    sys.exit(0)
+new_content = re.sub(r'^(--- wish-\S+) \[running\]', r'\1 [pending]', content, flags=re.MULTILINE)
+spell_file.write_text(new_content, encoding='utf-8')
+for w in running:
+    print(w)
+EOF
+        ) || continue
+        if [ -n "$reset" ]; then
+            while IFS= read -r wish_id; do
+                log "startup: ${date_str}/${wish_id} [running→pending] (stale from previous session)"
+            done <<< "$reset"
+            git add "wishes/spell/${date_str}.md"
+            any=true
+        fi
+    done
+    if [ "$any" = true ]; then
+        git commit -m "recover: reset stale [running] wishes to [pending] on startup"
+        git push
+    fi
+}
+
 main() {
     log "knight online  (poll interval ${POLL_INTERVAL}s)"
     mkdir -p "$SPELL_DIR" "$PHANTASM_DIR"
+
+    git pull --rebase 2>/dev/null || log "git pull failed on startup"
+    reset_stale_running
 
     while true; do
         git pull --rebase 2>/dev/null || log "git pull failed, will retry"
