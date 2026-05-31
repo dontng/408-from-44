@@ -8,9 +8,19 @@ SPELL_DIR="$REPO_DIR/wishes/spell"
 PHANTASM_DIR="$REPO_DIR/wishes/phantasm"
 POLL_INTERVAL="${POLL_INTERVAL:-600}"
 
+LOCK_FILE="/tmp/knight-408.lock"
+
 cd "$REPO_DIR"
 
 log() { echo "[$(date '+%Y/%m/%d %H:%M:%S')] $*" >&2; }
+
+# 防止重复启动
+if [ -f "$LOCK_FILE" ] && kill -0 "$(cat "$LOCK_FILE")" 2>/dev/null; then
+    log "knight already running (PID $(cat "$LOCK_FILE")), exiting"
+    exit 0
+fi
+echo $$ > "$LOCK_FILE"
+trap 'rm -f "$LOCK_FILE"' EXIT
 
 # ── spell file helpers ────────────────────────────────────────────────────────
 
