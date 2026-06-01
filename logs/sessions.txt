@@ -1,13 +1,13 @@
 /********************* pinned *********************/
 
-2026/06/01 01:54  ?  other
+2026/06/01 02:11  ?  other
     wish: 0601/wish-01 [running]
 
-2026/06/01 01:57  CO  ocr-fix
-    组成原理二轮精修：消除11处[OCR]标注
+2026/06/01 02:20  ?  other
+    wish: 0601/wish-02 prompt优化 — 先自查再决定，不重复已完成工作
 
-2026/06/01 01:58  ?  other
-    wish: 0601/wish-01 prompt优化 — 复用/tmp缓存图片节省token
+2026/06/01 02:27  CO  other
+    组成原理三轮精修：消除17处重复选项，修正内容错误
 
 /******************* log for may *******************/
 
@@ -144,3 +144,18 @@
 
 2026/06/01 01:54  ?  ocr-fix
     wish: 0601/wish-01 [pending] — CN两遍OCR纠错修复
+
+2026/06/01 01:54  ?  other
+    wish: 0601/wish-01 [running]
+
+2026/06/01 01:57  CO  ocr-fix
+    组成原理二轮精修：消除11处[OCR]标注
+
+2026/06/01 01:58  ?  other
+    wish: 0601/wish-01 prompt优化 — 复用/tmp缓存图片节省token
+
+2026/06/01 01:59  CN  other
+    phantasm: 0601/wish-01 [failed]
+
+2026/06/01 02:00  ?  other
+    wish: 0601/wish-01 [pending] — 重置，用新prompt复用/tmp缓存
