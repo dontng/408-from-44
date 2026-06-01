@@ -1,13 +1,13 @@
 /********************* pinned *********************/
 
-2026/06/02 01:22  ?  other
-    wish: 0601/wish-01 [running]
+2026/06/02 02:09  ?  other
+    wish: 0601/wish-02 [reverted: sleeping 15668s for reset]
 
-2026/06/02 01:56  CN  ocr-fix
-    cn: 计算机网络全28节两遍OCR纠错修复
+2026/06/02 06:31  ?  other
+    wish: 0601/wish-02 [running]
 
-2026/06/02 02:02  CN  ocr-fix
-    cn: 第二遍OCR纠错 — TCP结构修复与IPv4细节修正
+2026/06/02 06:49  CN  ocr-fix
+    cn: 质检修复 — 7个文件的选项补全与编号纠正
 
 /******************* log for may *******************/
 
@@ -174,3 +174,18 @@
 
 2026/06/02 01:22  ?  other
     recover: reset stale [running] wishes to [pending] on startu…
+
+2026/06/02 01:22  ?  other
+    wish: 0601/wish-01 [running]
+
+2026/06/02 01:56  CN  ocr-fix
+    cn: 计算机网络全28节两遍OCR纠错修复
+
+2026/06/02 02:02  CN  ocr-fix
+    cn: 第二遍OCR纠错 — TCP结构修复与IPv4细节修正
+
+2026/06/02 02:02  ?  other
+    phantasm: 0601/wish-01 [done]
+
+2026/06/02 02:02  ?  other
+    wish: 0601/wish-02 [running]
