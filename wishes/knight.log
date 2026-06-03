@@ -1,0 +1,551 @@
+[2026/05/30 10:34:42] knight online  (poll interval 1800s)
+[2026/05/30 10:34:42] git pull failed, will retry
+[2026/05/30 10:34:42] 0530 / wish-01 → running
+[main 84127a4] wish: 0530/wish-01 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   2084600..84127a4  main -> main
+[main 6a6d5b5] phantasm: 0530/wish-01 [failed]
+ 6 files changed, 58 insertions(+), 12 deletions(-)
+ create mode 100644 wishes/knight.log
+ create mode 100644 wishes/phantasm/0530.md
+To github.com:dontng/408-from-44.git
+   c840018..6a6d5b5  main -> main
+[2026/05/30 11:08:18] 0530 / wish-01 → [failed]
+[2026/05/30 11:08:18] git pull failed, will retry
+[2026/05/30 11:08:18] no pending spells — sleeping 1800s
+[2026/05/30 11:41:02] git pull failed, will retry
+[2026/05/30 11:41:02] no pending spells — sleeping 1800s
+[2026/05/30 12:13:41] git pull failed, will retry
+[2026/05/30 12:13:41] no pending spells — sleeping 1800s
+[2026/05/30 12:46:27] git pull failed, will retry
+[2026/05/30 12:46:27] no pending spells — sleeping 1800s
+[2026/05/30 13:19:08] git pull failed, will retry
+[2026/05/30 13:19:08] no pending spells — sleeping 1800s
+[2026/05/30 13:51:51] git pull failed, will retry
+[2026/05/30 13:51:51] no pending spells — sleeping 1800s
+[2026/05/30 14:24:34] git pull failed, will retry
+[2026/05/30 14:24:34] no pending spells — sleeping 1800s
+[2026/05/30 14:57:21] git pull failed, will retry
+[2026/05/30 14:57:21] no pending spells — sleeping 1800s
+[2026/05/30 15:30:02] git pull failed, will retry
+[2026/05/30 15:30:02] no pending spells — sleeping 1800s
+[2026/05/30 16:02:50] git pull failed, will retry
+[2026/05/30 16:02:50] no pending spells — sleeping 1800s
+[2026/05/30 16:35:33] git pull failed, will retry
+[2026/05/30 16:35:33] no pending spells — sleeping 1800s
+[2026/05/30 17:08:17] git pull failed, will retry
+[2026/05/30 17:08:17] no pending spells — sleeping 1800s
+[2026/05/30 17:40:49] git pull failed, will retry
+[2026/05/30 17:40:49] no pending spells — sleeping 1800s
+[2026/05/30 18:13:20] git pull failed, will retry
+[2026/05/30 18:13:20] no pending spells — sleeping 1800s
+[2026/05/30 18:45:57] git pull failed, will retry
+[2026/05/30 18:45:57] no pending spells — sleeping 1800s
+[2026/05/30 19:18:40] git pull failed, will retry
+[2026/05/30 19:18:40] no pending spells — sleeping 1800s
+[2026/05/30 19:51:23] git pull failed, will retry
+[2026/05/30 19:51:23] no pending spells — sleeping 1800s
+[2026/05/30 20:24:19] git pull failed, will retry
+[2026/05/30 20:24:19] no pending spells — sleeping 1800s
+[2026/05/30 20:56:58] git pull failed, will retry
+[2026/05/30 20:56:58] no pending spells — sleeping 1800s
+[2026/05/30 21:28:43] git pull failed, will retry
+[2026/05/30 21:28:43] no pending spells — sleeping 1800s
+[2026/05/30 21:58:43] git pull failed, will retry
+[2026/05/30 21:58:43] no pending spells — sleeping 1800s
+[2026/05/30 22:20:03] knight online  (poll interval 1800s)
+Already up to date.
+[2026/05/30 22:20:07] 0530 / wish-02 → running
+[main bef0b5d] wish: 0530/wish-02 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   ecab71c..bef0b5d  main -> main
+[main 4b46b57] phantasm: 0530/wish-02 [done]
+ 3 files changed, 57 insertions(+), 7 deletions(-)
+To github.com:dontng/408-from-44.git
+   f941f2c..4b46b57  main -> main
+[2026/05/30 22:50:52] 0530 / wish-02 → [done]
+Already up to date.
+[2026/05/30 22:50:57] no pending spells — sleeping 1800s
+[2026/05/30 23:20:57] git pull failed, will retry
+[2026/05/30 23:20:57] no pending spells — sleeping 1800s
+[2026/05/30 23:50:57] git pull failed, will retry
+[2026/05/30 23:50:57] no pending spells — sleeping 1800s
+nohup: ignoring input
+[2026/05/31 00:20:55] knight online  (poll interval 1800s)
+[2026/05/31 00:20:55] git pull failed, will retry
+[2026/05/31 00:20:55] 0531 / wish-01 → running
+[main 925032d] wish: 0531/wish-01 [running]
+ 1 file changed, 4 insertions(+)
+ create mode 100644 wishes/spell/0531.md
+[2026/05/31 00:20:57] git pull failed, will retry
+[2026/05/31 00:20:57] no pending spells — sleeping 1800s
+To github.com:dontng/408-from-44.git
+   8f801b0..925032d  main -> main
+[main af98d84] phantasm: 0531/wish-01 [failed]
+ 4 files changed, 41 insertions(+), 27 deletions(-)
+ create mode 100644 wishes/phantasm/0531.md
+To github.com:dontng/408-from-44.git
+   925032d..af98d84  main -> main
+[2026/05/31 00:21:20] 0531 / wish-01 → [failed]
+Already up to date.
+[2026/05/31 00:21:25] no pending spells — sleeping 1800s
+nohup: ignoring input
+[2026/05/31 00:44:36] knight online  (poll interval 1800s)
+[2026/05/31 00:44:36] git pull failed, will retry
+[2026/05/31 00:44:36] no pending spells — sleeping 1800s
+[2026/05/31 00:50:57] git pull failed, will retry
+[2026/05/31 00:50:58] no pending spells — sleeping 1800s
+[2026/05/31 00:51:25] git pull failed, will retry
+[2026/05/31 00:51:25] no pending spells — sleeping 1800s
+[2026/05/31 01:14:36] git pull failed, will retry
+[2026/05/31 01:14:36] no pending spells — sleeping 1800s
+[2026/05/31 01:20:58] git pull failed, will retry
+[2026/05/31 01:20:58] no pending spells — sleeping 1800s
+[2026/05/31 01:21:25] git pull failed, will retry
+[2026/05/31 01:21:25] no pending spells — sleeping 1800s
+[2026/05/31 01:44:36] git pull failed, will retry
+[2026/05/31 01:44:36] no pending spells — sleeping 1800s
+[2026/05/31 01:50:58] git pull failed, will retry
+[2026/05/31 01:50:58] no pending spells — sleeping 1800s
+[2026/05/31 01:51:25] git pull failed, will retry
+[2026/05/31 01:51:25] no pending spells — sleeping 1800s
+[2026/05/31 02:14:36] git pull failed, will retry
+[2026/05/31 02:14:36] no pending spells — sleeping 1800s
+[2026/05/31 02:20:58] git pull failed, will retry
+[2026/05/31 02:20:58] no pending spells — sleeping 1800s
+[2026/05/31 02:21:25] git pull failed, will retry
+[2026/05/31 02:21:25] no pending spells — sleeping 1800s
+[2026/05/31 02:44:36] git pull failed, will retry
+[2026/05/31 02:44:36] no pending spells — sleeping 1800s
+[2026/05/31 02:50:58] git pull failed, will retry
+[2026/05/31 02:50:58] no pending spells — sleeping 1800s
+[2026/05/31 02:51:25] git pull failed, will retry
+[2026/05/31 02:51:25] no pending spells — sleeping 1800s
+[2026/05/31 03:14:36] git pull failed, will retry
+[2026/05/31 03:14:36] no pending spells — sleeping 1800s
+[2026/05/31 03:20:58] git pull failed, will retry
+[2026/05/31 03:20:58] no pending spells — sleeping 1800s
+[2026/05/31 03:21:25] git pull failed, will retry
+[2026/05/31 03:21:25] no pending spells — sleeping 1800s
+[2026/05/31 03:44:36] git pull failed, will retry
+[2026/05/31 03:44:36] no pending spells — sleeping 1800s
+[2026/05/31 03:50:58] git pull failed, will retry
+[2026/05/31 03:50:58] no pending spells — sleeping 1800s
+[2026/05/31 03:51:25] git pull failed, will retry
+[2026/05/31 03:51:25] no pending spells — sleeping 1800s
+[2026/05/31 04:14:36] git pull failed, will retry
+[2026/05/31 04:14:36] no pending spells — sleeping 1800s
+[2026/05/31 04:20:58] git pull failed, will retry
+[2026/05/31 04:20:58] no pending spells — sleeping 1800s
+[2026/05/31 04:21:25] git pull failed, will retry
+[2026/05/31 04:21:25] no pending spells — sleeping 1800s
+[2026/05/31 04:44:36] git pull failed, will retry
+[2026/05/31 04:44:36] no pending spells — sleeping 1800s
+[2026/05/31 04:50:58] git pull failed, will retry
+[2026/05/31 04:50:58] no pending spells — sleeping 1800s
+[2026/05/31 04:51:25] git pull failed, will retry
+[2026/05/31 04:51:25] no pending spells — sleeping 1800s
+[2026/05/31 05:14:36] git pull failed, will retry
+[2026/05/31 05:14:36] no pending spells — sleeping 1800s
+[2026/05/31 05:20:58] git pull failed, will retry
+[2026/05/31 05:20:58] no pending spells — sleeping 1800s
+[2026/05/31 05:21:25] git pull failed, will retry
+[2026/05/31 05:21:25] no pending spells — sleeping 1800s
+[2026/05/31 05:44:36] git pull failed, will retry
+[2026/05/31 05:44:36] no pending spells — sleeping 1800s
+[2026/05/31 05:50:58] git pull failed, will retry
+[2026/05/31 05:50:58] no pending spells — sleeping 1800s
+[2026/05/31 05:51:25] git pull failed, will retry
+[2026/05/31 05:51:25] no pending spells — sleeping 1800s
+[2026/05/31 06:14:36] git pull failed, will retry
+[2026/05/31 06:14:36] no pending spells — sleeping 1800s
+[2026/05/31 06:20:58] git pull failed, will retry
+[2026/05/31 06:20:58] no pending spells — sleeping 1800s
+[2026/05/31 06:21:25] git pull failed, will retry
+[2026/05/31 06:21:25] no pending spells — sleeping 1800s
+[2026/05/31 06:44:37] git pull failed, will retry
+[2026/05/31 06:44:37] no pending spells — sleeping 1800s
+[2026/05/31 06:50:58] git pull failed, will retry
+[2026/05/31 06:50:58] no pending spells — sleeping 1800s
+[2026/05/31 06:51:25] git pull failed, will retry
+[2026/05/31 06:51:25] no pending spells — sleeping 1800s
+[2026/05/31 07:14:37] git pull failed, will retry
+[2026/05/31 07:14:37] no pending spells — sleeping 1800s
+[2026/05/31 07:20:58] git pull failed, will retry
+[2026/05/31 07:20:58] no pending spells — sleeping 1800s
+[2026/05/31 07:21:25] git pull failed, will retry
+[2026/05/31 07:21:25] no pending spells — sleeping 1800s
+[2026/05/31 07:44:37] git pull failed, will retry
+[2026/05/31 07:44:37] no pending spells — sleeping 1800s
+[2026/05/31 07:50:58] git pull failed, will retry
+[2026/05/31 07:50:58] no pending spells — sleeping 1800s
+[2026/05/31 07:51:25] git pull failed, will retry
+[2026/05/31 07:51:25] no pending spells — sleeping 1800s
+[2026/05/31 08:14:37] git pull failed, will retry
+[2026/05/31 08:14:37] no pending spells — sleeping 1800s
+[2026/05/31 08:20:58] git pull failed, will retry
+[2026/05/31 08:20:58] no pending spells — sleeping 1800s
+[2026/05/31 08:21:25] git pull failed, will retry
+[2026/05/31 08:21:25] no pending spells — sleeping 1800s
+[2026/05/31 08:44:37] git pull failed, will retry
+[2026/05/31 08:44:37] no pending spells — sleeping 1800s
+[2026/05/31 08:50:58] git pull failed, will retry
+[2026/05/31 08:50:58] no pending spells — sleeping 1800s
+[2026/05/31 08:51:25] git pull failed, will retry
+[2026/05/31 08:51:25] no pending spells — sleeping 1800s
+[2026/05/31 09:14:37] git pull failed, will retry
+[2026/05/31 09:14:37] no pending spells — sleeping 1800s
+[2026/05/31 09:20:58] git pull failed, will retry
+[2026/05/31 09:20:58] no pending spells — sleeping 1800s
+[2026/05/31 09:21:25] git pull failed, will retry
+[2026/05/31 09:21:25] no pending spells — sleeping 1800s
+[2026/05/31 09:44:37] git pull failed, will retry
+[2026/05/31 09:44:37] no pending spells — sleeping 1800s
+[2026/05/31 09:50:58] git pull failed, will retry
+[2026/05/31 09:50:58] no pending spells — sleeping 1800s
+[2026/05/31 09:51:25] git pull failed, will retry
+[2026/05/31 09:51:25] no pending spells — sleeping 1800s
+[2026/05/31 10:14:37] git pull failed, will retry
+[2026/05/31 10:14:37] no pending spells — sleeping 1800s
+[2026/05/31 10:20:58] git pull failed, will retry
+[2026/05/31 10:20:58] no pending spells — sleeping 1800s
+[2026/05/31 10:21:25] git pull failed, will retry
+[2026/05/31 10:21:26] no pending spells — sleeping 1800s
+[2026/05/31 10:44:37] git pull failed, will retry
+[2026/05/31 10:44:37] no pending spells — sleeping 1800s
+[2026/05/31 10:50:58] git pull failed, will retry
+[2026/05/31 10:50:59] no pending spells — sleeping 1800s
+[2026/05/31 10:51:26] git pull failed, will retry
+[2026/05/31 10:51:26] no pending spells — sleeping 1800s
+[2026/05/31 11:14:37] git pull failed, will retry
+[2026/05/31 11:14:37] no pending spells — sleeping 1800s
+[2026/05/31 11:20:59] git pull failed, will retry
+[2026/05/31 11:20:59] no pending spells — sleeping 1800s
+[2026/05/31 11:21:26] git pull failed, will retry
+[2026/05/31 11:21:26] no pending spells — sleeping 1800s
+[2026/05/31 11:44:37] git pull failed, will retry
+[2026/05/31 11:44:37] no pending spells — sleeping 1800s
+[2026/05/31 11:50:59] git pull failed, will retry
+[2026/05/31 11:50:59] no pending spells — sleeping 1800s
+[2026/05/31 11:51:26] git pull failed, will retry
+[2026/05/31 11:51:26] no pending spells — sleeping 1800s
+[2026/05/31 12:14:37] git pull failed, will retry
+[2026/05/31 12:14:37] no pending spells — sleeping 1800s
+[2026/05/31 12:20:59] git pull failed, will retry
+[2026/05/31 12:20:59] no pending spells — sleeping 1800s
+[2026/05/31 12:21:26] git pull failed, will retry
+[2026/05/31 12:21:26] no pending spells — sleeping 1800s
+[2026/05/31 12:44:37] git pull failed, will retry
+[2026/05/31 12:44:37] no pending spells — sleeping 1800s
+[2026/05/31 12:50:58] git pull failed, will retry
+[2026/05/31 12:50:58] no pending spells — sleeping 1800s
+[2026/05/31 12:51:25] git pull failed, will retry
+[2026/05/31 12:51:25] no pending spells — sleeping 1800s
+[2026/05/31 13:14:35] git pull failed, will retry
+[2026/05/31 13:14:36] no pending spells — sleeping 1800s
+[2026/05/31 13:20:57] git pull failed, will retry
+[2026/05/31 13:20:57] no pending spells — sleeping 1800s
+[2026/05/31 13:21:24] git pull failed, will retry
+[2026/05/31 13:21:24] no pending spells — sleeping 1800s
+[2026/05/31 13:44:35] git pull failed, will retry
+[2026/05/31 13:44:35] no pending spells — sleeping 1800s
+[2026/05/31 13:50:55] git pull failed, will retry
+[2026/05/31 13:50:55] no pending spells — sleeping 1800s
+[2026/05/31 13:51:22] git pull failed, will retry
+[2026/05/31 13:51:22] no pending spells — sleeping 1800s
+[2026/05/31 14:14:31] git pull failed, will retry
+[2026/05/31 14:14:31] no pending spells — sleeping 1800s
+[2026/05/31 21:33:08] knight online  (poll interval 600s)
+[2026/05/31 21:33:08] git pull failed, will retry
+[2026/05/31 21:33:08] recover: 0531/wish-01 → [pending]
+[main 9f3404e] recover: reset token-limited wishes to [pending]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   ae26e66..9f3404e  main -> main
+[2026/05/31 21:33:35] 0531 / wish-01 → running
+[main 1d5a302] wish: 0531/wish-01 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   9f3404e..1d5a302  main -> main
+[main 44e2b63] phantasm: 0531/wish-01 [done]
+ 3 files changed, 83 insertions(+), 7 deletions(-)
+To github.com:dontng/408-from-44.git
+   1d5a302..44e2b63  main -> main
+[2026/05/31 21:46:46] 0531 / wish-01 → [done]
+Already up to date.
+[2026/05/31 21:46:51] no pending spells — sleeping 600s
+Already up to date.
+[2026/05/31 21:57:40] no pending spells — sleeping 600s
+Already up to date.
+[2026/05/31 22:08:23] no pending spells — sleeping 600s
+Already up to date.
+[2026/05/31 22:19:20] no pending spells — sleeping 600s
+[2026/05/31 22:30:08] git pull failed, will retry
+[2026/05/31 22:30:08] no pending spells — sleeping 600s
+[2026/05/31 22:40:54] git pull failed, will retry
+[2026/05/31 22:40:54] no pending spells — sleeping 600s
+[2026/05/31 22:51:32] git pull failed, will retry
+[2026/05/31 22:51:32] no pending spells — sleeping 600s
+[2026/05/31 23:01:56] git pull failed, will retry
+[2026/05/31 23:01:56] no pending spells — sleeping 600s
+[2026/05/31 23:12:37] git pull failed, will retry
+[2026/05/31 23:12:37] no pending spells — sleeping 600s
+[2026/05/31 23:23:19] git pull failed, will retry
+[2026/05/31 23:23:19] no pending spells — sleeping 600s
+[2026/05/31 23:34:00] git pull failed, will retry
+[2026/05/31 23:34:00] no pending spells — sleeping 600s
+[2026/05/31 23:44:49] git pull failed, will retry
+[2026/05/31 23:44:49] no pending spells — sleeping 600s
+[2026/05/31 23:55:33] git pull failed, will retry
+[2026/05/31 23:55:33] no pending spells — sleeping 600s
+[2026/06/01 00:06:10] git pull failed, will retry
+[2026/06/01 00:06:10] no pending spells — sleeping 600s
+[2026/06/01 00:16:54] git pull failed, will retry
+[2026/06/01 00:16:54] no pending spells — sleeping 600s
+[2026/06/01 00:27:36] git pull failed, will retry
+[2026/06/01 00:27:36] no pending spells — sleeping 600s
+[2026/06/01 00:38:29] git pull failed, will retry
+[2026/06/01 00:38:29] no pending spells — sleeping 600s
+[2026/06/01 00:49:20] git pull failed, will retry
+[2026/06/01 00:49:20] no pending spells — sleeping 600s
+[2026/06/01 01:00:14] git pull failed, will retry
+[2026/06/01 01:00:14] no pending spells — sleeping 600s
+[2026/06/01 01:11:04] git pull failed, will retry
+[2026/06/01 01:11:04] no pending spells — sleeping 600s
+[2026/06/01 01:21:53] git pull failed, will retry
+[2026/06/01 01:21:53] no pending spells — sleeping 600s
+[2026/06/01 01:32:46] git pull failed, will retry
+[2026/06/01 01:32:46] no pending spells — sleeping 600s
+[2026/06/01 01:43:35] git pull failed, will retry
+[2026/06/01 01:43:36] no pending spells — sleeping 600s
+[2026/06/01 01:54:29] git pull failed, will retry
+[2026/06/01 01:54:29] 0601 / wish-01 → running
+[main b93b1c6] wish: 0601/wish-01 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   635d276..b93b1c6  main -> main
+[main 77d040d] phantasm: 0601/wish-01 [failed]
+ 14 files changed, 1153 insertions(+), 605 deletions(-)
+ rewrite "questions/computer_networks/ch03_\346\225\260\346\215\256\351\223\276\350\267\257\345\261\202/3.3_\345\267\256\351\224\231\346\216\247\345\210\266.md" (69%)
+ rewrite "questions/computer_networks/ch03_\346\225\260\346\215\256\351\223\276\350\267\257\345\261\202/3.4_\346\265\201\351\207\217\346\216\247\345\210\266\344\270\216\345\217\257\351\235\240\344\274\240\350\276\223\346\234\272\345\210\266.md" (60%)
+ rewrite "questions/computer_networks/ch03_\346\225\260\346\215\256\351\223\276\350\267\257\345\261\202/3.7_\345\271\277\345\237\237\347\275\221.md" (64%)
+ create mode 100644 scripts/repair_cn_questions.py
+ create mode 100644 wishes/phantasm/0601.md
+To github.com:dontng/408-from-44.git
+   e37330e..77d040d  main -> main
+[2026/06/01 02:00:03] 0601 / wish-01 → [failed]
+Already up to date.
+[2026/06/01 02:00:09] no pending spells — sleeping 600s
+[2026/06/01 02:11:00] git pull failed, will retry
+[2026/06/01 02:11:00] 0601 / wish-01 → running
+[main 56d6efa] wish: 0601/wish-01 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   f87534f..56d6efa  main -> main
+[2026/06/02 01:22:33] knight online  (poll interval 600s)
+[2026/06/02 01:22:33] git pull failed on startup
+[2026/06/02 01:22:33] startup: 0601/wish-01 [running→pending] (stale from previous session)
+[main 601167a] recover: reset stale [running] wishes to [pending] on startup
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   2723f51..601167a  main -> main
+[2026/06/02 01:22:37] git pull failed, will retry
+[2026/06/02 01:22:38] 0601 / wish-01 → running
+[main 467ae1c] wish: 0601/wish-01 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   601167a..467ae1c  main -> main
+[main a096e95] phantasm: 0601/wish-01 [done]
+ 3 files changed, 87 insertions(+), 6 deletions(-)
+To github.com:dontng/408-from-44.git
+   3cbc835..a096e95  main -> main
+[2026/06/02 02:02:30] 0601 / wish-01 → [done]
+[2026/06/02 02:02:30] 0601 / wish-02 → running
+[main 39be553] wish: 0601/wish-02 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   a096e95..39be553  main -> main
+[2026/06/02 02:09:51] 0601 / wish-02 → 触发 API 限额！识别到具体解限时间，休眠 15668 秒...
+[main 0d1c452] wish: 0601/wish-02 [reverted: sleeping 15668s for reset]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   39be553..0d1c452  main -> main
+[2026/06/02 06:31:03] 0601 / wish-02 → running
+[main 2bdca33] wish: 0601/wish-02 [running]
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To github.com:dontng/408-from-44.git
+   0d1c452..2bdca33  main -> main
+[main ef7ef50] phantasm: 0601/wish-02 [done]
+ 3 files changed, 62 insertions(+), 7 deletions(-)
+To github.com:dontng/408-from-44.git
+   e5f602c..ef7ef50  main -> main
+[2026/06/02 06:49:30] 0601 / wish-02 → [done]
+Already up to date.
+[2026/06/02 06:49:34] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 06:59:38] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 07:09:41] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 07:19:45] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 07:29:49] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 07:39:52] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 07:49:56] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:00:00] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:10:05] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:20:09] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:32:36] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:42:40] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 08:52:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:02:48] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:12:51] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:22:56] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:33:00] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:43:03] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 09:53:07] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:03:11] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:13:14] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:23:18] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:33:22] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:43:26] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 10:53:30] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:03:33] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:13:37] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:23:41] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:33:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:43:48] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 11:53:52] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:03:55] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:14:00] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:24:04] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:34:08] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:44:11] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 12:54:15] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:04:19] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:14:23] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:24:28] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:34:32] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:44:36] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 13:54:39] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:04:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:14:47] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:24:51] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:34:55] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:45:01] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 14:55:03] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:05:06] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:15:08] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:25:11] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:35:17] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:45:21] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 15:55:25] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:05:27] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:15:28] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:25:32] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:35:36] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:45:37] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 16:55:40] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:05:43] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:15:45] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:25:48] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:35:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:45:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 17:55:46] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:05:42] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:15:44] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:25:43] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:35:43] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:45:47] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 18:55:49] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:05:52] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:15:52] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:25:55] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:35:57] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:45:56] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 19:55:57] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 20:05:56] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 20:15:56] no pending spells — sleeping 600s
+Already up to date.
+[2026/06/02 20:25:59] no pending spells — sleeping 600s
+                                                                                [2026/06/02 20:42:52] knight online  (poll interval 600s)
+[2026/06/02 20:42:55] knight already running (PID 934), exiting
+Already up to date.
