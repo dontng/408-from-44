@@ -7,12 +7,31 @@ REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SPELL_DIR="$REPO_DIR/wishes/spell"
 PHANTASM_DIR="$REPO_DIR/wishes/phantasm"
 POLL_INTERVAL="${POLL_INTERVAL:-600}"
+LOG_FILE="$REPO_DIR/wishes/knight.log"
+LOG_RETAIN_DAYS="${LOG_RETAIN_DAYS:-14}"
 
 LOCK_FILE="/tmp/knight-408.lock"
 
 cd "$REPO_DIR"
 
-log() { echo "[$(date '+%Y/%m/%d %H:%M:%S')] $*" >&2; }
+log() { echo "[$(date '+%Y/%m/%d %H:%M:%S')] $*" | tee -a "$LOG_FILE" >&2; }
+
+trim_log() {
+    local log_file="$1"
+    [[ -f "$log_file" ]] || return
+    local cutoff
+    cutoff=$(date -d "${LOG_RETAIN_DAYS} days ago" '+%Y-%m-%d')
+    local start
+    start=$(awk -v c="$cutoff" '
+        match($0, /\[([0-9]{4})[\/\-]([0-9]{2})[\/\-]([0-9]{2})/, a) {
+            if (a[1] "-" a[2] "-" a[3] >= c) { print NR; exit }
+        }
+    ' "$log_file")
+    if [[ -n "$start" && "$start" -gt 1 ]]; then
+        local tmp; tmp=$(mktemp)
+        tail -n +"$start" "$log_file" > "$tmp" && mv "$tmp" "$log_file"
+    fi
+}
 
 # 防止重复启动
 if [ -f "$LOCK_FILE" ] && kill -0 "$(cat "$LOCK_FILE")" 2>/dev/null; then
@@ -298,6 +317,7 @@ EOF
 }
 
 main() {
+    trim_log "$LOG_FILE"
     log "knight online  (poll interval ${POLL_INTERVAL}s)"
     mkdir -p "$SPELL_DIR" "$PHANTASM_DIR"
 
