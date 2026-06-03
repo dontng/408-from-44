@@ -324,6 +324,10 @@ main() {
     git pull --rebase 2>/dev/null || log "git pull failed on startup"
     reset_stale_running
 
+    local _idle=false
+    local _last_heartbeat=0
+    local _heartbeat_interval=21600  # 6 hours
+
     while true; do
         git pull --rebase 2>/dev/null || log "git pull failed, will retry"
 
@@ -338,8 +342,18 @@ main() {
         done
 
         if [ "$any" = false ]; then
-            log "no pending spells — sleeping ${POLL_INTERVAL}s"
+            local _now; _now=$(date +%s)
+            if ! $_idle; then
+                log "no pending spells — polling every ${POLL_INTERVAL}s"
+                _idle=true
+                _last_heartbeat=$_now
+            elif (( _now - _last_heartbeat >= _heartbeat_interval )); then
+                log "online — idle $(( (_now - _last_heartbeat) / 3600 ))h, still polling"
+                _last_heartbeat=$_now
+            fi
             sleep "$POLL_INTERVAL"
+        else
+            _idle=false
         fi
     done
 }
