@@ -8,7 +8,7 @@ SPELL_DIR="$REPO_DIR/wishes/spell"
 PHANTASM_DIR="$REPO_DIR/wishes/phantasm"
 POLL_INTERVAL="${POLL_INTERVAL:-600}"
 LOG_FILE="$REPO_DIR/wishes/knight.log"
-LOG_RETAIN_DAYS="${LOG_RETAIN_DAYS:-14}"
+LOG_RETAIN_DAYS="${LOG_RETAIN_DAYS:-7}"
 
 LOCK_FILE="/tmp/knight-408.lock"
 
