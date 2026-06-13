@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>408 刷题</title>
+<style>
+  :root { --ok:#1a7f37; --no:#cf222e; --bg:#f6f8fa; --line:#d0d7de; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; font-family:-apple-system,system-ui,"PingFang SC",sans-serif;
+         background:var(--bg); color:#1f2328; }
+  header { position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line);
+           padding:10px 14px; display:flex; justify-content:space-between; align-items:center; }
+  header b { font-size:15px; }
+  header .meta { font-size:12px; color:#656d76; text-align:right; line-height:1.5; }
+  main { max-width:760px; margin:0 auto; padding:14px; }
+  .qmeta { font-size:12px; color:#656d76; margin-bottom:6px; }
+  .qimg { width:100%; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  .opts { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
+  .opt { padding:16px; font-size:20px; font-weight:600; text-align:center; background:#fff;
+         border:1px solid var(--line); border-radius:10px; cursor:pointer; user-select:none; }
+  .opt:active { transform:scale(.97); }
+  .opt.ok { background:var(--ok); color:#fff; border-color:var(--ok); }
+  .opt.no { background:var(--no); color:#fff; border-color:var(--no); }
+  .selfjudge { margin-top:14px; text-align:center; color:#656d76; font-size:14px; }
+  .selfjudge button { font-size:16px; padding:10px 22px; margin:0 8px; border-radius:10px;
+                      border:1px solid var(--line); background:#fff; }
+  .next { margin-top:18px; width:100%; padding:15px; font-size:17px; font-weight:600;
+          background:#0969da; color:#fff; border:none; border-radius:10px; }
+  .done { text-align:center; padding:60px 20px; color:#656d76; }
+  .done h2 { color:#1f2328; }
+</style>
+</head>
+<body>
+<header>
+  <b>408 刷题</b>
+  <div class="meta">
+    距考试 <b id="dday">—</b> 天<br>
+    今日 <span id="prog">0/0</span>　正确率 <span id="acc">—</span>
+  </div>
+</header>
+<main id="app"></main>
+
+<script src="data.js"></script>
+<script>
+// ── 配置 ──────────────────────────────────────────────
+const EXAM_DATE = "2026-12-26";          // 倒计时锚点(估)
+const NEW_PER_DAY = 15;                   // 每日新题上限
+const INTERVALS = [0, 1, 2, 4, 7, 15, 30];// 遗忘曲线档位(天)
+const LS = "p408_state_v1";
+
+// ── 状态 ──────────────────────────────────────────────
+const QS = window.QUESTIONS || [];
+const state = JSON.parse(localStorage.getItem(LS) || "{}");
+// state[id] = {box, due(yyyy-mm-dd), seen, right}
+
+const todayStr = () => new Date().toISOString().slice(0,10);
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n);
+                           return x.toISOString().slice(0,10); };
+function save(){ localStorage.setItem(LS, JSON.stringify(state)); }
+
+function dday(){
+  const ms = new Date(EXAM_DATE) - new Date(todayStr());
+  return Math.round(ms/86400000);
+}
+
+// 今日队列 = 到期复习题 + 新题(补到 NEW_PER_DAY)
+function buildQueue(){
+  const t = todayStr();
+  const due = [], fresh = [];
+  for (const it of QS){
+    const s = state[it.id];
+    if (s){ if (s.due <= t) due.push(it); }
+    else fresh.push(it);
+  }
+  return due.concat(fresh.slice(0, NEW_PER_DAY));
+}
+
+let queue = buildQueue();
+let idx = 0, dayStats = {n:0, ok:0};
+
+// ── 评分 ──────────────────────────────────────────────
+function grade(it, correct){
+  let s = state[it.id] || {box:0};
+  if (correct){ s.box = Math.min(s.box+1, INTERVALS.length-1); }
+  else { s.box = 0; }
+  s.due = addDays(todayStr(), INTERVALS[s.box]);
+  s.seen = (s.seen||0)+1;
+  s.right = (s.right||0)+(correct?1:0);
+  state[it.id] = s; save();
+  dayStats.n++; if (correct) dayStats.ok++;
+  updateHeader();
+}
+
+function updateHeader(){
+  document.getElementById("dday").textContent = dday();
+  document.getElementById("prog").textContent = `${idx}/${queue.length}`;
+  document.getElementById("acc").textContent =
+    dayStats.n ? Math.round(dayStats.ok/dayStats.n*100)+"%" : "—";
+}
+
+// ── 渲染 ──────────────────────────────────────────────
+const app = document.getElementById("app");
+
+function render(){
+  updateHeader();
+  if (idx >= queue.length){ return renderDone(); }
+  const it = queue[idx];
+  app.innerHTML = `
+    <div class="qmeta">${it.year} · 第 ${it.q} 题${it.answer?'':' · (无答案·自判)'}</div>
+    <img class="qimg" src="${it.img}" alt="q${it.q}">
+    <div class="opts" id="opts">
+      ${["A","B","C","D"].map(o=>`<div class="opt" data-o="${o}">${o}</div>`).join("")}
+    </div>
+    <div id="after"></div>`;
+  document.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = ()=>choose(it, el.dataset.o);
+  });
+}
+
+let answered = false;
+function choose(it, pick){
+  if (answered) return;
+  answered = true;
+  const opts = document.getElementById("opts");
+  const after = document.getElementById("after");
+  if (it.answer){
+    const correct = pick === it.answer;
+    opts.querySelectorAll(".opt").forEach(el=>{
+      if (el.dataset.o === it.answer) el.classList.add("ok");
+      else if (el.dataset.o === pick) el.classList.add("no");
+    });
+    grade(it, correct);
+    after.innerHTML = `<button class="next">下一题 ›</button>`;
+    after.querySelector(".next").onclick = nextQ;
+  } else {
+    // 无答案：标记所选，请你自判对错
+    opts.querySelectorAll(".opt").forEach(el=>{
+      if (el.dataset.o === pick) el.style.outline="3px solid #0969da";
+    });
+    after.innerHTML = `<div class="selfjudge">这题对了吗？
+      <button id="sj-ok">✓ 对</button><button id="sj-no">✗ 错</button></div>`;
+    after.querySelector("#sj-ok").onclick = ()=>{ grade(it,true);  nextQ(); };
+    after.querySelector("#sj-no").onclick = ()=>{ grade(it,false); nextQ(); };
+  }
+}
+
+function nextQ(){ idx++; answered=false; render(); }
+
+function renderDone(){
+  app.innerHTML = `<div class="done">
+    <h2>今天刷完了 🎉</h2>
+    <p>本轮 ${dayStats.n} 题，对 ${dayStats.ok} 题（${dayStats.n?Math.round(dayStats.ok/dayStats.n*100):0}%）</p>
+    <p>错题会按遗忘曲线在 1/2/4/7/15 天后再出现。</p>
+  </div>`;
+}
+
+if (!QS.length){
+  app.innerHTML = `<div class="done"><h2>题库为空</h2>
+    <p>先运行 <code>python3 tools/build_manifest.py</code> 生成 data.js</p></div>`;
+} else {
+  render();
+}
+</script>
+</body>
+</html>
