@@ -6,21 +6,5 @@
       "Write(*)",
       "Edit(*)"
     ]
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /home/djology/408-from-44/scripts/auto_log.py"
-          },
-          {
-            "type": "command",
-            "command": "python3 /home/djology/408-from-44/scripts/auto_wish.py"
-          }
-        ]
-      }
-    ]
   }
 }
