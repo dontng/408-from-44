@@ -10,6 +10,7 @@
 """
 import sys, os, subprocess, tempfile
 import fitz
+from imgtrim import trim_file
 
 DPI = 200
 ZOOM = DPI / 72.0
@@ -63,7 +64,8 @@ def cut(year, qnum, pno, y0f, y1f):
     os.makedirs(outdir, exist_ok=True)
     path = os.path.join(outdir, f"q{int(qnum):02d}.png")
     pix.save(path)
-    print(f"已切 → {path}  ({pix.width}x{pix.height}px)")
+    trim_file(path)
+    print(f"已切 → {path}")
 
 
 def _clip_png(page, y0f, y1f):
@@ -85,7 +87,8 @@ def cut2(year, qnum, p0, a0, a1, p1, b0, b1):
     outdir = os.path.join("bank", year); os.makedirs(outdir, exist_ok=True)
     path = os.path.join(outdir, f"q{int(qnum):02d}.png")
     out.save(path)
-    print(f"已切(跨页) → {path}  ({out.width}x{out.height}px)")
+    trim_file(path)
+    print(f"已切(跨页) → {path}")
 
 
 def main():

@@ -7,6 +7,7 @@
 """
 import sys, re, os
 import fitz  # pymupdf
+from imgtrim import trim_file
 
 DPI = 200
 ZOOM = DPI / 72.0
@@ -87,6 +88,7 @@ def crop(doc, markers, outdir):
         pix = page.get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip)
         path = os.path.join(outdir, f"q{qnum:02d}.png")
         pix.save(path)
+        trim_file(path)
         saved += 1
     return saved
 

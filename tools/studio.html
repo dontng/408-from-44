@@ -6,187 +6,207 @@
 <title>408 刷题台</title>
 <style>
 :root{
-  --bg:#f6f3ec; --paper:#fcfaf4; --ink:#34302a; --sub:#948c7d; --line:#e6dfd0;
-  --akane:#a13c3c; --ai:#3c5a78; --moss:#5e7a58;
+  --bg:#f4f1e9; --paper:#fcfaf4; --ink:#33302a; --sub:#9b9384; --faint:#c3bbab;
+  --line:#e7e0d1; --hair:#ece6d8; --akane:#a13c3c; --ai:#3c5a78; --moss:#5e7a58;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
-  font-size:15px;line-height:1.9;letter-spacing:.02em}
-.layout{max-width:1080px;margin:0 auto;padding:28px 22px 90px;
-  display:grid;grid-template-columns:230px 1fr;gap:38px}
-@media(max-width:760px){.layout{grid-template-columns:1fr;gap:20px;padding:18px 16px 70px}}
+  font-size:15px;line-height:1.85;letter-spacing:.02em}
 
-/* ── 侧边栏 ── */
-aside{position:sticky;top:28px;align-self:start}
-@media(max-width:760px){aside{position:static}}
-.kicker{font-size:10px;letter-spacing:.4em;color:var(--sub)}
-.dday{font-family:Georgia,serif;margin:6px 0 2px}
-.dday b{font-size:40px;color:var(--akane);font-weight:600}
-.dday span{font-size:12px;color:var(--sub);letter-spacing:.2em}
-.todaybar{margin:22px 0 12px;display:flex;align-items:baseline;gap:10px}
-.todaybar h2{font-family:"Noto Serif CJK SC",serif;font-size:15px;letter-spacing:.2em}
-.todaybar small{color:var(--sub);font-size:12px}
-.qlist{list-style:none;max-height:62vh;overflow:auto}
-@media(max-width:760px){.qlist{max-height:140px;display:flex;flex-wrap:wrap;gap:6px}}
-.qlist li{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:13px;color:var(--sub);
-  border-bottom:1px solid #efe9dc;cursor:pointer}
-@media(max-width:760px){.qlist li{border:1px solid var(--line);border-radius:4px;padding:3px 8px}}
-.qlist li .dot{width:7px;height:7px;border-radius:50%;background:#cdc4b0;flex:none}
-.qlist li.cur{color:var(--ink);font-weight:600}
-.qlist li.cur .dot{background:var(--ai)}
-.qlist li.ok .dot{background:var(--moss)} .qlist li.no .dot{background:var(--akane)}
-.qlist li.done{color:#bcb4a4}
+.layout{max-width:1120px;margin:0 auto;padding:40px 30px 120px;
+  display:grid;grid-template-columns:188px 1fr;gap:64px}
+@media(max-width:780px){.layout{grid-template-columns:1fr;gap:8px;padding:22px 18px 80px}}
 
-/* ── 主区 ── */
+/* ── 侧栏 ── */
+aside{position:sticky;top:40px;align-self:start}
+@media(max-width:780px){aside{position:static;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:8px}}
+.kicker{font-size:10px;letter-spacing:.45em;color:var(--faint);text-transform:uppercase}
+.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 4px;line-height:1}
+.dday b{font-size:52px;font-weight:600;color:var(--akane);letter-spacing:-.02em}
+.dday i{font-style:normal;font-size:12px;color:var(--sub);letter-spacing:.25em;margin-left:6px}
+.stat{font-size:12.5px;color:var(--sub);letter-spacing:.05em;margin:26px 0 10px}
+.stat b{color:var(--ink);font-weight:600}
+@media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.stat{margin:0}}
+.dots{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;max-width:170px}
+.dots .d{aspect-ratio:1;border-radius:50%;background:#d9d0bd;cursor:pointer;
+  transition:transform .15s,background .2s}
+.dots .d:hover{transform:scale(1.35)}
+.dots .d.ok{background:var(--moss)} .dots .d.no{background:var(--akane)}
+.dots .d.pending{background:#d9d0bd} .dots .d.cur{box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--ai)}
+.hint{font-size:10.5px;color:var(--faint);letter-spacing:.2em;margin-top:16px}
+@media(max-width:780px){.hint{display:none}}
+
+/* ── 题流 ── */
 main{min-width:0}
-.qmeta{font-size:11px;letter-spacing:.25em;color:var(--sub);margin-bottom:12px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px}
-.card img{width:100%;display:block;border-radius:4px}
-.opts{margin-top:20px;display:flex;flex-direction:column;gap:11px}
-.opt{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--paper);
-  border:1px solid var(--line);border-radius:7px;cursor:pointer;transition:all .18s;font-size:16px}
-.opt:hover{border-color:var(--ai)}
-.opt .k{font-family:Georgia,serif;font-size:18px;font-weight:600;color:var(--sub);width:18px}
-.opt.ok{background:var(--moss);border-color:var(--moss);color:#fff} .opt.ok .k{color:#fff}
-.opt.no{background:var(--akane);border-color:var(--akane);color:#fff} .opt.no .k{color:#fff}
-.opt.pick{outline:2px solid var(--ai)}
-.feedback{margin-top:22px;display:flex;align-items:center;gap:16px;min-height:34px}
-.verdict{font-family:"Noto Serif CJK SC",serif;font-size:18px;letter-spacing:.1em}
+.qblock{padding:0 0 52px;margin-bottom:52px;border-bottom:1px solid var(--hair)}
+.qblock:last-child{border-bottom:none}
+.qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
+  color:var(--faint);margin-bottom:18px}
+.qmeta b{color:var(--sub);font-weight:600}
+.qimg{width:100%;max-width:780px;display:block;border-radius:3px}
+
+.opts{margin-top:20px;display:flex;gap:10px}
+.opt{width:54px;height:38px;display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:15px;color:var(--sub);
+  background:var(--paper);border:1px solid var(--line);border-radius:6px;
+  cursor:pointer;transition:all .16s;user-select:none}
+.opt:hover{border-color:var(--ai);color:var(--ai)}
+.opt.ok{background:var(--moss);border-color:var(--moss);color:#fff}
+.opt.no{background:var(--akane);border-color:var(--akane);color:#fff}
+.opt.pick{border-color:var(--ai);color:var(--ai);box-shadow:inset 0 0 0 1px var(--ai)}
+.opts.locked .opt{cursor:default}.opts.locked .opt:hover{border-color:var(--line);color:var(--sub)}
+.opts.locked .opt.ok:hover{border-color:var(--moss);color:#fff}
+.opts.locked .opt.no:hover{border-color:var(--akane);color:#fff}
+
+.fb{margin-top:16px;min-height:24px;display:flex;align-items:center;gap:16px;font-size:13.5px}
+.verdict{font-family:"Noto Serif CJK SC",serif;letter-spacing:.12em}
 .verdict.ok{color:var(--moss)} .verdict.no{color:var(--akane)}
-.selfjudge{color:var(--sub);font-size:14px}
-button{font:inherit;font-size:13.5px;letter-spacing:.15em;cursor:pointer;
-  padding:8px 24px;color:var(--ai);background:none;border:1px solid var(--ai);border-radius:5px;
-  transition:all .2s}
-button:hover{background:var(--ai);color:var(--paper)}
-button.q{border-color:var(--line);color:var(--sub);padding:6px 16px}
-.next{margin-left:auto}
-.done-screen{text-align:center;padding:70px 20px;color:var(--sub)}
-.done-screen h2{font-family:"Noto Serif CJK SC",serif;color:var(--ink);font-size:22px;letter-spacing:.1em;margin-bottom:12px}
-footer{margin-top:60px;text-align:center;font-size:11px;color:#c4bcab;letter-spacing:.4em}
+.verdict .ans{color:var(--sub);font-family:inherit;margin-left:10px;letter-spacing:.05em}
+.ask{color:var(--sub)}
+.sj{font:inherit;font-size:12.5px;letter-spacing:.1em;cursor:pointer;color:var(--ai);
+  background:none;border:1px solid var(--line);border-radius:5px;padding:5px 16px;transition:all .18s}
+.sj:hover{border-color:var(--ai);background:var(--ai);color:var(--paper)}
+
+.done-tag{font-size:12px;letter-spacing:.15em;color:var(--faint)}
+.done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
+
+.empty{padding:90px 10px;text-align:center;color:var(--sub)}
+.empty h2{font-family:"Noto Serif CJK SC",serif;color:var(--ink);font-size:21px;letter-spacing:.1em;margin-bottom:14px;font-weight:600}
+.empty p{font-size:13px;line-height:2}
+footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);letter-spacing:.5em}
 </style>
 </head>
 <body>
 <div class="layout">
   <aside>
-    <div class="kicker">408 · 真题刷题</div>
-    <div class="dday"><b id="dday">—</b> <span>天后考试</span></div>
-    <div class="todaybar">
-      <h2>今日</h2><small id="todaystat">—</small>
-    </div>
-    <ul class="qlist" id="qlist"></ul>
+    <div class="kicker">408 · 真题</div>
+    <div class="dday"><b id="dday">—</b><i>天后考试</i></div>
+    <div class="stat" id="stat">—</div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">点圆点跳到对应题</div>
   </aside>
-
-  <main id="main"></main>
+  <main id="feed"></main>
 </div>
 <footer>从混沌到清晰</footer>
 
 <script>
-let DATA = null;        // /api/today 返回
-let cur = null;         // 当前题对象
-let answered = false;
-
+let DATA = null;
 const $ = s => document.querySelector(s);
+const LETTERS = ["A","B","C","D"];
 
 async function load(){
   DATA = await (await fetch("/api/today")).json();
   $("#dday").textContent = DATA.dday;
   renderSidebar();
-  cur = DATA.items.find(it => it.status === "pending");
-  renderMain();
+  renderFeed();
+  const first = DATA.items.find(it => it.status === "pending");
+  if (first) document.getElementById("blk-"+first.id)
+    ?.scrollIntoView({behavior:"instant",block:"center"});
 }
 
 function renderSidebar(){
   const total = DATA.items.length;
-  $("#todaystat").textContent = `${DATA.done}/${total} 题　对 ${DATA.ok}`;
-  const ul = $("#qlist"); ul.innerHTML = "";
+  $("#stat").innerHTML = `今日 <b>${DATA.done}</b>/${total}　对 <b>${DATA.ok}</b>`;
+  const box = $("#dots"); box.innerHTML = "";
   for (const it of DATA.items){
-    const li = document.createElement("li");
-    let cls = "";
-    if (it.status === "done") cls = "done " + (it.ok ? "ok" : "no");
-    if (cur && it.id === cur.id) cls += " cur";
-    li.className = cls.trim();
-    li.innerHTML = `<span class="dot"></span>${it.year} 第${it.q}题`;
-    li.onclick = () => { if (it.status==="pending"){ cur = it; renderMain(); renderSidebar(); } };
-    ul.appendChild(li);
+    const d = document.createElement("div");
+    d.className = "d " + (it.status==="done" ? (it.ok?"ok":"no") : "pending");
+    d.title = `${it.year} 第${it.q}题`;
+    d.onclick = () => document.getElementById("blk-"+it.id)
+      ?.scrollIntoView({behavior:"smooth",block:"center"});
+    box.appendChild(d);
   }
 }
 
-function renderMain(){
-  answered = false;
-  const m = $("#main");
-  if (!cur){
-    m.innerHTML = `<div class="done-screen"><h2>今天刷完了 🎉</h2>
-      <p>共 ${DATA.done} 题，对 ${DATA.ok} 题（${DATA.done?Math.round(DATA.ok/DATA.done*100):0}%）</p>
-      <p>错题会按 1/2/4/7/15 天的遗忘曲线再回来找你。</p></div>`;
+function renderFeed(){
+  const feed = $("#feed");
+  feed.innerHTML = "";
+  if (!DATA.items.length){
+    feed.innerHTML = `<div class="empty"><h2>今天没有待刷的题</h2>
+      <p>错题会按遗忘曲线再回来找你。</p></div>`;
     return;
   }
-  m.innerHTML = `
-    <div class="qmeta">${cur.year} 年 · 第 ${cur.q} 题</div>
-    <div class="card"><img src="${cur.img}" alt="q${cur.q}"></div>
-    <div class="opts" id="opts">
-      ${["A","B","C","D"].map(o=>`<div class="opt" data-o="${o}"><span class="k">${o}</span><span>选项 ${o}</span></div>`).join("")}
-    </div>
-    <div class="feedback" id="feedback"></div>`;
-  document.querySelectorAll(".opt").forEach(el=>{
-    el.onclick = () => choose(el.dataset.o);
-  });
+  for (const it of DATA.items) feed.appendChild(renderBlock(it));
+  // 全做完时，末尾给个收束语
+  if (DATA.items.every(it=>it.status==="done")) appendDoneNote(feed);
 }
 
-async function choose(pick){
-  if (answered) return;
-  answered = true;
+function renderBlock(it){
+  const b = document.createElement("section");
+  b.className = "qblock"; b.id = "blk-"+it.id;
+  b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题</div>
+    <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy">`;
+  if (it.status === "done"){
+    const tag = document.createElement("div");
+    tag.className = "fb";
+    tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
+    b.appendChild(tag);
+    return b;
+  }
+  const opts = document.createElement("div");
+  opts.className = "opts";
+  opts.innerHTML = LETTERS.map(o=>`<div class="opt" data-o="${o}">${o}</div>`).join("");
+  const fb = document.createElement("div"); fb.className = "fb";
+  b.appendChild(opts); b.appendChild(fb);
+  opts.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = () => choose(it, opts, fb, el.dataset.o);
+  });
+  return b;
+}
+
+async function choose(it, opts, fb, pick){
+  if (it._answered) return; it._answered = true;
   const res = await (await fetch("/api/grade",{method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:cur.id, pick})})).json();
-
+    body:JSON.stringify({id:it.id, pick})})).json();
   if (!res.known){
-    // 无官方答案 → 自判
-    answered = false;
-    document.querySelectorAll(".opt").forEach(el=>{
-      if (el.dataset.o===pick) el.classList.add("pick");
-    });
-    $("#feedback").innerHTML = `<span class="selfjudge">这题对了吗？</span>
-      <button class="q" id="sjok">✓ 对</button><button class="q" id="sjno">✗ 错</button>`;
-    $("#sjok").onclick = ()=>selfjudge(true);
-    $("#sjno").onclick = ()=>selfjudge(false);
+    it._answered = false;
+    opts.querySelectorAll(".opt").forEach(el=>el.classList.toggle("pick", el.dataset.o===pick));
+    fb.innerHTML = `<span class="ask">这题对了吗？</span>`;
+    const ok = mkBtn("✓ 对", ()=>selfjudge(it,opts,fb,true));
+    const no = mkBtn("✗ 错", ()=>selfjudge(it,opts,fb,false));
+    fb.append(ok,no);
     return;
   }
-  showVerdict(pick, res.correct, res.answer);
+  showVerdict(it, opts, fb, pick, res.correct, res.answer);
 }
 
-async function selfjudge(ok){
-  if (answered) return; answered = true;
+async function selfjudge(it, opts, fb, ok){
+  if (it._answered) return; it._answered = true;
   await fetch("/api/grade",{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:cur.id, self:ok})});
-  showVerdict(null, ok, null);
+    body:JSON.stringify({id:it.id, self:ok})});
+  showVerdict(it, opts, fb, null, ok, null);
 }
 
-function showVerdict(pick, correct, answer){
-  document.querySelectorAll(".opt").forEach(el=>{
+function showVerdict(it, opts, fb, pick, correct, answer){
+  opts.classList.add("locked");
+  opts.querySelectorAll(".opt").forEach(el=>{
+    el.classList.remove("pick");
     const o = el.dataset.o;
     if (answer && o===answer) el.classList.add("ok");
     else if (pick && o===pick && !correct) el.classList.add("no");
     el.onclick = null;
   });
-  markDone(correct);
-  $("#feedback").innerHTML =
-    `<span class="verdict ${correct?'ok':'no'}">${correct?'答对':'答错'}${answer?'　正确答案 '+answer:''}</span>
-     <button class="next" id="next">下一题 ›</button>`;
-  $("#next").onclick = nextQ;
-}
-
-function markDone(correct){
-  const it = DATA.items.find(x=>x.id===cur.id);
-  if (it){ it.status="done"; it.ok=correct; }
+  fb.innerHTML = `<span class="verdict ${correct?'ok':'no'}">${correct?'答对':'答错'}`
+    + (answer?`<span class="ans">正确答案 ${answer}</span>`:``) + `</span>`;
+  it.status = "done"; it.ok = correct;
   DATA.done += 1; if (correct) DATA.ok += 1;
   renderSidebar();
 }
 
-function nextQ(){
-  cur = DATA.items.find(it => it.status === "pending");
-  renderMain(); renderSidebar();
+function mkBtn(t, fn){ const b=document.createElement("button"); b.className="sj";
+  b.textContent=t; b.onclick=fn; return b; }
+
+function appendDoneNote(feed){
+  const n = document.createElement("div"); n.className="empty";
+  n.innerHTML = `<h2>今天刷完了</h2>
+    <p>共 ${DATA.done} 题，对 ${DATA.ok} 题（${DATA.done?Math.round(DATA.ok/DATA.done*100):0}%）<br>
+    错题会按遗忘曲线再回来找你。</p>`;
+  feed.appendChild(n);
 }
 
 load();
