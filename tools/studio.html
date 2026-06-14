@@ -15,22 +15,24 @@ body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
   font-size:15px;line-height:1.85;letter-spacing:.02em}
 
-.layout{max-width:1120px;margin:0 auto;padding:40px 30px 120px;
-  display:grid;grid-template-columns:188px 1fr;gap:64px}
-@media(max-width:780px){.layout{grid-template-columns:1fr;gap:8px;padding:22px 18px 80px}}
+.layout{max-width:1120px;margin:0 auto;padding:30px 30px 80px;
+  display:grid;grid-template-columns:184px 1fr;gap:48px}
+@media(max-width:780px){.layout{grid-template-columns:1fr;gap:6px;padding:18px 18px 60px}}
 
 /* ── 侧栏 ── */
 aside{position:sticky;top:40px;align-self:start}
 @media(max-width:780px){aside{position:static;
   display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:8px}}
-.kicker{font-size:10px;letter-spacing:.45em;color:var(--faint);text-transform:uppercase}
-.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 4px;line-height:1}
-.dday b{font-size:52px;font-weight:600;color:var(--akane);letter-spacing:-.02em}
-.dday i{font-style:normal;font-size:12px;color:var(--sub);letter-spacing:.25em;margin-left:6px}
-.stat{font-size:12.5px;color:var(--sub);letter-spacing:.05em;margin:26px 0 10px}
+.kicker{font-size:11px;letter-spacing:.5em;color:var(--sub);font-weight:600}
+.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:8px 0 0;line-height:.92}
+.dday b{font-size:58px;font-weight:700;color:var(--akane);letter-spacing:-.03em}
+.dday i{font-style:normal;font-size:13px;color:var(--akane);letter-spacing:.2em;margin-left:5px}
+.warn{font-size:12px;font-weight:600;letter-spacing:.5em;color:var(--akane);
+  margin-top:7px;padding-top:7px;border-top:2px solid var(--akane);display:inline-block}
+.stat{font-size:12.5px;color:var(--sub);letter-spacing:.05em;margin:20px 0 10px}
 .stat b{color:var(--ink);font-weight:600}
-@media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.stat{margin:0}}
+@media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.warn{margin-top:0}.stat{margin:0}}
 .dots{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;max-width:170px}
 .dots .d{aspect-ratio:1;border-radius:50%;background:#d9d0bd;cursor:pointer;
   transition:transform .15s,background .2s}
@@ -42,14 +44,14 @@ aside{position:sticky;top:40px;align-self:start}
 
 /* ── 题流 ── */
 main{min-width:0}
-.qblock{padding:0 0 52px;margin-bottom:52px;border-bottom:1px solid var(--hair)}
+.qblock{padding:0 0 28px;margin-bottom:28px;border-bottom:1px solid var(--hair)}
 .qblock:last-child{border-bottom:none}
 .qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
-  color:var(--faint);margin-bottom:18px}
+  color:var(--faint);margin-bottom:12px}
 .qmeta b{color:var(--sub);font-weight:600}
 .qimg{width:100%;max-width:780px;display:block;border-radius:3px}
 
-.opts{margin-top:20px;display:flex;gap:10px}
+.opts{margin-top:14px;display:flex;gap:10px}
 .opt{width:54px;height:38px;display:flex;align-items:center;justify-content:center;
   font-family:Georgia,serif;font-size:15px;color:var(--sub);
   background:var(--paper);border:1px solid var(--line);border-radius:6px;
@@ -83,8 +85,9 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 <body>
 <div class="layout">
   <aside>
-    <div class="kicker">408 · 真题</div>
-    <div class="dday"><b id="dday">—</b><i>天后考试</i></div>
+    <div class="kicker">距 考 研</div>
+    <div class="dday"><b id="dday">—</b><i>日</i></div>
+    <div class="warn">只 进 不 退</div>
     <div class="stat" id="stat">—</div>
     <div class="dots" id="dots"></div>
     <div class="hint">点圆点跳到对应题</div>
