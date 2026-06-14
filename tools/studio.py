@@ -18,7 +18,7 @@ PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
 
 # ── 可调参数 ──────────────────────────────────────────────
-EXAM_DATE = "2026-12-26"          # 初试日期(倒计时锚点，待你确认)
+EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
 NEW_PER_DAY = 20                  # 每日新题上限(待讨论)
 INTERVALS = [1, 2, 4, 7, 15, 30, 60]   # 遗忘曲线：box 档位 → 间隔天数
 
@@ -77,7 +77,8 @@ def add_days(d, n):
 
 
 def dday():
-    return (datetime.date.fromisoformat(EXAM_DATE) - datetime.date.today()).days
+    # 倒计时到"考前最后一天"(考试日前一天)，与可复习天数一致
+    return (datetime.date.fromisoformat(EXAM_DATE) - datetime.date.today()).days - 1
 
 
 def day_log(state):
