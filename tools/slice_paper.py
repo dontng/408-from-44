@@ -32,35 +32,37 @@ def line_groups(page):
 def find_markers(doc):
     """定位选择题 1..40 的题号。返回 (markers, missing)。
 
-    先找"单项选择题"标题作起点、"综合应用题/二、"作终点，只在此区间内
-    收集左边距的题号行；容忍个别题号 OCR 漏抓(跳号)，单调递增即接受。
+    不依赖标题锚点：收集所有左边距的"数字." 候选(阅读顺序)，再取最长的
+    严格递增序列——考生须知那段只到 5，正题能到 40，自然胜出；也能跳过
+    任何假开头。容忍个别题号 OCR 漏抓(跳号)。
     """
-    started = False
-    last = 0
-    markers = []
+    cand = []
     for pno in range(len(doc)):
         page = doc[pno]
         pw = page.rect.width
         for y0, x0, text in line_groups(page):
-            s = text.lstrip()
-            if not started:
-                if "单项选择题" in text:
-                    started = True
+            if x0 > pw * 0.23:           # 题号在左边距
                 continue
-            if "综合应用题" in text or re.match(r'二[、.]', s):
-                return markers, _missing(markers)
-            if x0 > pw * 0.22:
-                continue
-            m = re.match(r'0?(\d{1,2})[.．、)]', s)
+            m = re.match(r'0?(\d{1,2})[.．、)]', text.lstrip())
             if not m:
                 continue
             num = int(m.group(1))
-            if last < num <= 40:        # 单调递增、容忍跳号
-                markers.append((num, pno, y0))
-                last = num
-                if num == 40:
-                    return markers, _missing(markers)
-    return markers, _missing(markers)
+            if 1 <= num <= 40:
+                cand.append((num, pno, y0))
+
+    best = []
+    for i in range(len(cand)):
+        run = [cand[i]]
+        last = cand[i][0]
+        for j in range(i + 1, len(cand)):
+            if cand[j][0] > last:
+                run.append(cand[j])
+                last = cand[j][0]
+                if last == 40:
+                    break
+        if len(run) > len(best):
+            best = run
+    return best, _missing(best)
 
 
 def _missing(markers):

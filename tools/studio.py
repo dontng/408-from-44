@@ -17,10 +17,25 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
 
-# ── 可调参数 ──────────────────────────────────────────────
+# ── 可调参数（设计见 memory: project-408-study-system）──────
 EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
-NEW_PER_DAY = 20                  # 每日新题上限(待讨论)
-INTERVALS = [1, 2, 4, 7, 15, 30, 60]   # 遗忘曲线：box 档位 → 间隔天数
+NEW_PER_DAY = 20                  # 每日新题上限(待最终敲定)
+
+# 选择题遗忘曲线：单题间隔“扩张”(先短后长，抓住遗忘陡崖)，共 7 次曝光。
+# 注：最后 1~2 次理想应“锁定”到 11/12 月做考前冲刺，目前先用纯间隔近似(TODO 日期锁定)。
+INTERVALS = [2, 5, 12, 30, 60, 90]      # 6 个间隔 = 7 次曝光
+# 大题遗忘曲线：至少 4 次，更稀；大题按“时间”排不按“道数”。(引擎接入待大题入库)
+INTERVALS_BIG = [3, 12, 35, 70]
+
+# 科目轮转：早期每天只激活一对子轨，配平工作量(大科配小科)
+ROTATION = [["data_structures", "computer_networks"],        # 45 + 25
+            ["computer_organization", "operating_systems"]]  # 45 + 35
+
+# 打乱度(分块→交错)：随日期推进，从“按章节聚类”过渡到“完全随机跨科”
+# 三段界线：~8月底、~11月底。需 tags/<年>.tsv 章节标签就绪后才生效。
+SCRAMBLE_PHASES = [("2026-08-31", "blocked"),    # 早期：同章节成组、每天两门
+                   ("2026-11-30", "interleaved"),# 中期：科目内交错+跨科适度
+                   ("9999-12-31", "random")]     # 后期：完全随机跨章跨科=全真模拟
 
 
 # ── 题库 / 答案 ───────────────────────────────────────────
@@ -35,6 +50,18 @@ def load_answers(year):
     return d
 
 
+def load_tags(year):
+    """tags/<year>.tsv：每行 '题号<TAB>科目<TAB>章节'。无则返回空。"""
+    p = REPO / "tags" / f"{year}.tsv"
+    d = {}
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            parts = line.split("\t")
+            if len(parts) >= 3 and parts[0].strip().isdigit():
+                d[int(parts[0])] = {"subject": parts[1].strip(), "chapter": parts[2].strip()}
+    return d
+
+
 def load_questions():
     items = {}
     for ydir in sorted((REPO / "bank").glob("*")):
@@ -42,14 +69,17 @@ def load_questions():
             continue
         year = ydir.name
         ans = load_answers(year)
+        tags = load_tags(year)
         for png in sorted(ydir.glob("q*.png")):
             m = re.search(r"q(\d+)\.png$", png.name)
             if not m:
                 continue
             q = int(m.group(1))
             qid = f"{year}-{q:02d}"
+            t = tags.get(q, {})
             items[qid] = {"id": qid, "year": year, "q": q,
-                          "img": f"/bank/{year}/{png.name}", "answer": ans.get(q)}
+                          "img": f"/bank/{year}/{png.name}", "answer": ans.get(q),
+                          "subject": t.get("subject"), "chapter": t.get("chapter")}
     return items
 
 
