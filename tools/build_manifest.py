@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """扫描 bank/ 生成网页用的题库清单 web/data.js。
 
-每年的标准答案(可选)放在 bank/<year>/answers.txt，每行 "题号 答案"，如:
+每年的标准答案(可选)放在 answers/<year>.txt，每行 "题号 答案"，如:
     1 D
     2 D
 没有答案的题，answer 为 null，网页里走"自判对错"模式。
@@ -9,11 +9,12 @@
 import os, re, json, glob
 
 BANK = "bank"
+ANSWERS = "answers"
 OUT = "web/data.js"
 
 
-def load_answers(year_dir):
-    path = os.path.join(year_dir, "answers.txt")
+def load_answers(year):
+    path = os.path.join(ANSWERS, f"{year}.txt")
     ans = {}
     if os.path.exists(path):
         for line in open(path, encoding="utf-8"):
@@ -29,7 +30,7 @@ def main():
         if not os.path.isdir(year_dir):
             continue
         year = os.path.basename(year_dir)
-        ans = load_answers(year_dir)
+        ans = load_answers(year)
         for png in sorted(glob.glob(os.path.join(year_dir, "q*.png"))):
             m = re.search(r'q(\d{2})\.png$', png)
             if not m:
