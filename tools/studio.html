@@ -39,11 +39,20 @@ aside{position:sticky;top:40px;align-self:start}
 .dots .d:hover{transform:scale(1.35)}
 .dots .d.ok{background:var(--moss)} .dots .d.no{background:var(--akane)}
 .dots .d.pending{background:#d9d0bd} .dots .d.cur{box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--ai)}
+.plan{font-size:11.5px;color:var(--ai);letter-spacing:.08em;margin:16px 0 2px;line-height:1.7}
+.plan .ph{display:inline-block;font-size:10px;letter-spacing:.2em;color:var(--moss);
+  border:1px solid var(--moss);border-radius:3px;padding:1px 6px;margin-bottom:5px}
+.plan b{color:var(--ink);font-weight:600}
 .hint{font-size:10.5px;color:var(--faint);letter-spacing:.2em;margin-top:16px}
 @media(max-width:780px){.hint{display:none}}
 
 /* ── 题流 ── */
 main{min-width:0}
+.grouphd{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.14em;
+  color:var(--ink);margin:0 0 24px;padding-bottom:8px;border-bottom:2px solid var(--moss);
+  display:flex;align-items:baseline;gap:12px}
+.grouphd:not(:first-child){margin-top:40px}
+.grouphd small{font-size:11px;color:var(--sub);letter-spacing:.08em;font-family:inherit;font-weight:400}
 .qblock{padding:0 0 28px;margin-bottom:28px;border-bottom:1px solid var(--hair)}
 .qblock:last-child{border-bottom:none}
 .qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
@@ -89,6 +98,7 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
     <div class="dday"><b id="dday">—</b><i>日</i></div>
     <div class="warn">只 进 不 退</div>
     <div class="stat" id="stat">—</div>
+    <div class="plan" id="plan"></div>
     <div class="dots" id="dots"></div>
     <div class="hint">点圆点跳到对应题</div>
   </aside>
@@ -111,9 +121,16 @@ async function load(){
     ?.scrollIntoView({behavior:"instant",block:"center"});
 }
 
+function prettyCh(ch){
+  if (!ch || ch.startsWith("zz")) return "未标章节";
+  return ch.replace(/^ch\d+_/, "");
+}
+
 function renderSidebar(){
   const total = DATA.items.length;
   $("#stat").innerHTML = `今日 <b>${DATA.done}</b>/${total}　对 <b>${DATA.ok}</b>`;
+  if (DATA.phaseCN) $("#plan").innerHTML =
+    `<span class="ph">${DATA.phaseCN}</span><br>今日两门：<b>${(DATA.subjects||[]).join(" + ")}</b>`;
   const box = $("#dots"); box.innerHTML = "";
   for (const it of DATA.items){
     const d = document.createElement("div");
@@ -133,8 +150,20 @@ function renderFeed(){
       <p>错题会按遗忘曲线再回来找你。</p></div>`;
     return;
   }
-  for (const it of DATA.items) feed.appendChild(renderBlock(it));
-  // 全做完时，末尾给个收束语
+  let curKey = null;
+  for (const it of DATA.items){
+    if (it.status !== "done"){            // 只对待做题按 科目·章节 分组成块
+      const key = it.subjectCN + "·" + it.chapter;
+      if (key !== curKey){
+        curKey = key;
+        const hd = document.createElement("div");
+        hd.className = "grouphd";
+        hd.innerHTML = `${it.subjectCN}　<small>${prettyCh(it.chapter)}</small>`;
+        feed.appendChild(hd);
+      }
+    }
+    feed.appendChild(renderBlock(it));
+  }
   if (DATA.items.every(it=>it.status==="done")) appendDoneNote(feed);
 }
 

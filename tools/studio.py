@@ -7,7 +7,8 @@ usage:  studio.py [repo_dir] [port]   （由根目录 studio.sh 启动）
 题目图片在 bank/<年>/qNN.png，答案在 answers/<年>.txt，
 学习状态(遗忘曲线)存 review/state.json —— 纯文本，可随仓库多机同步。
 """
-import sys, os, re, json, datetime, mimetypes
+import sys, os, re, json, datetime, mimetypes, random
+from collections import defaultdict, deque
 from pathlib import Path
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
@@ -36,6 +37,14 @@ ROTATION = [["data_structures", "computer_networks"],        # 45 + 25
 SCRAMBLE_PHASES = [("2026-08-31", "blocked"),    # 早期：同章节成组、每天两门
                    ("2026-11-30", "interleaved"),# 中期：科目内交错+跨科适度
                    ("9999-12-31", "random")]     # 后期：完全随机跨章跨科=全真模拟
+
+SUBJECTS = ["data_structures", "computer_organization",
+            "operating_systems", "computer_networks"]
+SUBJECT_CN = {"data_structures": "数据结构", "computer_organization": "组成原理",
+              "operating_systems": "操作系统", "computer_networks": "计算机网络"}
+# 无 tags 时按题号位置兜底归科(408 选择题长期分布: DS1-10 / CO11-23 / OS24-33 / 网34-40)
+SUBJECT_BOUNDS = [(10, "data_structures"), (23, "computer_organization"),
+                  (33, "operating_systems"), (40, "computer_networks")]
 
 
 # ── 题库 / 答案 ───────────────────────────────────────────
@@ -115,12 +124,86 @@ def day_log(state):
     return state.setdefault("_progress", {}).setdefault(today(), {"done": [], "ok": 0, "new": 0})
 
 
+# ── 调度器：科目轮转 + 分块→交错(见 memory: project-408-study-system) ──
+def q_subject(it):
+    """题目科目：优先用 tags/<年>.tsv 标签，无则按题号位置兜底。"""
+    if it.get("subject"):
+        return it["subject"]
+    for hi, subj in SUBJECT_BOUNDS:
+        if it["q"] <= hi:
+            return subj
+    return "computer_networks"
+
+
+def q_chapter(it):
+    return it.get("chapter") or "zz_未标"
+
+
+def phase_today():
+    t = today()
+    for date, name in SCRAMBLE_PHASES:
+        if t <= date:
+            return name
+    return "random"
+
+
+def active_subjects():
+    """按天交替激活一对子轨(大科配小科，配平当日工作量)。"""
+    idx = datetime.date.fromisoformat(today()).toordinal() % len(ROTATION)
+    return ROTATION[idx]
+
+
+def _subj_order(active):
+    return active + [s for s in SUBJECTS if s not in active]
+
+
+def _cluster(items, active):
+    """按 科目(今日激活对在前)→章节→年份 聚类成组。"""
+    order = _subj_order(active)
+    return sorted(items, key=lambda it: (order.index(q_subject(it)),
+                                         q_chapter(it), it["year"], it["q"]))
+
+
+def _interleave(items):
+    """科目内按章节聚类，科目之间 round-robin 交错。"""
+    buckets = defaultdict(list)
+    for it in items:
+        buckets[q_subject(it)].append(it)
+    queues = []
+    for s in SUBJECTS:
+        if buckets[s]:
+            buckets[s].sort(key=lambda it: (q_chapter(it), it["year"], it["q"]))
+            queues.append(deque(buckets[s]))
+    out = []
+    while queues:
+        for dq in queues:
+            out.append(dq.popleft())
+        queues = [dq for dq in queues if dq]
+    return out
+
+
+def order_questions(items, phase, active):
+    if phase == "blocked":
+        return _cluster(items, active)          # 同章成组、每天两门
+    if phase == "interleaved":
+        return _interleave(items)               # 科目间交错
+    random.Random(today()).shuffle(items)       # 完全随机跨章跨科=全真模拟
+    return items
+
+
 def build_today(state):
-    """返回今日全量清单(含已做)：[{id,year,q,img,status,ok}]，新题在已做后。"""
+    """返回今日全量清单(含已做)：[{id,year,q,img,subject,chapter,status,ok}]。
+
+    复习题(due)按遗忘曲线始终全出(retention 优先)；新题在 blocked/interleaved
+    阶段只从今日激活科目对引入；最终顺序按阶段 分块→交错→随机 排列。
+    """
     log = day_log(state)
     done = list(log["done"])
     done_set = set(done)
     t = today()
+    phase = phase_today()
+    active = active_subjects()
+
     due, fresh = [], []
     for qid, it in QUESTIONS.items():
         if qid in done_set:
@@ -128,25 +211,44 @@ def build_today(state):
         s = state.get(qid)
         if s:
             if s.get("due", "9999") <= t:
-                due.append(qid)
+                due.append(it)
         else:
-            fresh.append(qid)
+            fresh.append(it)
+
+    # 新题配额
     remaining_new = max(0, NEW_PER_DAY - log["new"])
-    pending = due + fresh[:remaining_new]
+    if phase in ("blocked", "interleaved"):
+        # 只从今日激活科目对引入，且在两门间均衡(round-robin)，保证每天两门都出
+        pools = [deque(_cluster([it for it in fresh if q_subject(it) == s], active))
+                 for s in active]
+        new_today = []
+        while len(new_today) < remaining_new and any(pools):
+            for dq in pools:
+                if dq and len(new_today) < remaining_new:
+                    new_today.append(dq.popleft())
+    else:
+        pool = list(fresh)
+        random.Random(today() + "f").shuffle(pool)
+        new_today = pool[:remaining_new]
+
+    pending = order_questions(due + new_today, phase, active)
+
     out = []
     for qid in done:
         it = QUESTIONS.get(qid)
         if it:
             ent = state.get(qid, {})
             out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True)})
-    for qid in pending:
-        out.append({**_pub(QUESTIONS[qid]), "status": "pending"})
+    for it in pending:
+        out.append({**_pub(it), "status": "pending"})
     return out, log
 
 
 def _pub(it):
-    """对外不暴露答案。"""
-    return {"id": it["id"], "year": it["year"], "q": it["q"], "img": it["img"]}
+    """对外不暴露答案。带上科目/章节供前端分组显示。"""
+    return {"id": it["id"], "year": it["year"], "q": it["q"], "img": it["img"],
+            "subject": q_subject(it), "subjectCN": SUBJECT_CN[q_subject(it)],
+            "chapter": q_chapter(it)}
 
 
 def grade(state, qid, pick=None, selfok=None):
@@ -201,10 +303,15 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/today":
             state = load_state()
             items, log = build_today(state)
+            phase = phase_today()
             return self._send(200, {
                 "dday": dday(), "examDate": EXAM_DATE, "newPerDay": NEW_PER_DAY,
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
+                "phase": phase,
+                "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
+                            "random": "全真模拟"}[phase],
+                "subjects": [SUBJECT_CN[s] for s in active_subjects()],
             })
         if path.startswith("/bank/"):
             f = (REPO / path.lstrip("/")).resolve()
