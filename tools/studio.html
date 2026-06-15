@@ -15,8 +15,8 @@ body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
   font-size:15px;line-height:1.85;letter-spacing:.02em}
 
-.layout{max-width:1120px;margin:0 auto;padding:30px 30px 80px;
-  display:grid;grid-template-columns:184px 1fr;gap:48px}
+.layout{max-width:888px;margin:0 auto;padding:30px 30px 80px;
+  display:grid;grid-template-columns:172px 1fr;gap:44px}
 @media(max-width:780px){.layout{grid-template-columns:1fr;gap:6px;padding:18px 18px 60px}}
 
 /* ── 侧栏 ── */
@@ -24,21 +24,24 @@ aside{position:sticky;top:40px;align-self:start}
 @media(max-width:780px){aside{position:static;
   display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:8px}}
+.ddaywrap{padding:6px 0 18px 22px}
 .kicker{font-size:11px;letter-spacing:.5em;color:var(--sub);font-weight:600}
-.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:8px 0 0;line-height:.92}
-.dday b{font-size:58px;font-weight:700;color:var(--akane);letter-spacing:-.03em}
-.dday i{font-style:normal;font-size:13px;color:var(--akane);letter-spacing:.2em;margin-left:5px}
+.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 0;line-height:1}
+.dday b{font-size:40px;font-weight:700;color:var(--akane);letter-spacing:-.02em}
+.dday i{font-style:normal;font-size:11px;color:var(--akane);letter-spacing:.2em;margin-left:4px}
 .warn{font-size:12px;font-weight:600;letter-spacing:.5em;color:var(--akane);
-  margin-top:7px;padding-top:7px;border-top:2px solid var(--akane);display:inline-block}
+  margin-top:11px;padding-top:9px;border-top:2px solid var(--akane);display:inline-block}
+@media(max-width:780px){.ddaywrap{padding:0}}
 .stat{font-size:12.5px;color:var(--sub);letter-spacing:.05em;margin:20px 0 10px}
 .stat b{color:var(--ink);font-weight:600}
 @media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.warn{margin-top:0}.stat{margin:0}}
-.dots{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;max-width:170px}
-.dots .d{aspect-ratio:1;border-radius:50%;background:#d9d0bd;cursor:pointer;
-  transition:transform .15s,background .2s}
-.dots .d:hover{transform:scale(1.35)}
-.dots .d.ok{background:var(--moss)} .dots .d.no{background:var(--akane)}
-.dots .d.pending{background:#d9d0bd} .dots .d.cur{box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--ai)}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:172px}
+.dots .d{aspect-ratio:1;border-radius:5px;background:#e4dccb;color:var(--sub);
+  font-family:Georgia,serif;font-size:10.5px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s,background .2s}
+.dots .d:hover{transform:scale(1.18)}
+.dots .d.ok{background:var(--moss);color:#fff} .dots .d.no{background:var(--akane);color:#fff}
+.dots .d.pending{background:#e4dccb;color:var(--sub)}
 .plan{font-size:11.5px;color:var(--ai);letter-spacing:.08em;margin:16px 0 2px;line-height:1.7}
 .plan .ph{display:inline-block;font-size:10px;letter-spacing:.2em;color:var(--moss);
   border:1px solid var(--moss);border-radius:3px;padding:1px 6px;margin-bottom:5px}
@@ -58,11 +61,11 @@ main{min-width:0}
 .qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
   color:var(--faint);margin-bottom:12px}
 .qmeta b{color:var(--sub);font-weight:600}
-.qimg{width:100%;max-width:780px;display:block;border-radius:3px}
+.qimg{width:100%;max-width:560px;display:block;border-radius:3px}
 
-.opts{margin-top:14px;display:flex;gap:10px}
-.opt{width:54px;height:38px;display:flex;align-items:center;justify-content:center;
-  font-family:Georgia,serif;font-size:15px;color:var(--sub);
+.opts{margin-top:12px;max-width:560px;display:flex;gap:9px}
+.opt{width:46px;height:33px;display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:14px;color:var(--sub);
   background:var(--paper);border:1px solid var(--line);border-radius:6px;
   cursor:pointer;transition:all .16s;user-select:none}
 .opt:hover{border-color:var(--ai);color:var(--ai)}
@@ -94,13 +97,15 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 <body>
 <div class="layout">
   <aside>
-    <div class="kicker">距 考 研</div>
-    <div class="dday"><b id="dday">—</b><i>日</i></div>
-    <div class="warn">只 进 不 退</div>
+    <div class="ddaywrap">
+      <div class="kicker">距 考 研</div>
+      <div class="dday"><b id="dday">—</b><i>日</i></div>
+      <div class="warn">只 进 不 退</div>
+    </div>
     <div class="stat" id="stat">—</div>
     <div class="plan" id="plan"></div>
     <div class="dots" id="dots"></div>
-    <div class="hint">点圆点跳到对应题</div>
+    <div class="hint">点数字跳到对应题</div>
   </aside>
   <main id="feed"></main>
 </div>
@@ -132,14 +137,15 @@ function renderSidebar(){
   if (DATA.phaseCN) $("#plan").innerHTML =
     `<span class="ph">${DATA.phaseCN}</span><br>今日两门：<b>${(DATA.subjects||[]).join(" + ")}</b>`;
   const box = $("#dots"); box.innerHTML = "";
-  for (const it of DATA.items){
+  DATA.items.forEach((it, i) => {
     const d = document.createElement("div");
     d.className = "d " + (it.status==="done" ? (it.ok?"ok":"no") : "pending");
+    d.textContent = i + 1;
     d.title = `${it.year} 第${it.q}题`;
     d.onclick = () => document.getElementById("blk-"+it.id)
       ?.scrollIntoView({behavior:"smooth",block:"center"});
     box.appendChild(d);
-  }
+  });
 }
 
 function renderFeed(){
