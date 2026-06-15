@@ -8,7 +8,7 @@ usage:  studio.py [repo_dir] [port]   （由根目录 studio.sh 启动）
 学习状态(遗忘曲线)存 review/state.json —— 纯文本，可随仓库多机同步。
 """
 import sys, os, re, json, datetime, mimetypes, random
-from collections import defaultdict, deque
+from collections import defaultdict, deque, Counter
 from pathlib import Path
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
@@ -251,6 +251,73 @@ def _pub(it):
             "chapter": q_chapter(it)}
 
 
+# ── 战况诊断：今日小结 / 弱项 / 错题本 / 冲刺预测分 ──────────
+def pretty_ch(ch):
+    if not ch or ch.startswith("zz"):
+        return "未标章节"
+    return re.sub(r"^ch\d+_", "", ch)
+
+
+# 408 各科满分(选择+综合)，用于冲刺预测分
+EXAM_POINTS = {"data_structures": 45, "computer_organization": 45,
+               "operating_systems": 35, "computer_networks": 25}
+
+
+def build_stats(state):
+    t = today()
+    log = state.get("_progress", {}).get(t, {"done": [], "ok": 0})
+
+    # ① 今日小结：今日错题按 科目·章节 计数
+    tw = Counter()
+    for qid in log.get("done", []):
+        s = state.get(qid, {})
+        it = QUESTIONS.get(qid)
+        if it and not s.get("last_ok", True):
+            tw[f"{SUBJECT_CN[q_subject(it)]}·{pretty_ch(q_chapter(it))}"] += 1
+    done = len(log.get("done", []))
+    today_summary = {"done": done, "ok": log.get("ok", 0),
+                     "acc": round(log.get("ok", 0) / done * 100) if done else 0,
+                     "wrong": [{"label": k, "n": n} for k, n in tw.most_common()]}
+
+    # 累积聚合(全历史)：按 科目·章节 与 科目
+    ch_agg = defaultdict(lambda: {"seen": 0, "right": 0})
+    subj_agg = defaultdict(lambda: {"seen": 0, "right": 0})
+    mistakes = []
+    for qid, it in QUESTIONS.items():
+        s = state.get(qid)
+        if not s or not s.get("seen"):
+            continue
+        subj, ch = q_subject(it), q_chapter(it)
+        ck = (SUBJECT_CN[subj], pretty_ch(ch))
+        ch_agg[ck]["seen"] += s["seen"]; ch_agg[ck]["right"] += s.get("right", 0)
+        subj_agg[subj]["seen"] += s["seen"]; subj_agg[subj]["right"] += s.get("right", 0)
+        if not s.get("last_ok", True):      # ③ 错题本：最近一次做错
+            mistakes.append(_pub(it))
+
+    # ② 弱项诊断：章节正确率升序(最弱在前)
+    weak = [{"subject": s, "chapter": c, "seen": v["seen"],
+             "acc": round(v["right"] / v["seen"] * 100)}
+            for (s, c), v in ch_agg.items()]
+    weak.sort(key=lambda w: (w["acc"], -w["seen"]))
+
+    mistakes.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
+
+    # ④ 冲刺预测分：各科正确率 × 满分，求和(粗估，仅基于选择题表现)
+    by_subj, total = [], 0.0
+    for subj, pts in EXAM_POINTS.items():
+        v = subj_agg.get(subj, {"seen": 0, "right": 0})
+        acc = v["right"] / v["seen"] if v["seen"] else 0
+        total += acc * pts
+        by_subj.append({"subject": SUBJECT_CN[subj], "points": pts,
+                        "acc": round(acc * 100) if v["seen"] else None,
+                        "score": round(acc * pts, 1), "seen": v["seen"]})
+    projection = {"total": round(total), "full": sum(EXAM_POINTS.values()),
+                  "target": 120, "by_subject": by_subj}
+
+    return {"today": today_summary, "weak": weak,
+            "mistakes": mistakes, "projection": projection}
+
+
 def grade(state, qid, pick=None, selfok=None):
     it = QUESTIONS.get(qid)
     if not it:
@@ -313,6 +380,8 @@ class H(BaseHTTPRequestHandler):
                             "random": "全真模拟"}[phase],
                 "subjects": [SUBJECT_CN[s] for s in active_subjects()],
             })
+        if path == "/api/stats":
+            return self._send(200, build_stats(load_state()))
         if path.startswith("/bank/"):
             f = (REPO / path.lstrip("/")).resolve()
             if REPO in f.parents and f.exists():

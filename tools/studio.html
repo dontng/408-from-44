@@ -88,6 +88,30 @@ main{min-width:0}
 .done-tag{font-size:12px;letter-spacing:.15em;color:var(--faint)}
 .done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
 
+/* ── 战况诊断面板 ── */
+.statlink{font-size:11px;letter-spacing:.16em;color:var(--ai);cursor:pointer;
+  display:inline-block;margin-top:18px;border-bottom:1px solid var(--line);padding-bottom:2px}
+.statlink:hover{color:var(--ink);border-color:var(--ai)}
+.back{font-size:12px;color:var(--ai);cursor:pointer;letter-spacing:.12em;margin-bottom:30px;display:inline-block}
+.back:hover{color:var(--ink)}
+.sect{margin-bottom:42px}
+.sect h3{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.18em;color:var(--ink);
+  margin-bottom:18px;padding-bottom:7px;border-bottom:2px solid var(--moss);display:inline-block}
+.proj{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+.proj b{font-family:"Noto Serif CJK SC",serif;font-size:46px;color:var(--akane);font-weight:700;line-height:1}
+.proj .full{font-size:13px;color:var(--sub)} .proj .tgt{font-size:12px;color:var(--moss);letter-spacing:.1em}
+.bar{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:12.5px;max-width:560px}
+.bar .lab{width:150px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .track{flex:1;height:8px;background:#ece6d8;border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--ai);border-radius:4px;transition:width .4s}
+.bar .fill.weak{background:var(--akane)} .bar .fill.good{background:var(--moss)}
+.bar .val{width:84px;text-align:right;color:var(--sub);font-family:Georgia,serif;font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.chip{font-size:11.5px;color:var(--akane);border:1px solid var(--line);border-radius:4px;padding:3px 10px}
+.empty-s{color:var(--sub);font-size:13px;padding:6px 0}
+.mk{margin:18px 0}
+.mk .mkmeta{font-size:11px;color:var(--faint);letter-spacing:.16em;margin-bottom:6px}
+.mk img{width:100%;max-width:520px;display:block;border-radius:3px}
 .empty{padding:90px 10px;text-align:center;color:var(--sub)}
 .empty h2{font-family:"Noto Serif CJK SC",serif;color:var(--ink);font-size:21px;letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 .empty p{font-size:13px;line-height:2}
@@ -106,6 +130,7 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
     <div class="plan" id="plan"></div>
     <div class="dots" id="dots"></div>
     <div class="hint">点数字跳到对应题</div>
+    <div class="statlink" id="statlink">▸ 战况诊断</div>
   </aside>
   <main id="feed"></main>
 </div>
@@ -247,7 +272,57 @@ function appendDoneNote(feed){
   feed.appendChild(n);
 }
 
-load();
+// ── 战况诊断 ──
+function bar(label, acc, valtext){
+  const w = acc == null ? 0 : acc;
+  const cls = acc == null ? "" : (acc < 60 ? "weak" : acc >= 85 ? "good" : "");
+  const val = acc == null ? "未做" : `${acc}%`;
+  return `<div class="bar"><span class="lab">${label}</span>
+    <span class="track"><span class="fill ${cls}" style="width:${w}%"></span></span>
+    <span class="val">${val}${valtext?" · "+valtext:""}</span></div>`;
+}
+function sect(title, inner){
+  const d = document.createElement("div"); d.className = "sect";
+  d.innerHTML = `<h3>${title}</h3>${inner}`;
+  return d;
+}
+async function showStats(){
+  const st = await (await fetch("/api/stats")).json();
+  const feed = $("#feed"); feed.innerHTML = "";
+  const back = document.createElement("div");
+  back.className = "back"; back.textContent = "‹ 返回刷题";
+  back.onclick = () => { renderFeed(); window.scrollTo(0,0); };
+  feed.appendChild(back);
+
+  const p = st.projection;
+  feed.appendChild(sect("冲刺预测分",
+    `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
+       <span class="tgt">目标 ${p.target}</span></div>`
+    + p.by_subject.map(s=>bar(s.subject, s.acc, `${s.score}/${s.points}分`)).join("")
+    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，做得越多越准。</div>`));
+
+  const t = st.today;
+  feed.appendChild(sect("今日小结",
+    t.done ? `<div class="bar"><span class="lab">今日 ${t.done} 题 · 对 ${t.ok}</span>
+        <span class="track"><span class="fill ${t.acc<60?'weak':t.acc>=85?'good':''}" style="width:${t.acc}%"></span></span>
+        <span class="val">${t.acc}%</span></div>`
+      + (t.wrong.length ? `<div class="chips">`+t.wrong.map(w=>`<span class="chip">${w.label} ×${w.n}</span>`).join("")+`</div>` : `<div class="empty-s">今天全对，漂亮。</div>`)
+      : `<div class="empty-s">今天还没做题。</div>`));
+
+  feed.appendChild(sect("弱项诊断",
+    st.weak.length ? st.weak.slice(0,12).map(w=>bar(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`)).join("")
+      : `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`));
+
+  feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
+    st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
+        <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
+        <img src="${m.img}" loading="lazy"></div>`).join("")
+      : `<div class="empty-s">暂无错题 👍</div>`));
+  window.scrollTo(0,0);
+}
+$("#statlink").onclick = showStats;
+
+load().then(() => { if (location.hash === "#stats") showStats(); });
 </script>
 </body>
 </html>
