@@ -259,6 +259,19 @@ function showVerdict(it, opts, fb, pick, correct, answer){
   it.status = "done"; it.ok = correct;
   DATA.done += 1; if (correct) DATA.ok += 1;
   renderSidebar();
+  if (!correct){      // 错了：疏忽(跳过) / 没懂(进持久待解清单)
+    const slip = mkBtn("疏忽·跳过", ()=>fb.querySelector(".markrow")?.remove());
+    const stk  = mkBtn("没懂·进待解", ()=>markStuck(it, fb));
+    const row = document.createElement("span"); row.className = "markrow";
+    row.style.marginLeft = "6px"; row.append(slip, stk);
+    fb.appendChild(row);
+  }
+}
+async function markStuck(it, fb){
+  await fetch("/api/stuck",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id:it.id, stuck:true})});
+  const row = fb.querySelector(".markrow");
+  if (row) row.outerHTML = `<span class="done-tag no">已入待解清单</span>`;
 }
 
 function mkBtn(t, fn){ const b=document.createElement("button"); b.className="sj";
@@ -294,31 +307,42 @@ async function showStats(){
   back.onclick = () => { renderFeed(); window.scrollTo(0,0); };
   feed.appendChild(back);
 
-  const p = st.projection;
-  feed.appendChild(sect("冲刺预测分",
-    `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
-       <span class="tgt">目标 ${p.target}</span></div>`
-    + p.by_subject.map(s=>bar(s.subject, s.acc, `${s.score}/${s.points}分`)).join("")
-    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，做得越多越准。</div>`));
+  // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
+  const stk = st.stuck || [];
+  feed.appendChild(sect(`待解清单 · 没懂（${stk.length}）`,
+    stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
+        <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题${m.pick?` · 你选了 ${m.pick}`:''}
+          <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
+        <img src="${m.img}" loading="lazy"></div>`).join("")
+      : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
 
-  const t = st.today;
-  feed.appendChild(sect("今日小结",
-    t.done ? `<div class="bar"><span class="lab">今日 ${t.done} 题 · 对 ${t.ok}</span>
-        <span class="track"><span class="fill ${t.acc<60?'weak':t.acc>=85?'good':''}" style="width:${t.acc}%"></span></span>
-        <span class="val">${t.acc}%</span></div>`
-      + (t.wrong.length ? `<div class="chips">`+t.wrong.map(w=>`<span class="chip">${w.label} ×${w.n}</span>`).join("")+`</div>` : `<div class="empty-s">今天全对，漂亮。</div>`)
-      : `<div class="empty-s">今天还没做题。</div>`));
-
+  // ② 弱项诊断
   feed.appendChild(sect("弱项诊断",
     st.weak.length ? st.weak.slice(0,12).map(w=>bar(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`)).join("")
       : `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`));
 
+  // ③ 错题本(全部最近做错，含疏忽)
   feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
     st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
         <img src="${m.img}" loading="lazy"></div>`).join("")
       : `<div class="empty-s">暂无错题 👍</div>`));
+
+  // ④ 冲刺预测分 — 垫底·参考
+  const p = st.projection;
+  feed.appendChild(sect("冲刺预测分",
+    `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
+       <span class="tgt">目标 ${p.target}</span></div>`
+    + p.by_subject.map(s=>bar(s.subject, s.acc, `${s.score}/${s.points}分`)).join("")
+    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，参考用。</div>`));
+
+  feed.querySelectorAll(".solved").forEach(b => b.onclick = () => unstick(b.dataset.id));
   window.scrollTo(0,0);
+}
+async function unstick(id){
+  await fetch("/api/stuck",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id, stuck:false})});
+  document.getElementById("stuck-"+id)?.remove();
 }
 $("#statlink").onclick = showStats;
 

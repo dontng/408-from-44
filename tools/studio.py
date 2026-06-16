@@ -24,7 +24,7 @@ NEW_PER_DAY = 20                  # 每日新题上限(待最终敲定)
 
 # 选择题遗忘曲线：单题间隔“扩张”(先短后长，抓住遗忘陡崖)，共 7 次曝光。
 # 注：最后 1~2 次理想应“锁定”到 11/12 月做考前冲刺，目前先用纯间隔近似(TODO 日期锁定)。
-INTERVALS = [2, 5, 12, 30, 60, 90]      # 6 个间隔 = 7 次曝光
+INTERVALS = [2, 4, 8, 16, 30, 45]       # 压缩版：7次曝光11-11收齐(见 docs/学习数学模型.md)
 # 大题遗忘曲线：至少 4 次，更稀；大题按“时间”排不按“道数”。(引擎接入待大题入库)
 INTERVALS_BIG = [3, 12, 35, 70]
 
@@ -282,7 +282,7 @@ def build_stats(state):
     # 累积聚合(全历史)：按 科目·章节 与 科目
     ch_agg = defaultdict(lambda: {"seen": 0, "right": 0})
     subj_agg = defaultdict(lambda: {"seen": 0, "right": 0})
-    mistakes = []
+    mistakes, stuck = [], []
     for qid, it in QUESTIONS.items():
         s = state.get(qid)
         if not s or not s.get("seen"):
@@ -291,6 +291,8 @@ def build_stats(state):
         ck = (SUBJECT_CN[subj], pretty_ch(ch))
         ch_agg[ck]["seen"] += s["seen"]; ch_agg[ck]["right"] += s.get("right", 0)
         subj_agg[subj]["seen"] += s["seen"]; subj_agg[subj]["right"] += s.get("right", 0)
+        if s.get("stuck"):                  # ⓪ 待解清单：手动标"没懂"，持久不清
+            stuck.append({**_pub(it), "pick": s.get("last_pick")})
         if not s.get("last_ok", True):      # ③ 错题本：最近一次做错
             mistakes.append(_pub(it))
 
@@ -301,6 +303,7 @@ def build_stats(state):
     weak.sort(key=lambda w: (w["acc"], -w["seen"]))
 
     mistakes.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
+    stuck.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
 
     # ④ 冲刺预测分：各科正确率 × 满分，求和(粗估，仅基于选择题表现)
     by_subj, total = [], 0.0
@@ -314,7 +317,7 @@ def build_stats(state):
     projection = {"total": round(total), "full": sum(EXAM_POINTS.values()),
                   "target": 120, "by_subject": by_subj}
 
-    return {"today": today_summary, "weak": weak,
+    return {"today": today_summary, "weak": weak, "stuck": stuck,
             "mistakes": mistakes, "projection": projection}
 
 
@@ -335,6 +338,8 @@ def grade(state, qid, pick=None, selfok=None):
     s["right"] = s.get("right", 0) + (1 if correct else 0)
     s["last"] = today()
     s["last_ok"] = correct
+    if pick:
+        s["last_pick"] = pick        # 记下选了哪个干扰项，供拷打扎具体错念
     state[qid] = s
     log = day_log(state)
     if qid not in log["done"]:
@@ -345,6 +350,20 @@ def grade(state, qid, pick=None, selfok=None):
             log["new"] += 1
     save_state(state)
     return {"known": True, "correct": correct, "answer": ans}
+
+
+def mark_stuck(state, qid, stuck):
+    """标"没懂"→进持久待解清单(只堆不清,不强制通关)；"搞懂了"→撤下。"""
+    s = state.get(qid)
+    if s is None:
+        return {"error": "not graded yet"}
+    if stuck:
+        s["stuck"] = True
+    else:
+        s.pop("stuck", None)
+    state[qid] = s
+    save_state(state)
+    return {"ok": True, "stuck": bool(s.get("stuck"))}
 
 
 # ── HTTP ──────────────────────────────────────────────────
@@ -396,6 +415,10 @@ class H(BaseHTTPRequestHandler):
         if self.path == "/api/grade":
             state = load_state()
             res = grade(state, data.get("id"), data.get("pick"), data.get("self"))
+            return self._send(200, res)
+        if self.path == "/api/stuck":
+            state = load_state()
+            res = mark_stuck(state, data.get("id"), data.get("stuck"))
             return self._send(200, res)
         return self._send(404, {"error": "not found"})
 
