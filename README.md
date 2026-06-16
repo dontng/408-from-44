@@ -26,7 +26,15 @@ bash studio.sh          # 启动刷题台 (127.0.0.1:8408)
 
 进度见 `STATUS.md`。真题 PDF 与答案 PDF 本地留存、不入库。
 
-## Tip：Claude app 远程操控（rc connect）下清理上下文
+## Tip · rc connect 下清上下文
 
-对话太长想瘦身，又不想断掉手机 app 的 rc 连接时，用 **`/compact`**——它把对话压成摘要、在同一进程里继续，连接不断。`/clear` 会清空全部上下文（连接仍在，但信息全丢）。真正会断 rc 的是关终端、`/exit`、重启 Claude Code（进程被杀）。本项目状态都落盘在记忆与 `STATUS.md`，`/compact` 后可随时重建上下文。
+想瘦身又不断手机 app 的连接，用 `/compact`。
+
+| 命令 | 上下文 | rc 连接 |
+|---|---|---|
+| `/compact` | 压成摘要、续上 | 不断 |
+| `/clear` | 全清 | 不断 |
+| 关终端 / `/exit` / 重启 | — | **断** |
+
+状态都在记忆和 `STATUS.md` 里，`/compact` 后可重建。
 
