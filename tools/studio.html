@@ -51,15 +51,19 @@ aside{position:sticky;top:56px;align-self:start}
 
 /* ── 题流 ── */
 main{min-width:0}
-/* 历史导航：左右键/箭头翻看过去某天 */
-.daynav{display:flex;align-items:center;justify-content:center;gap:16px;min-height:30px;margin-bottom:30px}
-.dayarrow{font-family:Georgia,serif;font-size:18px;line-height:1;color:var(--ai);
-  background:var(--paper);border:1px solid var(--line);border-radius:6px;
-  width:40px;height:30px;cursor:pointer;transition:all .16s}
-.dayarrow:hover:not([disabled]){border-color:var(--ai);background:var(--ai);color:var(--paper)}
-.dayarrow[disabled]{opacity:.28;cursor:default}
+/* 历史导航：手绘风左右箭头(过 #sketch 滤镜抖成手绘味)，键盘 ←/→ 翻日 */
+.daynav{display:flex;align-items:center;justify-content:center;gap:14px;min-height:62px;margin-bottom:24px}
+.dayarrow{width:78px;height:58px;padding:0;border:none;background:none;cursor:pointer;
+  color:var(--ink);display:grid;place-items:center;border-radius:36px;
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s}
+.dayarrow svg{width:70px;height:52px;display:block;overflow:visible;filter:url(#sketch);transition:transform .15s ease}
+.dayarrow:hover{color:var(--akane)}
+.dayarrow.left:hover svg{transform:translateX(-4px) scale(1.06)}
+.dayarrow.right:hover svg{transform:translateX(4px) scale(1.06)}
+.dayarrow.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
+.dayarrow.gone{visibility:hidden;pointer-events:none}
 .daylabel{font-family:"Noto Serif CJK SC",serif;font-size:12.5px;letter-spacing:.18em;
-  color:var(--sub);min-width:128px;text-align:center}
+  color:var(--sub);min-width:132px;text-align:center}
 .grouphd{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.14em;
   color:var(--ink);margin:0 0 32px;padding-bottom:10px;border-bottom:2px solid var(--moss);
   display:flex;align-items:baseline;gap:12px}
@@ -130,6 +134,12 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="sketch">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
 <div class="layout">
   <aside>
     <div class="ddaywrap">
@@ -178,13 +188,29 @@ function renderLive(){
   renderDayNav(DATA.prev, "", "今日");
 }
 
-// 顶部一左一右翻日箭头 + 标签
+// 手绘双横杠箭头(⇐ / ⇒)，过 #sketch 滤镜抖成手绘味
+const ARROW = {
+  left:  '<path d="M37 10 C 26 21,18 28,13 33 C 18 38,26 45,37 55"/>'
+       + '<path d="M16 28 C 38 27,58 27,78 26"/><path d="M16 38 C 38 39,58 39,78 39"/>',
+  right: '<path d="M51 10 C 62 21,70 28,75 33 C 70 38,62 45,51 55"/>'
+       + '<path d="M72 28 C 50 27,30 27,10 26"/><path d="M72 38 C 50 39,30 39,10 39"/>',
+};
+const arrowSvg = p => `<svg viewBox="0 0 88 64" fill="none" stroke="currentColor" stroke-width="3.6"`
+  + ` stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+// 顶部一左一右翻日箭头 + 标签；无目标的一侧隐藏但占位
 function renderDayNav(prev, next, label){
   navPrev = prev || ""; navNext = next || "";
   $("#daynav").innerHTML =
-      `<button class="dayarrow" ${prev?"":"disabled"} onclick="gotoDay('${prev||""}')">‹</button>`
+      `<button class="dayarrow left ${prev?"":"gone"}" aria-label="前一天" onclick="navDay('${prev||""}',this)">${arrowSvg(ARROW.left)}</button>`
     + `<span class="daylabel">${label||""}</span>`
-    + `<button class="dayarrow" ${next?"":"disabled"} onclick="gotoDay('${next||""}')">›</button>`;
+    + `<button class="dayarrow right ${next?"":"gone"}" aria-label="后一天" onclick="navDay('${next||""}',this)">${arrowSvg(ARROW.right)}</button>`;
+}
+// 点击/按键：先加 .press 下沉反馈，再翻日
+function navDay(date, btn){
+  if (!date) return;
+  btn.classList.add("press");
+  setTimeout(()=>{ btn.classList.remove("press"); gotoDay(date); }, 160);
 }
 
 // 切到某天：今日→实时可答页；其它→只读历史回顾。
@@ -422,8 +448,8 @@ $("#statlink").onclick = showStats;
 // 左右方向键翻看历史(战况诊断视图里不响应)
 document.addEventListener("keydown", e => {
   if (inStats || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === "ArrowLeft"  && navPrev) { e.preventDefault(); gotoDay(navPrev); }
-  if (e.key === "ArrowRight" && navNext) { e.preventDefault(); gotoDay(navNext); }
+  if (e.key === "ArrowLeft")  { const b=$("#daynav .dayarrow.left:not(.gone)");  if(b){e.preventDefault();b.click();} }
+  if (e.key === "ArrowRight") { const b=$("#daynav .dayarrow.right:not(.gone)"); if(b){e.preventDefault();b.click();} }
 });
 
 load().then(() => { if (location.hash === "#stats") showStats(); });
