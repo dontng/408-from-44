@@ -496,6 +496,7 @@ class H(BaseHTTPRequestHandler):
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
                 "today": today(), "prev": prev, "next": nxt,
+                "chart": build_chart(state),     # 中栏常驻：坚持热力图 + 近十天趋势
                 "phase": phase,
                 "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
                             "random": "全真模拟"}[phase],
@@ -505,10 +506,7 @@ class H(BaseHTTPRequestHandler):
             date = (parse_qs(urlparse(self.path).query).get("d") or [""])[0]
             return self._send(200, build_day(load_state(), date))
         if path == "/api/stats":
-            state = load_state()
-            res = build_stats(state)
-            res["chart"] = build_chart(state)
-            return self._send(200, res)
+            return self._send(200, build_stats(load_state()))
         if path.startswith("/bank/"):
             f = (REPO / path.lstrip("/")).resolve()
             if REPO in f.parents and f.exists():

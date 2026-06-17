@@ -15,15 +15,20 @@ body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
   font-size:15px;line-height:1.9;letter-spacing:.025em}
 
-.layout{max-width:1180px;margin:0 auto;padding:60px 48px 130px;
-  display:grid;grid-template-columns:170px 1fr;gap:64px}
-@media(max-width:780px){.layout{grid-template-columns:1fr;gap:8px;padding:24px 20px 70px}}
+.layout{max-width:1340px;margin:0 auto;padding:60px 48px 130px;
+  display:grid;grid-template-columns:170px 312px 1fr;gap:52px}
+@media(max-width:1080px){.layout{grid-template-columns:1fr;gap:8px;padding:24px 20px 70px}}
 
-/* ── 侧栏 ── */
+/* ── 左栏 / 中栏 ── */
 aside{position:sticky;top:56px;align-self:start}
-@media(max-width:780px){aside{position:static;
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:8px}}
+@media(max-width:1080px){aside{position:static;margin-bottom:8px}}
+@media(max-width:1080px){aside.rail{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding-bottom:14px;border-bottom:1px solid var(--hair)}}
+/* 中栏：坚持(热力图+近十天) */
+aside.track{min-width:0}
+@media(max-width:1080px){aside.track{border-bottom:1px solid var(--hair);padding-bottom:18px}}
+.trackcard h3{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.18em;color:var(--ink);
+  margin-bottom:16px;padding-bottom:7px;border-bottom:2px solid var(--moss);display:inline-block}
 .ddaywrap{padding:4px 0 30px 0}
 .kicker{font-size:11px;letter-spacing:.5em;color:var(--sub);font-weight:600}
 .dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 0;line-height:1}
@@ -156,7 +161,7 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
   </filter>
 </defs></svg>
 <div class="layout">
-  <aside>
+  <aside class="rail">
     <div class="ddaywrap">
       <div class="kicker">距 考 研</div>
       <div class="dday"><b id="dday">—</b><i>日</i></div>
@@ -168,6 +173,7 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
     <div class="hint">点数字跳到对应题</div>
     <div class="statlink" id="statlink">▸ 战况诊断</div>
   </aside>
+  <aside class="track"><div class="trackcard" id="track"></div></aside>
   <main>
     <div class="daynav" id="daynav"></div>
     <div id="feed"></div>
@@ -199,8 +205,14 @@ async function load(){
 function renderLive(){
   curDay = null; inStats = false;
   renderSidebar();
+  renderTrack(DATA.chart);
   renderFeed();
   renderDayNav(DATA.prev, "", "今日");
+}
+
+// 中栏：坚持(热力图 + 近十天)，常驻
+function renderTrack(chart){
+  $("#track").innerHTML = `<h3>坚持</h3>${renderChart(chart)}`;
 }
 
 // 手绘双横杠箭头(⇐ / ⇒)，过 #sketch 滤镜抖成手绘味
@@ -428,7 +440,7 @@ function sect(title, inner){
 }
 // ── 坚持热力图 + 近十天趋势 ──
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const HM_WINDOW = 5;     // 热力图滚动窗口：始终显示最近这么多个月
+const HM_WINDOW = 4;     // 热力图滚动窗口：最近这么多个月(适配中栏宽度，不横滚)
 const fmtIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const hmLevel = n => n>=22?4 : n>=15?3 : n>=8?2 : 1;   // 按当天题量定深浅(有记录至少 1 档)
 
@@ -483,9 +495,6 @@ async function showStats(){
   back.className = "back"; back.textContent = "‹ 返回刷题";
   back.onclick = () => { renderLive(); window.scrollTo(0,0); };
   feed.appendChild(back);
-
-  // 坚持 — 热力图 + 近十天趋势(顶部·复盘)
-  feed.appendChild(sect("坚持", renderChart(st.chart)));
 
   // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
   const stk = st.stuck || [];
