@@ -251,7 +251,8 @@ function renderReviewBlock(it){
   const tag = it.status === "done"
     ? `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'答对':'答错'}</span>`
     : `<span class="done-tag">未答</span>`;
-  b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}</div>
+  const pick = (it.pick && !it.ok) ? `　<span class="done-tag">选了 ${it.pick}</span>` : "";
+  b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}${pick}</div>
     <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
   return b;
 }

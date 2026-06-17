@@ -19,6 +19,7 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
 NORM_FILE = REPO / "review" / "imgnorm.json"   # 每题显示宽(见 tools/imgnorm.py)：让屏幕字号一致
+JOURNAL = REPO / "journal"                     # 每天做题记录(journal/YYYY-MM/MMDD.md)，回顾页的真相源
 
 # ── 可调参数（设计见 memory: project-408-study-system）──────
 EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
@@ -256,10 +257,27 @@ def build_today(state):
     return out, log
 
 
-# ── 历史回顾：左右键翻看过去某天做过的题 ──────────────────
+# ── 历史回顾：每天题单存成 journal/YYYY-MM/MMDD.md，左右键翻看 ──
+PHASE_CN = {"blocked": "分块期", "interleaved": "交错期", "random": "全真模拟"}
+JROW = re.compile(r"^\|\s*(\d{4}-\d{2})\s*\|\s*(答对|答错|未答)\s*\|\s*([A-D]?)\s*\|")
+
+
+def journal_path(date):
+    """'YYYY-MM-DD' → journal/YYYY-MM/MMDD.md"""
+    y, m, d = date.split("-")
+    return JOURNAL / f"{y}-{m}" / f"{m}{d}.md"
+
+
+def journal_date(f):
+    """journal/2026-06/0617.md → '2026-06-17'"""
+    return f"{f.parent.name}-{f.stem[2:]}"
+
+
 def progress_days(state):
-    """所有有做题记录的日期(升序)；并入今天作为最右的“实时”页。"""
-    days = set(state.get("_progress", {}).keys())
+    """所有有记录的日期(升序)：journal 文件 ∪ 旧 _progress 键 ∪ 今天(最右实时页)。"""
+    days = set(state.get("_progress", {}).keys())          # 兼容尚无 journal 的旧记录
+    if JOURNAL.exists():
+        days |= {journal_date(f) for f in JOURNAL.glob("*/*.md")}
     days.add(today())
     return sorted(days)
 
@@ -272,41 +290,88 @@ def day_nav(date, days):
     return (days[i - 1] if i > 0 else "", days[i + 1] if i < len(days) - 1 else "")
 
 
-def snapshot_roster(state, items):
-    """把当天完整题单(已做+待做)记进 _progress[今天].roster，供回顾页显示未答题。
-    只在题单有新增时落盘，避免每次访问都写。"""
+def write_journal_today(state, items):
+    """把今天的完整题单(含未答)写成 markdown 表，供回顾页与人肉翻阅。
+    每次访问/判分后整文件重写——一天几十行，开销可忽略。"""
     log = day_log(state)
-    ids = {it["id"] for it in items}
-    cur = set(log.get("roster", []))
-    if not ids <= cur:
-        log["roster"] = sorted(cur | ids)
-        save_state(state)
+    answered = sum(1 for it in items if it.get("status") == "done")
+    ok = sum(1 for it in items if it.get("status") == "done" and it.get("ok"))
+    acc = round(ok / answered * 100) if answered else 0
+    subj = " + ".join(SUBJECT_CN[s] for s in active_subjects())
+    head = (f"# {today()} 做题记录\n\n"
+            f"共 {len(items)} 题 · 答 {answered} · 对 {ok}（{acc}%）\n"
+            f"{PHASE_CN[phase_today()]} · {subj}\n\n"
+            "| 年份·题号 | 状态 | 选 |\n|---|---|---|\n")
+    rows = []
+    for it in items:
+        st = ("答对" if it.get("ok") else "答错") if it.get("status") == "done" else "未答"
+        pick = state.get(it["id"], {}).get("last_pick") or ""
+        rows.append(f"| {it['id']} | {st} | {pick} |")
+    p = journal_path(today())
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(head + "\n".join(rows) + "\n", encoding="utf-8")
+
+
+def refresh_journal(state):
+    """用当前状态重算今天题单并落盘 journal。/api/today 与判分后各调一次。"""
+    items, _ = build_today(state)
+    write_journal_today(state, items)
+
+
+def parse_journal(date):
+    """读 journal/YYYY-MM/MMDD.md 的题行 → [(qid, 状态, 选项)]；无文件返回 None。"""
+    p = journal_path(date)
+    if not p.exists():
+        return None
+    out = []
+    for line in p.read_text(encoding="utf-8").splitlines():
+        m = JROW.match(line.strip())
+        if m:
+            out.append((m.group(1), m.group(2), m.group(3)))
+    return out
 
 
 def build_day(state, date):
     """只读回顾历史某天：当天完整题单(答对/答错/未答) + 小结 + 前后导航。"""
     days = progress_days(state)
     prev, nxt = day_nav(date, days)
-    log = state.get("_progress", {}).get(date)
     base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt}
-    if not log:
-        return {**base, "exists": False, "items": [], "total": 0, "done": 0, "ok": 0}
-    res = log.get("res", {})
-    done_set = set(log.get("done", []))
-    roster = log.get("roster") or list(log.get("done", []))   # 旧记录无 roster 则回退到答过的题
-    items = []
-    for qid in roster:
+    rows = parse_journal(date)
+    if rows is None:
+        return _build_day_legacy(state, date, base)        # 旧记录无 journal 文件
+    items, done, okn = [], 0, 0
+    for qid, st, pick in rows:
         it = QUESTIONS.get(qid)
         if not it:
             continue
-        if qid in done_set:
+        if st == "未答":
+            items.append({**_pub(it), "status": "pending"})
+        else:
+            ok = st == "答对"
+            done += 1; okn += 1 if ok else 0
+            d = {**_pub(it), "status": "done", "ok": ok}
+            if pick:
+                d["pick"] = pick
+            items.append(d)
+    return {**base, "exists": bool(items), "items": items,
+            "total": len(items), "done": done, "ok": okn}
+
+
+def _build_day_legacy(state, date, base):
+    """向后兼容：journal 出现前、只在 _progress 里留过痕迹的日子(回退到答过的题)。"""
+    log = state.get("_progress", {}).get(date)
+    if not log:
+        return {**base, "exists": False, "items": [], "total": 0, "done": 0, "ok": 0}
+    res = log.get("res", {})
+    items = []
+    for qid in log.get("done", []):
+        it = QUESTIONS.get(qid)
+        if it:
             ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
             items.append({**_pub(it), "status": "done", "ok": ok})
-        else:
-            items.append({**_pub(it), "status": "pending"})
     okn = sum(1 for x in items if x.get("ok"))
-    return {**base, "exists": True, "items": items, "total": len(items),
-            "done": len(done_set), "ok": okn, "new": log.get("new", 0)}
+    return {**base, "exists": bool(items), "items": items,
+            "total": len(items), "done": len(items), "ok": okn}
 
 
 def _pub(it):
@@ -414,8 +479,8 @@ def grade(state, qid, pick=None, selfok=None):
             log["ok"] += 1
         if is_new:
             log["new"] += 1
-    log.setdefault("res", {})[qid] = correct   # 记当天每题对错，历史回顾不受日后复习影响
     save_state(state)
+    refresh_journal(state)        # 把这次作答落进当天 journal(回顾页真相源)
     return {"known": True, "correct": correct, "answer": ans}
 
 
@@ -456,7 +521,7 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/today":
             state = load_state()
             items, log = build_today(state)
-            snapshot_roster(state, items)        # 记下当天完整题单(含未答)，供回顾页
+            write_journal_today(state, items)    # 落盘当天完整题单(含未答)，供回顾页/人肉翻阅
             phase = phase_today()
             prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {
