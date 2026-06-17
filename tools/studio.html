@@ -124,6 +124,21 @@ main{min-width:0}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
 .chip{font-size:11.5px;color:var(--akane);border:1px solid var(--line);border-radius:4px;padding:3px 10px}
 .empty-s{color:var(--sub);font-size:13px;padding:6px 0}
+/* 坚持热力图 + 近十天趋势 */
+.chart-sub{font-size:11.5px;color:var(--sub);letter-spacing:.1em;margin-bottom:14px}
+.heatwrap{overflow-x:auto;padding-bottom:2px}
+.heatwrap svg{display:block}
+.hm-d{transition:opacity .15s}.hm-d:hover{opacity:.7}
+.hm-n{fill:#ebe4d6}.hm-1{fill:#bcd3ab}.hm-2{fill:#94b884}.hm-3{fill:#6f9963}.hm-4{fill:#5e7a58}
+.hm-d.today{stroke:var(--akane);stroke-width:1.6}
+.hm-label{fill:var(--faint);font-family:Georgia,serif;font-size:9px}
+.hm-legend{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--sub);letter-spacing:.1em;margin-top:9px}
+.hm-legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+.recent{border-collapse:collapse;font-size:12.5px;margin-top:20px;min-width:240px}
+.recent th{font-weight:600;color:var(--sub);text-align:left;font-size:11px;letter-spacing:.12em;padding:0 20px 8px 0;border-bottom:1px solid var(--line)}
+.recent td{padding:7px 20px 7px 0;border-bottom:1px solid var(--hair);font-family:Georgia,serif;color:var(--ink)}
+.recent td.day{color:var(--sub)}
+.recent .up{color:var(--moss)}.recent .down{color:var(--akane)}
 .mk{margin:18px 0}
 .mk .mkmeta{font-size:11px;color:var(--faint);letter-spacing:.16em;margin-bottom:6px}
 .mk img{width:auto;max-width:100%;height:auto;display:block;border-radius:3px}
@@ -411,6 +426,55 @@ function sect(title, inner){
   d.innerHTML = `<h3>${title}</h3>${inner}`;
   return d;
 }
+// ── 坚持热力图 + 近十天趋势 ──
+const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const HM_WINDOW = 5;     // 热力图滚动窗口：始终显示最近这么多个月
+const fmtIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const hmLevel = n => n>=22?4 : n>=15?3 : n>=8?2 : 1;   // 按当天题量定深浅(有记录至少 1 档)
+
+function renderHeat(chart){
+  const cells = chart.cells||{}, todayIso = chart.today;
+  const today = new Date(todayIso+"T00:00:00");
+  let start = new Date(today.getFullYear(), today.getMonth()-(HM_WINDOW-1), 1);
+  start.setDate(start.getDate()-start.getDay());        // 回退到周日
+  const CELL=12, GAP=3, STEP=CELL+GAP, TOP=14, LEFT=24;
+  let rects="", months="", wi=0, lastM=-1;
+  for (let d=new Date(start); d<=today; wi++){
+    const x = LEFT + wi*STEP;
+    if (d.getMonth()!==lastM){ lastM=d.getMonth(); months+=`<text class="hm-label" x="${x}" y="9">${HM_MONTHS[lastM]}</text>`; }
+    for (let di=0; di<7; di++){
+      if (d<=today){
+        const iso=fmtIso(d), c=cells[iso];
+        const cls = c===undefined ? "hm-n" : "hm-"+hmLevel(c.n);
+        const here = iso===todayIso ? " today" : "";
+        const tip = c===undefined ? `${iso} · 未做` : `${iso} · ${c.n} 题 · 对 ${c.ok}（${c.acc}%）`;
+        rects += `<rect class="hm-d ${cls}${here}" x="${x}" y="${TOP+di*STEP}" width="${CELL}" height="${CELL}" rx="2"><title>${tip}</title></rect>`;
+      }
+      d.setDate(d.getDate()+1);
+    }
+  }
+  const W=LEFT+wi*STEP, H=TOP+7*STEP;
+  const wd=[["一",1],["三",3],["五",5]].map(([t,r])=>`<text class="hm-label" x="2" y="${TOP+r*STEP+9}">${t}</text>`).join("");
+  return `<div class="heatwrap"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${months}${wd}${rects}</svg></div>`
+    + `<div class="hm-legend">少 <i class="hm-n"></i><i class="hm-1"></i><i class="hm-2"></i><i class="hm-3"></i><i class="hm-4"></i> 多</div>`;
+}
+function renderRecent(chart){
+  const rows = chart.recent||[];
+  if (!rows.length) return "";
+  let h = `<table class="recent"><tr><th>日期</th><th>题</th><th>正确率</th></tr>`;
+  for (const r of rows){
+    const tr = r.trend==="↑" ? "up" : r.trend==="↓" ? "down" : "";
+    h += `<tr><td class="day">${fmtMD(r.date)}</td><td>${r.n}</td><td class="${tr}">${r.acc}% ${r.trend||""}</td></tr>`;
+  }
+  return h + `</table>`;
+}
+function renderChart(chart){
+  if (!chart || !chart.days)
+    return `<div class="empty-s">还没坚持记录。做几天题后，这里出现热力图和近十天趋势。</div>`;
+  return `<div class="chart-sub">共 ${chart.days} 天 · 连续 ${chart.streak} 天</div>`
+    + renderHeat(chart) + renderRecent(chart);
+}
+
 async function showStats(){
   inStats = true; curDay = null; $("#daynav").innerHTML = "";
   const st = await (await fetch("/api/stats")).json();
@@ -419,6 +483,9 @@ async function showStats(){
   back.className = "back"; back.textContent = "‹ 返回刷题";
   back.onclick = () => { renderLive(); window.scrollTo(0,0); };
   feed.appendChild(back);
+
+  // 坚持 — 热力图 + 近十天趋势(顶部·复盘)
+  feed.appendChild(sect("坚持", renderChart(st.chart)));
 
   // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
   const stk = st.stuck || [];
