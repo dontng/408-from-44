@@ -15,8 +15,8 @@ body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
   font-size:15px;line-height:1.9;letter-spacing:.025em}
 
-.layout{max-width:1000px;margin:0 auto;padding:60px 48px 130px;
-  display:grid;grid-template-columns:170px 1fr;gap:104px}
+.layout{max-width:1180px;margin:0 auto;padding:60px 48px 130px;
+  display:grid;grid-template-columns:170px 1fr;gap:64px}
 @media(max-width:780px){.layout{grid-template-columns:1fr;gap:8px;padding:24px 20px 70px}}
 
 /* ── 侧栏 ── */
@@ -61,7 +61,9 @@ main{min-width:0}
 .qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
   color:var(--faint);margin-bottom:18px}
 .qmeta b{color:var(--sub);font-weight:600}
-.qimg{width:100%;max-width:560px;display:block;border-radius:3px}
+/* 宽度由后端 dispW 按“字号一致”算好(见 tools/imgnorm.py)，故按原生比例显示而非铺满；
+   max-width:100% 仅作超宽表格的兜底，避免溢出主栏 */
+.qimg{width:auto;max-width:100%;height:auto;display:block;border-radius:3px}
 
 .opts{margin-top:20px;max-width:560px;display:flex;gap:10px}
 .opt{width:46px;height:33px;display:flex;align-items:center;justify-content:center;
@@ -111,7 +113,7 @@ main{min-width:0}
 .empty-s{color:var(--sub);font-size:13px;padding:6px 0}
 .mk{margin:18px 0}
 .mk .mkmeta{font-size:11px;color:var(--faint);letter-spacing:.16em;margin-bottom:6px}
-.mk img{width:100%;max-width:520px;display:block;border-radius:3px}
+.mk img{width:auto;max-width:100%;height:auto;display:block;border-radius:3px}
 .empty{padding:90px 10px;text-align:center;color:var(--sub)}
 .empty h2{font-family:"Noto Serif CJK SC",serif;color:var(--ink);font-size:21px;letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 .empty p{font-size:13px;line-height:2}
@@ -155,6 +157,8 @@ function prettyCh(ch){
   if (!ch || ch.startsWith("zz")) return "未标章节";
   return ch.replace(/^ch\d+_/, "");
 }
+// 题图宽度：用后端按“字号一致”算好的 dispW；缺失则退回旧的 560px 上限
+function imgW(it){ return it.dispW ? ` style="width:${it.dispW}px"` : ` style="max-width:560px"`; }
 
 function renderSidebar(){
   const total = DATA.items.length;
@@ -202,7 +206,7 @@ function renderBlock(it){
   const b = document.createElement("section");
   b.className = "qblock"; b.id = "blk-"+it.id;
   b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题</div>
-    <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy">`;
+    <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
   if (it.status === "done"){
     const tag = document.createElement("div");
     tag.className = "fb";
@@ -313,7 +317,7 @@ async function showStats(){
     stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题${m.pick?` · 你选了 ${m.pick}`:''}
           <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
-        <img src="${m.img}" loading="lazy"></div>`).join("")
+        <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
       : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
 
   // ② 弱项诊断
@@ -325,7 +329,7 @@ async function showStats(){
   feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
     st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
-        <img src="${m.img}" loading="lazy"></div>`).join("")
+        <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
       : `<div class="empty-s">暂无错题 👍</div>`));
 
   // ④ 冲刺预测分 — 垫底·参考

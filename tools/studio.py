@@ -17,6 +17,7 @@ PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8408
 HERE = Path(__file__).resolve().parent
 PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
+NORM_FILE = REPO / "review" / "imgnorm.json"   # 每题显示宽(见 tools/imgnorm.py)：让屏幕字号一致
 
 # ── 可调参数（设计见 memory: project-408-study-system）──────
 EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
@@ -93,6 +94,16 @@ def load_questions():
 
 
 QUESTIONS = load_questions()
+
+
+def load_norm():
+    """题图显示宽 {qid: px}。由 tools/imgnorm.py 离线算好；缺失则前端按默认宽兜底。"""
+    if NORM_FILE.exists():
+        return json.loads(NORM_FILE.read_text(encoding="utf-8")).get("items", {})
+    return {}
+
+
+NORM = load_norm()
 
 
 # ── 状态 ──────────────────────────────────────────────────
@@ -247,6 +258,7 @@ def build_today(state):
 def _pub(it):
     """对外不暴露答案。带上科目/章节供前端分组显示。"""
     return {"id": it["id"], "year": it["year"], "q": it["q"], "img": it["img"],
+            "dispW": NORM.get(it["id"]),
             "subject": q_subject(it), "subjectCN": SUBJECT_CN[q_subject(it)],
             "chapter": q_chapter(it)}
 
