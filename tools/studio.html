@@ -15,18 +15,18 @@ body{background:var(--bg);color:var(--ink);
   font-family:"Hiragino Sans GB","PingFang SC","Noto Sans CJK SC",sans-serif;
   font-size:15px;line-height:1.9;letter-spacing:.025em}
 
-.layout{max-width:1340px;margin:0 auto;padding:60px 48px 130px;
-  display:grid;grid-template-columns:170px 312px 1fr;gap:52px}
-@media(max-width:1080px){.layout{grid-template-columns:1fr;gap:8px;padding:24px 20px 70px}}
+.layout{max-width:1380px;margin:0 auto;padding:60px 48px 130px;
+  display:grid;grid-template-columns:168px 360px 1fr;gap:48px}
+@media(max-width:1120px){.layout{grid-template-columns:1fr;gap:8px;padding:24px 20px 70px}}
 
 /* ── 左栏 / 中栏 ── */
 aside{position:sticky;top:56px;align-self:start}
-@media(max-width:1080px){aside{position:static;margin-bottom:8px}}
-@media(max-width:1080px){aside.rail{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+@media(max-width:1120px){aside{position:static;margin-bottom:8px}}
+@media(max-width:1120px){aside.rail{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   padding-bottom:14px;border-bottom:1px solid var(--hair)}}
 /* 中栏：坚持(热力图+近十天) */
 aside.track{min-width:0}
-@media(max-width:1080px){aside.track{border-bottom:1px solid var(--hair);padding-bottom:18px}}
+@media(max-width:1120px){aside.track{border-bottom:1px solid var(--hair);padding-bottom:18px}}
 .trackcard h3{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.18em;color:var(--ink);
   margin-bottom:16px;padding-bottom:7px;border-bottom:2px solid var(--moss);display:inline-block}
 .ddaywrap{padding:4px 0 30px 0}
@@ -67,8 +67,8 @@ main{min-width:0}
 .dayarrow.right:hover svg{transform:translateX(4px) scale(1.06)}
 .dayarrow.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
 .dayarrow.gone{visibility:hidden;pointer-events:none}
-.daylabel{font-family:"Noto Serif CJK SC",serif;font-size:12.5px;letter-spacing:.18em;
-  color:var(--sub);min-width:132px;text-align:center}
+.daylabel{font-family:"Noto Serif CJK SC",serif;font-size:12.5px;letter-spacing:.14em;
+  color:var(--sub);min-width:190px;text-align:center}
 .grouphd{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.14em;
   color:var(--ink);margin:0 0 32px;padding-bottom:10px;border-bottom:2px solid var(--moss);
   display:flex;align-items:baseline;gap:12px}
@@ -104,6 +104,7 @@ main{min-width:0}
 .sj{font:inherit;font-size:12.5px;letter-spacing:.1em;cursor:pointer;color:var(--ai);
   background:none;border:1px solid var(--line);border-radius:5px;padding:5px 16px;transition:all .18s}
 .sj:hover{border-color:var(--ai);background:var(--ai);color:var(--paper)}
+.sj:disabled{opacity:.4;cursor:default;border-color:var(--line);background:none;color:var(--sub)}
 
 .done-tag{font-size:12px;letter-spacing:.15em;color:var(--faint)}
 .done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
@@ -137,8 +138,13 @@ main{min-width:0}
 .hm-n{fill:#ebe4d6}.hm-1{fill:#bcd3ab}.hm-2{fill:#94b884}.hm-3{fill:#6f9963}.hm-4{fill:#5e7a58}
 .hm-d.today{stroke:var(--akane);stroke-width:1.6}
 .hm-label{fill:var(--faint);font-family:Georgia,serif;font-size:9px}
-.hm-legend{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--sub);letter-spacing:.1em;margin-top:9px}
+.hm-legend{display:flex;align-items:center;justify-content:flex-end;gap:4px;
+  font-size:10.5px;color:var(--sub);letter-spacing:.1em;margin-top:9px}
 .hm-legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+/* 中栏底部：答题进度圆点 + 跳题 */
+.dotscard{margin-top:38px}
+.dotshd{font-family:"Noto Serif CJK SC",serif;font-size:13px;letter-spacing:.16em;color:var(--ink);
+  margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--moss);display:inline-block}
 .recent{border-collapse:collapse;font-size:12.5px;margin-top:20px;min-width:240px}
 .recent th{font-weight:600;color:var(--sub);text-align:left;font-size:11px;letter-spacing:.12em;padding:0 20px 8px 0;border-bottom:1px solid var(--line)}
 .recent td{padding:7px 20px 7px 0;border-bottom:1px solid var(--hair);font-family:Georgia,serif;color:var(--ink)}
@@ -169,11 +175,16 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
     </div>
     <div class="stat" id="stat">—</div>
     <div class="plan" id="plan"></div>
-    <div class="dots" id="dots"></div>
-    <div class="hint">点数字跳到对应题</div>
     <div class="statlink" id="statlink">▸ 战况诊断</div>
   </aside>
-  <aside class="track"><div class="trackcard" id="track"></div></aside>
+  <aside class="track">
+    <div class="trackcard" id="track"></div>
+    <div class="dotscard">
+      <div class="dotshd">答题进度</div>
+      <div class="dots" id="dots"></div>
+      <div class="hint">点数字跳到对应题</div>
+    </div>
+  </aside>
   <main>
     <div class="daynav" id="daynav"></div>
     <div id="feed"></div>
@@ -207,7 +218,7 @@ function renderLive(){
   renderSidebar();
   renderTrack(DATA.chart);
   renderFeed();
-  renderDayNav(DATA.prev, "", "今日");
+  renderDayNav(DATA.prev, "", `今日 · day ${DATA.day} · ${fmtMD(DATA.today)}`);
 }
 
 // 中栏：坚持(热力图 + 近十天)，常驻
@@ -253,7 +264,7 @@ function gotoDay(date){
 
 // 只读渲染历史某天：当天完整题单(答对/答错/未答)，侧栏同步成当天小结。
 function renderDayView(d){
-  renderDayNav(d.prev, d.next, "回顾 · "+fmtMD(d.date));
+  renderDayNav(d.prev, d.next, `回顾 · day ${d.day} · ${fmtMD(d.date)}`);
   const total = d.total != null ? d.total : d.items.length;
   $("#stat").innerHTML = `${fmtMD(d.date)} 答 <b>${d.done}</b>/${total}　对 <b>${d.ok}</b>`;
   fillDots(d.items);
@@ -355,26 +366,37 @@ function renderBlock(it){
   const fb = document.createElement("div"); fb.className = "fb";
   b.appendChild(opts); b.appendChild(fb);
   opts.querySelectorAll(".opt").forEach(el=>{
-    el.onclick = () => choose(it, opts, fb, el.dataset.o);
+    el.onclick = () => pickOpt(it, opts, fb, el.dataset.o);
   });
+  const submit = mkBtn("提交", () => submitAnswer(it, opts, fb));
+  submit.className = "sj submit"; submit.disabled = true;
+  fb.appendChild(submit);
   return b;
 }
 
-async function choose(it, opts, fb, pick){
-  if (it._answered) return; it._answered = true;
+// 选选项：只高亮、可反复改，不判分(避免手滑/瞎填就被锁定)
+function pickOpt(it, opts, fb, o){
+  if (it._answered) return;
+  it._pick = o;
+  opts.querySelectorAll(".opt").forEach(el=>el.classList.toggle("pick", el.dataset.o===o));
+  const sb = fb.querySelector(".submit"); if (sb) sb.disabled = false;
+}
+
+// 点“提交”才判分锁定
+async function submitAnswer(it, opts, fb){
+  if (it._answered || !it._pick) return;
+  it._answered = true;
   const res = await (await fetch("/api/grade",{method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:it.id, pick})})).json();
-  if (!res.known){
+    body:JSON.stringify({id:it.id, pick:it._pick})})).json();
+  if (!res.known){            // 无官方答案 → 自判(选项保留高亮)
     it._answered = false;
-    opts.querySelectorAll(".opt").forEach(el=>el.classList.toggle("pick", el.dataset.o===pick));
     fb.innerHTML = `<span class="ask">这题对了吗？</span>`;
-    const ok = mkBtn("✓ 对", ()=>selfjudge(it,opts,fb,true));
-    const no = mkBtn("✗ 错", ()=>selfjudge(it,opts,fb,false));
-    fb.append(ok,no);
+    fb.append(mkBtn("✓ 对", ()=>selfjudge(it,opts,fb,true)),
+              mkBtn("✗ 错", ()=>selfjudge(it,opts,fb,false)));
     return;
   }
-  showVerdict(it, opts, fb, pick, res.correct, res.answer);
+  showVerdict(it, opts, fb, it._pick, res.correct, res.answer);
 }
 
 async function selfjudge(it, opts, fb, ok){
@@ -440,7 +462,7 @@ function sect(title, inner){
 }
 // ── 坚持热力图 + 近十天趋势 ──
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const HM_WINDOW = 4;     // 热力图滚动窗口：最近这么多个月(适配中栏宽度，不横滚)
+const HM_WINDOW = 5;     // 热力图滚动窗口：最近 5 个月(今天 6 月→覆盖到 2 月)
 const fmtIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const hmLevel = n => n>=22?4 : n>=15?3 : n>=8?2 : 1;   // 按当天题量定深浅(有记录至少 1 档)
 
@@ -449,7 +471,7 @@ function renderHeat(chart){
   const today = new Date(todayIso+"T00:00:00");
   let start = new Date(today.getFullYear(), today.getMonth()-(HM_WINDOW-1), 1);
   start.setDate(start.getDate()-start.getDay());        // 回退到周日
-  const CELL=12, GAP=3, STEP=CELL+GAP, TOP=14, LEFT=24;
+  const CELL=12, GAP=3, STEP=CELL+GAP, TOP=14, LEFT=28;
   let rects="", months="", wi=0, lastM=-1;
   for (let d=new Date(start); d<=today; wi++){
     const x = LEFT + wi*STEP;
@@ -466,7 +488,7 @@ function renderHeat(chart){
     }
   }
   const W=LEFT+wi*STEP, H=TOP+7*STEP;
-  const wd=[["一",1],["三",3],["五",5]].map(([t,r])=>`<text class="hm-label" x="2" y="${TOP+r*STEP+9}">${t}</text>`).join("");
+  const wd=[["Mon",1],["Wed",3],["Fri",5]].map(([t,r])=>`<text class="hm-label" x="0" y="${TOP+r*STEP+9}">${t}</text>`).join("");
   return `<div class="heatwrap"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${months}${wd}${rects}</svg></div>`
     + `<div class="hm-legend">少 <i class="hm-n"></i><i class="hm-1"></i><i class="hm-2"></i><i class="hm-3"></i><i class="hm-4"></i> 多</div>`;
 }

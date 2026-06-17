@@ -132,6 +132,18 @@ def dday():
     return (datetime.date.fromisoformat(EXAM_DATE) - datetime.date.today()).days - 1
 
 
+def day1_anchor(state):
+    """day1 = 第一天做题的日期(最早有记录的天)；还没记录时就是今天。"""
+    days = state.get("_progress", {}).keys()
+    return min(days) if days else today()
+
+
+def day_num(date_iso, state):
+    """某天是备考第几天(今天才 day1，按日历天数算)。"""
+    base = datetime.date.fromisoformat(day1_anchor(state))
+    return (datetime.date.fromisoformat(date_iso) - base).days + 1
+
+
 def day_log(state):
     return state.setdefault("_progress", {}).setdefault(today(), {"done": [], "ok": 0, "new": 0})
 
@@ -287,7 +299,8 @@ def build_day(state, date):
     """只读回顾历史某天：完整题单(答对/答错/未答) + 小结 + 前后导航。"""
     days = progress_days(state)
     prev, nxt = day_nav(date, days)
-    base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt}
+    base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt,
+            "day": day_num(date, state)}
     log = state.get("_progress", {}).get(date)
     if not log:
         return {**base, "exists": False, "items": [], "total": 0, "done": 0, "ok": 0}
@@ -327,8 +340,8 @@ def build_chart(state):
     while d.isoformat() in cells:
         streak += 1
         d -= datetime.timedelta(days=1)
-    recent = []                                 # 近十天(有记录的日期，降序)
-    for date in sorted(prog.keys(), reverse=True)[:10]:
+    recent = []                                 # 近七天(有记录的日期，降序)
+    for date in sorted(prog.keys(), reverse=True)[:7]:
         log = prog[date]
         done = len(log.get("done", []))
         ok = log.get("ok", 0)
@@ -496,7 +509,8 @@ class H(BaseHTTPRequestHandler):
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
                 "today": today(), "prev": prev, "next": nxt,
-                "chart": build_chart(state),     # 中栏常驻：坚持热力图 + 近十天趋势
+                "day": day_num(today(), state),
+                "chart": build_chart(state),     # 中栏常驻：坚持热力图 + 近七天趋势
                 "phase": phase,
                 "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
                             "random": "全真模拟"}[phase],
