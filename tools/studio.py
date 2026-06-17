@@ -272,25 +272,41 @@ def day_nav(date, days):
     return (days[i - 1] if i > 0 else "", days[i + 1] if i < len(days) - 1 else "")
 
 
+def snapshot_roster(state, items):
+    """把当天完整题单(已做+待做)记进 _progress[今天].roster，供回顾页显示未答题。
+    只在题单有新增时落盘，避免每次访问都写。"""
+    log = day_log(state)
+    ids = {it["id"] for it in items}
+    cur = set(log.get("roster", []))
+    if not ids <= cur:
+        log["roster"] = sorted(cur | ids)
+        save_state(state)
+
+
 def build_day(state, date):
-    """只读回顾历史某天：当天做过的题(图+对错) + 小结 + 前后导航。"""
+    """只读回顾历史某天：当天完整题单(答对/答错/未答) + 小结 + 前后导航。"""
     days = progress_days(state)
     prev, nxt = day_nav(date, days)
     log = state.get("_progress", {}).get(date)
     base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt}
     if not log:
-        return {**base, "exists": False, "items": [], "done": 0, "ok": 0}
+        return {**base, "exists": False, "items": [], "total": 0, "done": 0, "ok": 0}
     res = log.get("res", {})
+    done_set = set(log.get("done", []))
+    roster = log.get("roster") or list(log.get("done", []))   # 旧记录无 roster 则回退到答过的题
     items = []
-    for qid in log.get("done", []):
+    for qid in roster:
         it = QUESTIONS.get(qid)
         if not it:
             continue
-        ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
-        items.append({**_pub(it), "status": "done", "ok": ok})
-    okn = sum(1 for x in items if x["ok"])
-    return {**base, "exists": True, "items": items,
-            "done": len(items), "ok": okn, "new": log.get("new", 0)}
+        if qid in done_set:
+            ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
+            items.append({**_pub(it), "status": "done", "ok": ok})
+        else:
+            items.append({**_pub(it), "status": "pending"})
+    okn = sum(1 for x in items if x.get("ok"))
+    return {**base, "exists": True, "items": items, "total": len(items),
+            "done": len(done_set), "ok": okn, "new": log.get("new", 0)}
 
 
 def _pub(it):
@@ -440,6 +456,7 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/today":
             state = load_state()
             items, log = build_today(state)
+            snapshot_roster(state, items)        # 记下当天完整题单(含未答)，供回顾页
             phase = phase_today()
             prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {

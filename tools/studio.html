@@ -224,10 +224,11 @@ function gotoDay(date){
   });
 }
 
-// 只读渲染历史某天：当天做过的题(图+对错)，侧栏同步成当天小结。
+// 只读渲染历史某天：当天完整题单(答对/答错/未答)，侧栏同步成当天小结。
 function renderDayView(d){
   renderDayNav(d.prev, d.next, "回顾 · "+fmtMD(d.date));
-  $("#stat").innerHTML = `${fmtMD(d.date)} <b>${d.done}</b> 题　对 <b>${d.ok}</b>`;
+  const total = d.total != null ? d.total : d.items.length;
+  $("#stat").innerHTML = `${fmtMD(d.date)} 答 <b>${d.done}</b>/${total}　对 <b>${d.ok}</b>`;
   fillDots(d.items);
   const feed = $("#feed"); feed.innerHTML = "";
   if (!d.exists || !d.items.length){
@@ -237,10 +238,22 @@ function renderDayView(d){
   }
   const hd = document.createElement("div");
   hd.className = "grouphd";
-  hd.innerHTML = `回顾　<small>${fmtMD(d.date)} · ${d.done} 题 · 对 ${d.ok}（${d.done?Math.round(d.ok/d.done*100):0}%）</small>`;
+  hd.innerHTML = `回顾　<small>${fmtMD(d.date)} · 共 ${total} 题 · 答 ${d.done} · 对 ${d.ok}（${d.done?Math.round(d.ok/d.done*100):0}%）</small>`;
   feed.appendChild(hd);
-  for (const it of d.items) feed.appendChild(renderBlock(it));
+  for (const it of d.items) feed.appendChild(renderReviewBlock(it));
   window.scrollTo(0,0);
+}
+
+// 历史回顾的单题：纯只读，不带可点选项(避免误判进今天)。未答题标“未答”。
+function renderReviewBlock(it){
+  const b = document.createElement("section");
+  b.className = "qblock"; b.id = "blk-"+it.id;
+  const tag = it.status === "done"
+    ? `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'答对':'答错'}</span>`
+    : `<span class="done-tag">未答</span>`;
+  b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}</div>
+    <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
+  return b;
 }
 
 function prettyCh(ch){
