@@ -10,6 +10,7 @@ usage:  studio.py [repo_dir] [port]   （由根目录 studio.sh 启动）
 import sys, os, re, json, datetime, mimetypes, random
 from collections import defaultdict, deque, Counter
 from pathlib import Path
+from urllib.parse import urlparse, parse_qs
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 REPO = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
@@ -255,6 +256,43 @@ def build_today(state):
     return out, log
 
 
+# ── 历史回顾：左右键翻看过去某天做过的题 ──────────────────
+def progress_days(state):
+    """所有有做题记录的日期(升序)；并入今天作为最右的“实时”页。"""
+    days = set(state.get("_progress", {}).keys())
+    days.add(today())
+    return sorted(days)
+
+
+def day_nav(date, days):
+    """在日期序列里给出 (前一天, 后一天)；越界为 ''。"""
+    if date not in days:
+        return "", ""
+    i = days.index(date)
+    return (days[i - 1] if i > 0 else "", days[i + 1] if i < len(days) - 1 else "")
+
+
+def build_day(state, date):
+    """只读回顾历史某天：当天做过的题(图+对错) + 小结 + 前后导航。"""
+    days = progress_days(state)
+    prev, nxt = day_nav(date, days)
+    log = state.get("_progress", {}).get(date)
+    base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt}
+    if not log:
+        return {**base, "exists": False, "items": [], "done": 0, "ok": 0}
+    res = log.get("res", {})
+    items = []
+    for qid in log.get("done", []):
+        it = QUESTIONS.get(qid)
+        if not it:
+            continue
+        ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
+        items.append({**_pub(it), "status": "done", "ok": ok})
+    okn = sum(1 for x in items if x["ok"])
+    return {**base, "exists": True, "items": items,
+            "done": len(items), "ok": okn, "new": log.get("new", 0)}
+
+
 def _pub(it):
     """对外不暴露答案。带上科目/章节供前端分组显示。"""
     return {"id": it["id"], "year": it["year"], "q": it["q"], "img": it["img"],
@@ -360,6 +398,7 @@ def grade(state, qid, pick=None, selfok=None):
             log["ok"] += 1
         if is_new:
             log["new"] += 1
+    log.setdefault("res", {})[qid] = correct   # 记当天每题对错，历史回顾不受日后复习影响
     save_state(state)
     return {"known": True, "correct": correct, "answer": ans}
 
@@ -402,15 +441,20 @@ class H(BaseHTTPRequestHandler):
             state = load_state()
             items, log = build_today(state)
             phase = phase_today()
+            prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {
                 "dday": dday(), "examDate": EXAM_DATE, "newPerDay": NEW_PER_DAY,
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
+                "today": today(), "prev": prev, "next": nxt,
                 "phase": phase,
                 "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
                             "random": "全真模拟"}[phase],
                 "subjects": [SUBJECT_CN[s] for s in active_subjects()],
             })
+        if path == "/api/day":
+            date = (parse_qs(urlparse(self.path).query).get("d") or [""])[0]
+            return self._send(200, build_day(load_state(), date))
         if path == "/api/stats":
             return self._send(200, build_stats(load_state()))
         if path.startswith("/bank/"):

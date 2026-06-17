@@ -51,6 +51,15 @@ aside{position:sticky;top:56px;align-self:start}
 
 /* ── 题流 ── */
 main{min-width:0}
+/* 历史导航：左右键/箭头翻看过去某天 */
+.daynav{display:flex;align-items:center;justify-content:center;gap:16px;min-height:30px;margin-bottom:30px}
+.dayarrow{font-family:Georgia,serif;font-size:18px;line-height:1;color:var(--ai);
+  background:var(--paper);border:1px solid var(--line);border-radius:6px;
+  width:40px;height:30px;cursor:pointer;transition:all .16s}
+.dayarrow:hover:not([disabled]){border-color:var(--ai);background:var(--ai);color:var(--paper)}
+.dayarrow[disabled]{opacity:.28;cursor:default}
+.daylabel{font-family:"Noto Serif CJK SC",serif;font-size:12.5px;letter-spacing:.18em;
+  color:var(--sub);min-width:128px;text-align:center}
 .grouphd{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.14em;
   color:var(--ink);margin:0 0 32px;padding-bottom:10px;border-bottom:2px solid var(--moss);
   display:flex;align-items:baseline;gap:12px}
@@ -134,23 +143,78 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
     <div class="hint">点数字跳到对应题</div>
     <div class="statlink" id="statlink">▸ 战况诊断</div>
   </aside>
-  <main id="feed"></main>
+  <main>
+    <div class="daynav" id="daynav"></div>
+    <div id="feed"></div>
+  </main>
 </div>
 <footer>从混沌到清晰</footer>
 
 <script>
-let DATA = null;
+let DATA = null;            // 今日(实时)数据
+let TODAY_ISO = null;
+let curDay = null;          // 正在回顾的历史日期；null=今日实时
+let inStats = false;        // 战况诊断视图
+let navPrev = "", navNext = "";   // 当前页左右可去的日期，供键盘用
 const $ = s => document.querySelector(s);
 const LETTERS = ["A","B","C","D"];
+const fmtMD = iso => { const [,m,d] = iso.split("-"); return `${m}/${d}`; };
 
 async function load(){
   DATA = await (await fetch("/api/today")).json();
+  TODAY_ISO = DATA.today;
   $("#dday").textContent = DATA.dday;
-  renderSidebar();
-  renderFeed();
+  renderLive();
   const first = DATA.items.find(it => it.status === "pending");
   if (first) document.getElementById("blk-"+first.id)
     ?.scrollIntoView({behavior:"instant",block:"center"});
+}
+
+// 回到今日实时页
+function renderLive(){
+  curDay = null; inStats = false;
+  renderSidebar();
+  renderFeed();
+  renderDayNav(DATA.prev, "", "今日");
+}
+
+// 顶部一左一右翻日箭头 + 标签
+function renderDayNav(prev, next, label){
+  navPrev = prev || ""; navNext = next || "";
+  $("#daynav").innerHTML =
+      `<button class="dayarrow" ${prev?"":"disabled"} onclick="gotoDay('${prev||""}')">‹</button>`
+    + `<span class="daylabel">${label||""}</span>`
+    + `<button class="dayarrow" ${next?"":"disabled"} onclick="gotoDay('${next||""}')">›</button>`;
+}
+
+// 切到某天：今日→实时可答页；其它→只读历史回顾。
+function gotoDay(date){
+  if (!date) return;
+  if (date === TODAY_ISO){ renderLive(); window.scrollTo(0,0); return; }
+  curDay = date; inStats = false;
+  fetch("/api/day?d="+encodeURIComponent(date)).then(r=>r.json()).then(d=>{
+    if (curDay !== date) return;   // 期间又切走了
+    renderDayView(d);
+  });
+}
+
+// 只读渲染历史某天：当天做过的题(图+对错)，侧栏同步成当天小结。
+function renderDayView(d){
+  renderDayNav(d.prev, d.next, "回顾 · "+fmtMD(d.date));
+  $("#stat").innerHTML = `${fmtMD(d.date)} <b>${d.done}</b> 题　对 <b>${d.ok}</b>`;
+  fillDots(d.items);
+  const feed = $("#feed"); feed.innerHTML = "";
+  if (!d.exists || !d.items.length){
+    feed.innerHTML = `<div class="empty"><h2>这天没有做题记录</h2>
+      <p>左右键或上方箭头可翻到别的日子。</p></div>`;
+    window.scrollTo(0,0); return;
+  }
+  const hd = document.createElement("div");
+  hd.className = "grouphd";
+  hd.innerHTML = `回顾　<small>${fmtMD(d.date)} · ${d.done} 题 · 对 ${d.ok}（${d.done?Math.round(d.ok/d.done*100):0}%）</small>`;
+  feed.appendChild(hd);
+  for (const it of d.items) feed.appendChild(renderBlock(it));
+  window.scrollTo(0,0);
 }
 
 function prettyCh(ch){
@@ -165,8 +229,12 @@ function renderSidebar(){
   $("#stat").innerHTML = `今日 <b>${DATA.done}</b>/${total}　对 <b>${DATA.ok}</b>`;
   if (DATA.phaseCN) $("#plan").innerHTML =
     `<span class="ph">${DATA.phaseCN}</span><br>今日两门：<b>${(DATA.subjects||[]).join(" + ")}</b>`;
+  fillDots(DATA.items);
+}
+
+function fillDots(items){
   const box = $("#dots"); box.innerHTML = "";
-  DATA.items.forEach((it, i) => {
+  items.forEach((it, i) => {
     const d = document.createElement("div");
     d.className = "d " + (it.status==="done" ? (it.ok?"ok":"no") : "pending");
     d.textContent = i + 1;
@@ -304,11 +372,12 @@ function sect(title, inner){
   return d;
 }
 async function showStats(){
+  inStats = true; curDay = null; $("#daynav").innerHTML = "";
   const st = await (await fetch("/api/stats")).json();
   const feed = $("#feed"); feed.innerHTML = "";
   const back = document.createElement("div");
   back.className = "back"; back.textContent = "‹ 返回刷题";
-  back.onclick = () => { renderFeed(); window.scrollTo(0,0); };
+  back.onclick = () => { renderLive(); window.scrollTo(0,0); };
   feed.appendChild(back);
 
   // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
@@ -349,6 +418,13 @@ async function unstick(id){
   document.getElementById("stuck-"+id)?.remove();
 }
 $("#statlink").onclick = showStats;
+
+// 左右方向键翻看历史(战况诊断视图里不响应)
+document.addEventListener("keydown", e => {
+  if (inStats || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "ArrowLeft"  && navPrev) { e.preventDefault(); gotoDay(navPrev); }
+  if (e.key === "ArrowRight" && navNext) { e.preventDefault(); gotoDay(navNext); }
+});
 
 load().then(() => { if (location.hash === "#stats") showStats(); });
 </script>
