@@ -19,6 +19,20 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
 NORM_FILE = REPO / "review" / "imgnorm.json"   # 每题显示宽(见 tools/imgnorm.py)：让屏幕字号一致
+THEME_FILE = REPO / ".studio-theme"            # 明暗偏好：每机本地，不入 git
+
+
+def read_theme():
+    try:
+        v = THEME_FILE.read_text(encoding="utf-8").strip()
+        return v if v in ("dark", "light") else "auto"
+    except OSError:
+        return "auto"
+
+
+def write_theme(v):
+    if v in ("dark", "light"):
+        THEME_FILE.write_text(v, encoding="utf-8")
 
 # ── 可调参数（设计见 memory: project-408-study-system）──────
 EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
@@ -506,6 +520,7 @@ class H(BaseHTTPRequestHandler):
             prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {
                 "dday": dday(), "examDate": EXAM_DATE, "newPerDay": NEW_PER_DAY,
+                "theme": read_theme(),
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
                 "today": today(), "prev": prev, "next": nxt,
@@ -540,6 +555,9 @@ class H(BaseHTTPRequestHandler):
             state = load_state()
             res = mark_stuck(state, data.get("id"), data.get("stuck"))
             return self._send(200, res)
+        if self.path == "/api/theme":
+            write_theme(data.get("theme", ""))
+            return self._send(200, {"ok": True, "theme": read_theme()})
         return self._send(404, {"error": "not found"})
 
 

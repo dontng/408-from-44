@@ -8,7 +8,19 @@
 :root{
   --bg:#f4f1e9; --paper:#fcfaf4; --ink:#33302a; --sub:#9b9384; --faint:#c3bbab;
   --line:#e7e0d1; --hair:#ece6d8; --akane:#a13c3c; --ai:#3c5a78; --moss:#5e7a58;
+  --dot-bg:#e4dccb;
+  --halo:rgba(244,241,233,.96); --halo0:rgba(244,241,233,0);
+  --hm-n:#ebe4d6; --hm-1:#bcd3ab; --hm-2:#94b884; --hm-3:#6f9963; --hm-4:#5e7a58;
 }
+/* 和纸夜版：暖深炭底 + 柔米白字，点缀色提亮保对比 */
+:root[data-theme="dark"]{
+  --bg:#1a1613; --paper:#241f1a; --ink:#e7ddcc; --sub:#9a8e7c; --faint:#6b6253;
+  --line:#39322b; --hair:#322c25; --akane:#d77f72; --ai:#82a8cb; --moss:#8bb079;
+  --dot-bg:#3a332b;
+  --halo:rgba(36,31,26,.95); --halo0:rgba(36,31,26,0);
+  --hm-n:#2b2520; --hm-1:#46663a; --hm-2:#5d8a4c; --hm-3:#77a862; --hm-4:#8fc079;
+}
+html{transition:background-color .35s ease}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{background:var(--bg);color:var(--ink);
@@ -41,12 +53,12 @@ aside.track{min-width:0}
 .stat b{color:var(--ink);font-weight:600}
 @media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.warn{margin-top:0}.stat{margin:0}}
 .dots{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;max-width:172px;margin-top:4px}
-.dots .d{aspect-ratio:1;border-radius:5px;background:#e4dccb;color:var(--sub);
+.dots .d{aspect-ratio:1;border-radius:5px;background:var(--dot-bg);color:var(--sub);
   font-family:Georgia,serif;font-size:10.5px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:transform .15s,background .2s}
 .dots .d:hover{transform:scale(1.18)}
 .dots .d.ok{background:var(--moss);color:#fff} .dots .d.no{background:var(--akane);color:#fff}
-.dots .d.pending{background:#e4dccb;color:var(--sub)}
+.dots .d.pending{background:var(--dot-bg);color:var(--sub)}
 .plan{font-size:11.5px;color:var(--ai);letter-spacing:.08em;margin:24px 0 6px;line-height:1.95}
 .plan .ph{display:inline-block;font-size:10px;letter-spacing:.2em;color:var(--moss);
   border:1px solid var(--moss);border-radius:3px;padding:1px 6px;margin-bottom:5px}
@@ -123,7 +135,7 @@ main{min-width:0}
 .proj .full{font-size:13px;color:var(--sub)} .proj .tgt{font-size:12px;color:var(--moss);letter-spacing:.1em}
 .bar{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:12.5px;max-width:560px}
 .bar .lab{width:150px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar .track{flex:1;height:8px;background:#ece6d8;border-radius:4px;overflow:hidden}
+.bar .track{flex:1;height:8px;background:var(--hair);border-radius:4px;overflow:hidden}
 .bar .fill{height:100%;background:var(--ai);border-radius:4px;transition:width .4s}
 .bar .fill.weak{background:var(--akane)} .bar .fill.good{background:var(--moss)}
 .bar .val{width:84px;text-align:right;color:var(--sub);font-family:Georgia,serif;font-size:12px}
@@ -135,13 +147,13 @@ main{min-width:0}
 .heatwrap{overflow-x:auto;padding-bottom:2px}
 .heatwrap svg{display:block}
 .hm-d{transition:opacity .15s}.hm-d:hover{opacity:.7}
-.hm-n{fill:#ebe4d6}.hm-1{fill:#bcd3ab}.hm-2{fill:#94b884}.hm-3{fill:#6f9963}.hm-4{fill:#5e7a58}
+.hm-n{fill:var(--hm-n)}.hm-1{fill:var(--hm-1)}.hm-2{fill:var(--hm-2)}.hm-3{fill:var(--hm-3)}.hm-4{fill:var(--hm-4)}
 .hm-d.today{stroke:var(--akane);stroke-width:1.6}
 .hm-label{fill:var(--faint);font-family:Georgia,serif;font-size:9px}
 .hm-legend{display:flex;align-items:center;justify-content:flex-end;gap:6px;
   font-size:10.5px;color:var(--sub);letter-spacing:.1em;margin-top:9px}
 .hm-grad{height:11px;width:92px;border-radius:3px;display:inline-block;
-  background:linear-gradient(to right,#ebe4d6,#bcd3ab,#94b884,#6f9963,#5e7a58)}
+  background:linear-gradient(to right,var(--hm-n),var(--hm-1),var(--hm-2),var(--hm-3),var(--hm-4))}
 /* 中栏底部：答题进度圆点 + 跳题 */
 .dotscard{margin-top:38px}
 .dotscard .stat{margin:8px 0 14px}
@@ -159,7 +171,25 @@ main{min-width:0}
 .empty h2{font-family:"Noto Serif CJK SC",serif;color:var(--ink);font-size:21px;letter-spacing:.1em;margin-bottom:14px;font-weight:600}
 .empty p{font-size:13px;line-height:2}
 footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);letter-spacing:.5em}
+
+/* 深色模式开关：左下角悬浮的手绘日/月，复用 #sketch 滤镜 + 下沉动效 */
+.theme-toggle{position:fixed;left:20px;bottom:18px;z-index:40;width:60px;height:60px;
+  padding:0;border:none;cursor:pointer;color:var(--sub);display:grid;place-items:center;
+  border-radius:50%;background:radial-gradient(circle,var(--halo) 56%,var(--halo0) 76%);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s}
+.theme-toggle svg{width:40px;height:40px;display:block;overflow:visible;
+  filter:url(#sketch);transition:transform .2s ease}
+.theme-toggle:hover{color:var(--akane)}
+.theme-toggle:hover svg{transform:rotate(-14deg) scale(1.08)}
+.theme-toggle.press{transform:scale(.72) translateY(3px);opacity:.55;
+  color:var(--akane);transition-duration:.08s}
 </style>
+<script>
+/* 预着色：首帧前定明暗，避免白闪。优先本机记忆，否则跟随系统。 */
+(function(){try{var t=localStorage.getItem('studio-theme');
+  if(!t||t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
+</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -193,10 +223,40 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
   </main>
 </div>
 <footer>从混沌到清晰</footer>
+<button id="theme-toggle" class="theme-toggle" aria-label="深色模式开关" onclick="toggleTheme()"></button>
 
 <script>
 let DATA = null;            // 今日(实时)数据
 let TODAY_ISO = null;
+
+// —— 深色模式：手绘日/月开关 + 后端记忆 ——
+const THEME_ICON = {
+  moon: '<path d="M38 13 A 20 20 0 1 0 38 51 A 15 15 0 1 1 38 13 Z" fill="currentColor" stroke="none"/>',
+  sun:  '<circle cx="32" cy="32" r="9"/><path d="M32 7 L32 15 M32 49 L32 57 M7 32 L15 32'
+      + ' M49 32 L57 32 M15 15 L20 20 M44 44 L49 49 M49 15 L44 20 M15 49 L20 44"/>',
+};
+const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+function paintThemeBtn(){
+  const b = document.getElementById("theme-toggle"); if (!b) return;
+  b.setAttribute("aria-label", isDark() ? "切到亮色" : "切到暗色");
+  b.innerHTML = `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.2"`
+    + ` stroke-linecap="round" stroke-linejoin="round">${isDark() ? THEME_ICON.sun : THEME_ICON.moon}</svg>`;
+}
+function applyTheme(t, persist){
+  if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  else document.documentElement.removeAttribute("data-theme");
+  paintThemeBtn();
+  if (persist){
+    try { localStorage.setItem("studio-theme", t); } catch(e){}
+    fetch("/api/theme", {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({theme:t})}).catch(()=>{});
+  }
+}
+function toggleTheme(){
+  const b = document.getElementById("theme-toggle"); b.classList.add("press");
+  setTimeout(()=>{ b.classList.remove("press"); applyTheme(isDark() ? "light" : "dark", true); }, 140);
+}
+paintThemeBtn();
 let curDay = null;          // 正在回顾的历史日期；null=今日实时
 let inStats = false;        // 战况诊断视图
 let navPrev = "", navNext = "";   // 当前页左右可去的日期，供键盘用
@@ -206,6 +266,7 @@ const fmtMD = iso => { const [,m,d] = iso.split("-"); return `${m}/${d}`; };
 
 async function load(){
   DATA = await (await fetch("/api/today")).json();
+  if (DATA.theme && DATA.theme !== "auto") applyTheme(DATA.theme, false);   // 服务端记忆为准
   TODAY_ISO = DATA.today;
   $("#dday").textContent = DATA.dday;
   renderLive();
