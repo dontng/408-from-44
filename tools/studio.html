@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>408 刷题台</title>
+<title>Claude Compile</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='248' height='248' viewBox='0 0 248 248' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M52.4285 162.873L98.7844 136.879L99.5485 134.602L98.7844 133.334H96.4921L88.7237 132.862L62.2346 132.153L39.3113 131.207L17.0249 130.026L11.4214 128.844L6.2 121.873L6.7094 118.447L11.4214 115.257L18.171 115.847L33.0711 116.911L55.485 118.447L71.6586 119.392L95.728 121.873H99.5485L100.058 120.337L98.7844 119.392L97.7656 118.447L74.5877 102.732L49.4995 86.1905L36.3823 76.62L29.3779 71.7757L25.8121 67.2858L24.2839 57.3608L30.6515 50.2716L39.3113 50.8623L41.4763 51.4531L50.2636 58.1879L68.9842 72.7209L93.4357 90.6804L97.0015 93.6343L98.4374 92.6652L98.6571 91.9801L97.0015 89.2625L83.757 65.2772L69.621 40.8192L63.2534 30.6579L61.5978 24.632C60.9565 22.1032 60.579 20.0111 60.579 17.4246L67.8381 7.49965L71.9133 6.19995L81.7193 7.49965L85.7946 11.0443L91.9074 24.9865L101.714 46.8451L116.996 76.62L121.453 85.4816L123.873 93.6343L124.764 96.1155H126.292V94.6976L127.566 77.9197L129.858 57.3608L132.15 30.8942L132.915 23.4505L136.608 14.4708L143.994 9.62643L149.725 12.344L154.437 19.0788L153.8 23.4505L150.998 41.6463L145.522 70.1215L141.957 89.2625H143.994L146.414 86.7813L156.093 74.0206L172.266 53.698L179.398 45.6635L187.803 36.802L193.152 32.5484H203.34L210.726 43.6549L207.415 55.1159L196.972 68.3492L188.312 79.5739L175.896 96.2095L168.191 109.585L168.882 110.689L170.738 110.53L198.755 104.504L213.91 101.787L231.994 98.7149L240.144 102.496L241.036 106.395L237.852 114.311L218.495 119.037L195.826 123.645L162.07 131.592L161.696 131.893L162.137 132.547L177.36 133.925L183.855 134.279H199.774L229.447 136.524L237.215 141.605L241.8 147.867L241.036 152.711L229.065 158.737L213.019 154.956L175.45 145.977L162.587 142.787H160.805V143.85L171.502 154.366L191.242 172.089L215.82 195.011L217.094 200.682L213.91 205.172L210.599 204.699L188.949 188.394L180.544 181.069L161.696 165.118H160.422V166.772L164.752 173.152L187.803 207.771L188.949 218.405L187.294 221.832L181.308 223.959L174.813 222.777L161.187 203.754L147.305 182.486L136.098 163.345L134.745 164.2L128.075 235.42L125.019 239.082L117.887 241.8L111.902 237.31L108.718 229.984L111.902 215.452L115.722 196.547L118.779 181.541L121.58 162.873L123.291 156.636L123.14 156.219L121.773 156.449L107.699 175.752L86.304 204.699L69.3663 222.777L65.291 224.431L58.2867 220.768L58.9235 214.27L62.8713 208.48L86.304 178.705L100.44 160.155L109.551 149.507L109.462 147.967L108.959 147.924L46.6977 188.512L35.6182 189.93L30.7788 185.44L31.4156 178.115L33.7079 175.752L52.4285 162.873Z' fill='%23D97757'/%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#f4f1e9; --paper:#fcfaf4; --ink:#33302a; --sub:#9b9384; --faint:#c3bbab;
@@ -39,8 +40,6 @@ aside{position:sticky;top:38px;align-self:start}
 /* 中栏：坚持(热力图+近十天) */
 aside.track{min-width:0}
 @media(max-width:1120px){aside.track{border-bottom:1px solid var(--hair);padding-bottom:18px}}
-.trackcard h3{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.18em;color:var(--ink);
-  margin-bottom:16px;padding-bottom:7px;border-bottom:2px solid var(--moss);display:inline-block}
 .ddaywrap{padding:4px 0 30px 0}
 .kicker{font-size:11px;letter-spacing:.5em;color:var(--sub);font-weight:600}
 .dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 0;line-height:1}
@@ -68,19 +67,24 @@ aside.track{min-width:0}
 
 /* ── 题流 ── */
 main{min-width:0}
-/* 历史导航：手绘风左右箭头(过 #sketch 滤镜抖成手绘味)，键盘 ←/→ 翻日 */
-.daynav{display:flex;align-items:center;justify-content:center;gap:14px;min-height:62px;margin-bottom:24px}
-.dayarrow{width:78px;height:58px;padding:0;border:none;background:none;cursor:pointer;
-  color:var(--ink);display:grid;place-items:center;border-radius:36px;
+/* 历史导航：手绘风左右箭头(过 #sketch 滤镜抖成手绘味)，键盘 ←/→ 翻日；sticky 悬浮于正文顶部 */
+.daynav{position:sticky;top:4px;z-index:30;display:flex;justify-content:space-between;align-items:center;
+  height:60px;margin:-8px -14px 4px;pointer-events:none}
+.dayarrow{pointer-events:auto;width:86px;height:64px;padding:0;border:none;cursor:pointer;
+  color:var(--ink);display:grid;place-items:center;border-radius:40px;
+  background:radial-gradient(ellipse 60% 70% at center,var(--halo) 55%,var(--halo0) 78%);
   transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s}
-.dayarrow svg{width:70px;height:52px;display:block;overflow:visible;filter:url(#sketch);transition:transform .15s ease}
+.dayarrow svg{width:78px;height:57px;display:block;overflow:visible;filter:url(#sketch);transition:transform .15s ease}
 .dayarrow:hover{color:var(--akane)}
 .dayarrow.left:hover svg{transform:translateX(-4px) scale(1.06)}
 .dayarrow.right:hover svg{transform:translateX(4px) scale(1.06)}
 .dayarrow.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
 .dayarrow.gone{visibility:hidden;pointer-events:none}
-.daylabel{font-family:"Noto Serif CJK SC",serif;font-size:12.5px;letter-spacing:.14em;
-  color:var(--sub);min-width:190px;text-align:center}
+.stitle{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.stitle::before{content:"";align-self:center;width:3px;height:15px;background:var(--akane)}
+.stitle h2{font-family:"Noto Serif CJK SC",serif;font-size:16px;font-weight:600;letter-spacing:.2em}
+.stitle small{color:var(--sub);font-size:12px;letter-spacing:.1em}
+#daytitle{margin-top:48px}
 .grouphd{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.14em;
   color:var(--ink);margin:0 0 32px;padding-bottom:10px;border-bottom:2px solid var(--moss);
   display:flex;align-items:baseline;gap:12px}
@@ -122,11 +126,14 @@ main{min-width:0}
 .done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
 
 /* ── 战况诊断面板 ── */
-.statlink{font-size:11px;letter-spacing:.16em;color:var(--ai);cursor:pointer;
-  display:inline-block;margin-top:30px;border-bottom:1px solid var(--line);padding-bottom:2px}
-.statlink:hover{color:var(--ink);border-color:var(--ai)}
-.back{font-size:12px;color:var(--ai);cursor:pointer;letter-spacing:.12em;margin-bottom:30px;display:inline-block}
-.back:hover{color:var(--ink)}
+.stats-toggle{display:inline-grid;place-items:center;margin-top:28px;margin-left:28px;
+  padding:0 22px;height:50px;border:none;cursor:pointer;color:var(--ink);
+  border-radius:30px;background:var(--paper);
+  box-shadow:0 3px 12px rgba(0,0,0,.09),0 1px 4px rgba(0,0,0,.06);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,box-shadow .2s}
+.stats-toggle:hover{color:var(--akane);transform:scale(1.06);box-shadow:0 5px 18px rgba(0,0,0,.13),0 2px 6px rgba(0,0,0,.07)}
+.stats-toggle svg{display:block;overflow:visible;filter:url(#sketch)}
+.stats-toggle.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
 .sect{margin-bottom:42px}
 .sect h3{font-family:"Noto Serif CJK SC",serif;font-size:14px;letter-spacing:.18em;color:var(--ink);
   margin-bottom:18px;padding-bottom:7px;border-bottom:2px solid var(--moss);display:inline-block}
@@ -150,19 +157,17 @@ main{min-width:0}
 .hm-n{fill:var(--hm-n)}.hm-1{fill:var(--hm-1)}.hm-2{fill:var(--hm-2)}.hm-3{fill:var(--hm-3)}.hm-4{fill:var(--hm-4)}
 .hm-d.today{stroke:var(--akane);stroke-width:1.6}
 .hm-label{fill:var(--faint);font-family:Georgia,serif;font-size:9px}
-.hm-legend{display:flex;align-items:center;justify-content:flex-end;gap:6px;
+.hm-legend{display:flex;align-items:center;justify-content:flex-end;gap:5px;
   font-size:10.5px;color:var(--sub);letter-spacing:.1em;margin-top:9px}
-.hm-grad{height:11px;width:92px;border-radius:3px;display:inline-block;
-  background:linear-gradient(to right,var(--hm-n),var(--hm-1),var(--hm-2),var(--hm-3),var(--hm-4))}
+.hm-legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
 /* 中栏底部：答题进度圆点 + 跳题 */
 .dotscard{margin-top:38px}
-.dotscard .stat{margin:8px 0 14px}
-.dotshd{font-family:"Noto Serif CJK SC",serif;font-size:13px;letter-spacing:.16em;color:var(--ink);
-  margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--moss);display:inline-block}
-.recent{border-collapse:collapse;font-size:12.5px;margin-top:20px;min-width:240px}
-.recent th{font-weight:600;color:var(--sub);text-align:left;font-size:11px;letter-spacing:.12em;padding:0 20px 8px 0;border-bottom:1px solid var(--line)}
-.recent td{padding:7px 20px 7px 0;border-bottom:1px solid var(--hair);font-family:Georgia,serif;color:var(--ink)}
-.recent td.day{color:var(--sub)}
+.dotscard .dots{padding-left:28px}
+.dotscard .hint{padding-left:28px}
+.recent{border-collapse:collapse;font-size:12px;margin-top:12px;width:100%}
+.recent th{font-weight:400;color:var(--sub);text-align:left;font-size:10px;letter-spacing:.12em;padding:5px 3px;border-bottom:1px solid var(--line)}
+.recent td{padding:5px 3px;border-bottom:1px solid var(--hair);font-variant-numeric:tabular-nums}
+.recent td.num{font-family:Georgia,serif}
 .recent .up{color:var(--moss)}.recent .down{color:var(--akane)}
 .mk{margin:18px 0}
 .mk .mkmeta{font-size:11px;color:var(--faint);letter-spacing:.16em;margin-bottom:6px}
@@ -209,16 +214,16 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
   <aside class="track">
     <div class="trackcard" id="track"></div>
     <div class="dotscard">
-      <div class="dotshd">答题进度</div>
-      <div class="stat" id="stat">—</div>
+      <div class="stitle"><h2>答题进度</h2><small id="stat">—</small></div>
       <div class="dots" id="dots"></div>
       <div class="hint">点数字跳到对应题</div>
     </div>
     <div class="plan" id="plan"></div>
-    <div class="statlink" id="statlink">▸ 战况诊断</div>
+    <button id="stats-toggle" class="stats-toggle" onclick="toggleStats()">战况诊断</button>
   </aside>
   <main>
     <div class="daynav" id="daynav"></div>
+    <div id="daytitle"></div>
     <div id="feed"></div>
   </main>
 </div>
@@ -257,8 +262,22 @@ function toggleTheme(){
   setTimeout(()=>{ b.classList.remove("press"); applyTheme(isDark() ? "light" : "dark", true); }, 140);
 }
 paintThemeBtn();
+
+// —— 战况诊断 / 返回刷题：右下角悬浮切换按钮 ——
+function paintStatsBtn(){
+  const b = document.getElementById("stats-toggle"); if (!b) return;
+  const label = inStats ? "返回刷题" : "战况诊断";
+  b.innerHTML = `<svg viewBox="0 0 80 34" width="80" height="34"><text x="40" y="23"`
+    + ` text-anchor="middle" font-family="Noto Serif CJK SC,serif"`
+    + ` font-size="13" fill="currentColor" letter-spacing="4">${label}</text></svg>`;
+}
+function toggleStats(){
+  const b = document.getElementById("stats-toggle"); b.classList.add("press");
+  setTimeout(()=>{ b.classList.remove("press"); inStats ? (renderLive(), window.scrollTo(0,0)) : showStats(); }, 140);
+}
 let curDay = null;          // 正在回顾的历史日期；null=今日实时
 let inStats = false;        // 战况诊断视图
+paintStatsBtn();
 let navPrev = "", navNext = "";   // 当前页左右可去的日期，供键盘用
 const $ = s => document.querySelector(s);
 const LETTERS = ["A","B","C","D"];
@@ -277,16 +296,20 @@ async function load(){
 
 // 回到今日实时页
 function renderLive(){
-  curDay = null; inStats = false;
+  curDay = null; inStats = false; paintStatsBtn();
   renderSidebar();
   renderTrack(DATA.chart);
   renderFeed();
-  renderDayNav(DATA.prev, "", `今日 · day ${DATA.day} · ${fmtMD(DATA.today)}`);
+  renderDayNav(DATA.prev, "");
+  renderDayTitle("今日", `day ${DATA.day} · ${fmtMD(DATA.today)}`);
 }
 
 // 中栏：坚持(热力图 + 近十天)，常驻
 function renderTrack(chart){
-  $("#track").innerHTML = `<h3>坚持</h3>${renderChart(chart)}`;
+  const sub = chart && chart.days ? `共 ${chart.days} 天 · 连续 ${chart.streak} 天` : "";
+  $("#track").innerHTML =
+    `<div class="stitle"><h2>坚持</h2>${sub?`<small>${sub}</small>`:""}</div>`
+    + renderChart(chart);
 }
 
 // 手绘双横杠箭头(⇐ / ⇒)，过 #sketch 滤镜抖成手绘味
@@ -299,13 +322,15 @@ const ARROW = {
 const arrowSvg = p => `<svg viewBox="0 0 88 64" fill="none" stroke="currentColor" stroke-width="3.6"`
   + ` stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 
-// 顶部一左一右翻日箭头 + 标签；无目标的一侧隐藏但占位
-function renderDayNav(prev, next, label){
+// 顶部一左一右翻日箭头；无目标的一侧隐藏但占位
+function renderDayNav(prev, next){
   navPrev = prev || ""; navNext = next || "";
   $("#daynav").innerHTML =
       `<button class="dayarrow left ${prev?"":"gone"}" aria-label="前一天" onclick="navDay('${prev||""}',this)">${arrowSvg(ARROW.left)}</button>`
-    + `<span class="daylabel">${label||""}</span>`
     + `<button class="dayarrow right ${next?"":"gone"}" aria-label="后一天" onclick="navDay('${next||""}',this)">${arrowSvg(ARROW.right)}</button>`;
+}
+function renderDayTitle(main, sub){
+  $("#daytitle").innerHTML = `<div class="stitle"><h2>${main}</h2>${sub?`<small>${sub}</small>`:""}</div>`;
 }
 // 点击/按键：先加 .press 下沉反馈，再翻日
 function navDay(date, btn){
@@ -327,9 +352,12 @@ function gotoDay(date){
 
 // 只读渲染历史某天：当天完整题单(答对/答错/未答)，侧栏同步成当天小结。
 function renderDayView(d){
-  renderDayNav(d.prev, d.next, `回顾 · day ${d.day} · ${fmtMD(d.date)}`);
+  renderDayNav(d.prev, d.next);
+  renderDayTitle("回顾", `day ${d.day} · ${fmtMD(d.date)}`);
   const total = d.total != null ? d.total : d.items.length;
   $("#stat").innerHTML = `${fmtMD(d.date)} 答 <b>${d.done}</b>/${total}　对 <b>${d.ok}</b>`;
+  const subs = ([...new Set((d.items||[]).map(it=>it.subjectCN).filter(Boolean))]).join(" + ");
+  $("#plan").innerHTML = subs ? `当日两门：<b>${subs}</b>` : "";
   fillDots(d.items);
   const feed = $("#feed"); feed.innerHTML = "";
   if (!d.exists || !d.items.length){
@@ -368,8 +396,8 @@ function imgW(it){ return it.dispW ? ` style="width:${it.dispW}px"` : ` style="m
 function renderSidebar(){
   const total = DATA.items.length;
   $("#stat").innerHTML = `今日 <b>${DATA.done}</b>/${total}　对 <b>${DATA.ok}</b>`;
-  if (DATA.phaseCN) $("#plan").innerHTML =
-    `<span class="ph">${DATA.phaseCN}</span><br>今日两门：<b>${(DATA.subjects||[]).join(" + ")}</b>`;
+  const subs = (DATA.subjects||[]).join(" + ");
+  $("#plan").innerHTML = subs ? `今日两门：<b>${subs}</b>` : "";
   fillDots(DATA.items);
 }
 
@@ -553,33 +581,33 @@ function renderHeat(chart){
   const W=LEFT+wi*STEP, H=TOP+7*STEP;
   const wd=[["Mon",1],["Wed",3],["Fri",5]].map(([t,r])=>`<text class="hm-label" x="0" y="${TOP+r*STEP+9}">${t}</text>`).join("");
   return `<div class="heatwrap"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${months}${wd}${rects}</svg></div>`
-    + `<div class="hm-legend" style="max-width:${W}px">少 <i class="hm-grad"></i> 多</div>`;
+    + `<div class="hm-legend" style="max-width:${W}px">少`
+    + ` <i style="background:var(--hm-n)"></i>`
+    + ` <i style="background:var(--hm-1)"></i><i style="background:var(--hm-2)"></i>`
+    + ` <i style="background:var(--hm-3)"></i><i style="background:var(--hm-4)"></i> 多</div>`;
 }
 function renderRecent(chart){
   const rows = chart.recent||[];
   if (!rows.length) return "";
   let h = `<table class="recent"><tr><th>日期</th><th>题</th><th>正确率</th></tr>`;
   for (const r of rows){
-    const tr = r.trend==="↑" ? "up" : r.trend==="↓" ? "down" : "";
-    h += `<tr><td class="day">${fmtMD(r.date)}</td><td>${r.n}</td><td class="${tr}">${r.acc}% ${r.trend||""}</td></tr>`;
+    const trend = r.trend==="↑" ? "up" : r.trend==="↓" ? "down" : "";
+    h += `<tr><td>${fmtMD(r.date)}</td><td class="num">${r.n}</td>`
+       + `<td class="num ${trend}">${r.acc}%${r.trend ? " "+r.trend : ""}</td></tr>`;
   }
   return h + `</table>`;
 }
 function renderChart(chart){
   if (!chart || !chart.days)
     return `<div class="empty-s">还没坚持记录。做几天题后，这里出现热力图和近十天趋势。</div>`;
-  return `<div class="chart-sub">共 ${chart.days} 天 · 连续 ${chart.streak} 天</div>`
-    + renderHeat(chart) + renderRecent(chart);
+  return renderHeat(chart) + renderRecent(chart);
 }
 
 async function showStats(){
-  inStats = true; curDay = null; $("#daynav").innerHTML = "";
+  inStats = true; curDay = null; paintStatsBtn();
+  $("#daynav").innerHTML = ""; $("#daytitle").innerHTML = "";
   const st = await (await fetch("/api/stats")).json();
   const feed = $("#feed"); feed.innerHTML = "";
-  const back = document.createElement("div");
-  back.className = "back"; back.textContent = "‹ 返回刷题";
-  back.onclick = () => { renderLive(); window.scrollTo(0,0); };
-  feed.appendChild(back);
 
   // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
   const stk = st.stuck || [];
@@ -618,8 +646,6 @@ async function unstick(id){
     body:JSON.stringify({id, stuck:false})});
   document.getElementById("stuck-"+id)?.remove();
 }
-$("#statlink").onclick = showStats;
-
 // 左右方向键翻看历史(战况诊断视图里不响应)
 document.addEventListener("keydown", e => {
   if (inStats || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -628,6 +654,19 @@ document.addEventListener("keydown", e => {
 });
 
 load().then(() => { if (location.hash === "#stats") showStats(); });
+
+// 服务重启后自动 reload：轮询 /api/ping，时间戳变了就刷新页面
+(function(){
+  let known = null;
+  setInterval(async () => {
+    try {
+      const r = await fetch("/api/ping", {cache:"no-store"});
+      const {started} = await r.json();
+      if (known === null) { known = started; return; }
+      if (started !== known) location.reload();
+    } catch(e) {}
+  }, 3000);
+})();
 </script>
 </body>
 </html>

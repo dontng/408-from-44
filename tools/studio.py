@@ -7,7 +7,8 @@ usage:  studio.py [repo_dir] [port]   （由根目录 studio.sh 启动）
 题目图片在 bank/<年>/qNN.png，答案在 answers/<年>.txt，
 学习状态(遗忘曲线)存 review/state.json —— 纯文本，可随仓库多机同步。
 """
-import sys, os, re, json, datetime, mimetypes, random
+import sys, os, re, json, datetime, mimetypes, random, time
+SERVER_STARTED = str(int(time.time()))
 from collections import defaultdict, deque, Counter
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
@@ -534,6 +535,8 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/day":
             date = (parse_qs(urlparse(self.path).query).get("d") or [""])[0]
             return self._send(200, build_day(load_state(), date))
+        if path == "/api/ping":
+            return self._send(200, {"started": SERVER_STARTED})
         if path == "/api/stats":
             return self._send(200, build_stats(load_state()))
         if path.startswith("/bank/"):
