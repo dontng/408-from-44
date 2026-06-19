@@ -7,6 +7,7 @@
 """
 import sys, re, os
 import fitz  # pymupdf
+from PIL import Image
 from imgtrim import trim_file
 
 DPI = 200
@@ -78,16 +79,51 @@ def crop(doc, markers, outdir):
         page = doc[pno]
         ph = page.rect.height
         pw = page.rect.width
-        # 下边界: 同页下一题的题号y；跨页则切到本页底
-        if i + 1 < len(markers) and markers[i + 1][1] == pno:
-            y1 = markers[i + 1][2]
-        else:
-            y1 = ph
         top = max(0, y0 - 4)
-        clip = fitz.Rect(0, top, pw, y1)
-        pix = page.get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip)
         path = os.path.join(outdir, f"q{qnum:02d}.png")
-        pix.save(path)
+
+        # 确定下边界：下一题的题号位置
+        if i + 1 < len(markers):
+            next_pno, next_y0 = markers[i + 1][1], markers[i + 1][2]
+        else:
+            next_pno, next_y0 = pno, ph
+
+        if next_pno == pno:
+            # 同页：直接截
+            clip = fitz.Rect(0, top, pw, next_y0)
+            doc[pno].get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip).save(path)
+        else:
+            # 跨页：分段渲染后竖向拼接
+            pieces = []
+
+            # 当前页：题号到页底
+            clip = fitz.Rect(0, top, pw, ph)
+            pix = doc[pno].get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip)
+            pieces.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
+
+            # 中间整页（极少见，一题跨3页以上时出现）
+            for mid in range(pno + 1, next_pno):
+                p = doc[mid]
+                clip = fitz.Rect(0, 0, p.rect.width, p.rect.height)
+                pix = p.get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip)
+                pieces.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
+
+            # 下一题所在页：页顶到下题题号
+            np = doc[next_pno]
+            clip = fitz.Rect(0, 0, np.rect.width, next_y0)
+            pix = np.get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM), clip=clip)
+            pieces.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
+
+            # 竖向拼接
+            total_h = sum(p.height for p in pieces)
+            max_w = max(p.width for p in pieces)
+            stitched = Image.new("RGB", (max_w, total_h), (255, 255, 255))
+            y_off = 0
+            for p in pieces:
+                stitched.paste(p, (0, y_off))
+                y_off += p.height
+            stitched.save(path)
+
         trim_file(path)
         saved += 1
     return saved
