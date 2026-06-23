@@ -420,7 +420,7 @@ def build_stats(state):
         if s.get("stuck"):                  # ⓪ 待解清单：手动标"没懂"，持久不清
             stuck.append({**_pub(it), "pick": s.get("last_pick")})
         if not s.get("last_ok", True):      # ③ 错题本：最近一次做错
-            mistakes.append(_pub(it))
+            mistakes.append({**_pub(it), "pick": s.get("last_pick"), "last": s.get("last")})
 
     # ② 弱项诊断：章节正确率升序(最弱在前)
     weak = [{"subject": s, "chapter": c, "seen": v["seen"],
