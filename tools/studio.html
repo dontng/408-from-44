@@ -188,6 +188,33 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 .theme-toggle:hover svg{transform:rotate(-14deg) scale(1.08)}
 .theme-toggle.press{transform:scale(.72) translateY(3px);opacity:.55;
   color:var(--akane);transition-duration:.08s}
+
+/* ── 战况诊断 · 分节导航 ── */
+.stats-nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:32px}
+.stats-nav a{font-size:11px;color:var(--ai);border:1px solid var(--line);border-radius:4px;
+  padding:2px 9px;text-decoration:none;letter-spacing:.06em;cursor:pointer;user-select:none;
+  transition:border-color .15s,background .15s,color .15s}
+.stats-nav a:hover{border-color:var(--ai);background:var(--ai);color:var(--paper)}
+
+/* 今日小结卡 */
+.today-card{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:14px}
+.tc-item{display:flex;flex-direction:column;gap:2px}
+.tc-num{font-family:"Noto Serif CJK SC",serif;font-size:38px;font-weight:700;
+  color:var(--akane);line-height:1.1}
+.tc-num.sm{font-size:26px}
+.tc-label{font-size:11.5px;color:var(--sub);letter-spacing:.05em}
+
+/* 错题本科目筛选 */
+.subj-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.subj-filter button{font:inherit;font-size:11.5px;color:var(--sub);background:none;
+  border:1px solid var(--line);border-radius:4px;padding:2px 9px;cursor:pointer;
+  letter-spacing:.06em;transition:border-color .15s,background .15s,color .15s}
+.subj-filter button:hover,.subj-filter button.active{border-color:var(--ai);
+  background:var(--ai);color:var(--paper)}
+
+/* 加载中占位 */
+.loading-s{color:var(--sub);font-size:13px;padding:56px 10px;
+  letter-spacing:.35em;text-align:center}
 </style>
 <script>
 /* 预着色：首帧前定明暗，避免白闪。优先本机记忆，否则跟随系统。 */
@@ -551,6 +578,8 @@ function sect(title, inner){
   d.innerHTML = `<h3>${title}</h3>${inner}`;
   return d;
 }
+// 将 YYYY-MM-DD 日期格式化为 MM/DD（复用 fmtMD，但此处显式引用避免前向依赖）
+const fmtDate = iso => { const [,m,d] = iso.split("-"); return `${m}/${d}`; };
 // ── 坚持热力图 + 近十天趋势 ──
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const HM_WINDOW = 5;     // 热力图滚动窗口：最近 5 个月(今天 6 月→覆盖到 2 月)
@@ -606,37 +635,125 @@ function renderChart(chart){
 async function showStats(){
   inStats = true; curDay = null; paintStatsBtn();
   $("#daynav").innerHTML = ""; $("#daytitle").innerHTML = "";
-  const st = await (await fetch("/api/stats")).json();
-  const feed = $("#feed"); feed.innerHTML = "";
+  const feed = $("#feed");
 
-  // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
+  // 加载中占位，避免空白等待
+  feed.innerHTML = `<div class="loading-s">诊 断 中 …</div>`;
+
+  const st = await (await fetch("/api/stats")).json();
+  feed.innerHTML = "";
+
+  // 顶部分节快跳导航
+  const SECTIONS = [
+    ["stat-today",    "今日小结"],
+    ["stat-stuck",    `待解清单（${st.stuck.length}）`],
+    ["stat-weak",     "弱项诊断"],
+    ["stat-mistakes", `错题本（${st.mistakes.length}）`],
+    ["stat-proj",     "冲刺预测分"],
+  ];
+  const nav = document.createElement("div");
+  nav.className = "stats-nav";
+  nav.innerHTML = SECTIONS.map(([id, label]) => `<a data-target="${id}">${label}</a>`).join("");
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () =>
+    document.getElementById(a.dataset.target)?.scrollIntoView({behavior:"smooth", block:"start"})
+  ));
+  feed.appendChild(nav);
+
+  // ⓪ 今日小结 — 当天最新表现，提供即时上下文
+  const td = st.today;
+  let todayInner;
+  if (!td.done) {
+    todayInner = `<div class="empty-s">今日还没做题。</div>`;
+  } else {
+    const wrongPart = td.wrong.length
+      ? `<div style="margin-top:12px"><div class="chart-sub" style="margin-bottom:8px">今日出错章节</div>`
+        + `<div class="chips">${td.wrong.map(w=>`<span class="chip">${w.label}（${w.n}）</span>`).join("")}</div></div>`
+      : `<div class="empty-s" style="margin-top:8px">今日全部答对 👍</div>`;
+    todayInner =
+      `<div class="today-card">
+        <div class="tc-item"><span class="tc-num">${td.acc}</span><span class="tc-label">% 今日正确率</span></div>
+        <div class="tc-item"><span class="tc-num sm">${td.ok} / ${td.done}</span><span class="tc-label">题答对</span></div>
+      </div>` + wrongPart;
+  }
+  const todaySect = sect("今日小结", todayInner);
+  todaySect.id = "stat-today";
+  feed.appendChild(todaySect);
+
+  // ① 待解清单(没懂) — 必须解决的疑点，不进则退
   const stk = st.stuck || [];
-  feed.appendChild(sect(`待解清单 · 没懂（${stk.length}）`,
+  const stuckSect = sect(`待解清单 · 没懂（${stk.length}）`,
     stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题${m.pick?` · 你选了 ${m.pick}`:''}
           <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
         <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
-      : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
+      : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`);
+  stuckSect.id = "stat-stuck";
+  feed.appendChild(stuckSect);
 
-  // ② 弱项诊断
-  feed.appendChild(sect("弱项诊断",
-    st.weak.length ? st.weak.slice(0,12).map(w=>bar(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`)).join("")
-      : `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`));
+  // ② 弱项诊断 — 章节正确率升序，最弱在前；超过 12 条时折叠
+  const WEAK_INIT = 12;
+  let showAllWeak = false;
+  const weakSect = document.createElement("div");
+  weakSect.className = "sect"; weakSect.id = "stat-weak";
+  function renderWeak(){
+    const slice = showAllWeak ? st.weak : st.weak.slice(0, WEAK_INIT);
+    weakSect.innerHTML = `<h3>弱项诊断</h3>`
+      + (st.weak.length
+        ? slice.map(w=>bar(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`)).join("")
+          + (st.weak.length > WEAK_INIT
+            ? `<div style="margin-top:10px"><button class="sj" id="weak-more">${
+                showAllWeak ? "↑ 收起" : `↓ 全部 ${st.weak.length} 个章节`
+              }</button></div>`
+            : "")
+        : `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`);
+    const btn = weakSect.querySelector("#weak-more");
+    if (btn) btn.onclick = () => { showAllWeak = !showAllWeak; renderWeak(); };
+  }
+  renderWeak();
+  feed.appendChild(weakSect);
 
-  // ③ 错题本(全部最近做错，含疏忽)
-  feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
-    st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
-        <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
-        <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
-      : `<div class="empty-s">暂无错题 👍</div>`));
+  // ③ 错题本 — 科目筛选 + 你选了哪个 + 做错日期
+  const mistakes = st.mistakes || [];
+  const mistakeSect = document.createElement("div");
+  mistakeSect.className = "sect"; mistakeSect.id = "stat-mistakes";
+  const mistakeSubjs = [...new Set(mistakes.map(m => m.subjectCN))];
+  let activeSubj = null;
+  function renderMistakes(){
+    const filtered = activeSubj ? mistakes.filter(m => m.subjectCN === activeSubj) : mistakes;
+    const filterHtml = mistakeSubjs.length > 1
+      ? `<div class="subj-filter">
+          <button class="${!activeSubj ? "active" : ""}" data-subj="">全部（${mistakes.length}）</button>
+          ${mistakeSubjs.map(s =>
+            `<button class="${activeSubj===s?"active":""}" data-subj="${s}">${s}（${mistakes.filter(m=>m.subjectCN===s).length}）</button>`
+          ).join("")}
+        </div>`
+      : "";
+    mistakeSect.innerHTML = `<h3>错题本（${mistakes.length}）</h3>` + filterHtml
+      + (filtered.length
+        ? filtered.map(m =>
+            `<div class="mk">
+              <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题`
+              + (m.pick ? ` · 你选了 ${m.pick}` : "")
+              + (m.last  ? ` · ${fmtDate(m.last)} 错` : "")
+              + `</div><img src="${m.img}" loading="lazy"${imgW(m)}></div>`
+          ).join("")
+        : `<div class="empty-s">暂无错题 👍</div>`);
+    mistakeSect.querySelectorAll(".subj-filter button").forEach(b =>
+      b.addEventListener("click", () => { activeSubj = b.dataset.subj || null; renderMistakes(); })
+    );
+  }
+  renderMistakes();
+  feed.appendChild(mistakeSect);
 
   // ④ 冲刺预测分 — 垫底·参考
   const p = st.projection;
-  feed.appendChild(sect("冲刺预测分",
+  const projSect = sect("冲刺预测分",
     `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
        <span class="tgt">目标 ${p.target}</span></div>`
     + p.by_subject.map(s=>bar(s.subject, s.acc, `${s.score}/${s.points}分`)).join("")
-    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，参考用。</div>`));
+    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，参考用。</div>`);
+  projSect.id = "stat-proj";
+  feed.appendChild(projSect);
 
   feed.querySelectorAll(".solved").forEach(b => b.onclick = () => unstick(b.dataset.id));
   window.scrollTo(0,0);
@@ -646,9 +763,11 @@ async function unstick(id){
     body:JSON.stringify({id, stuck:false})});
   document.getElementById("stuck-"+id)?.remove();
 }
-// 左右方向键翻看历史(战况诊断视图里不响应)
+// 左右方向键翻看历史(战况诊断视图里不响应)；Escape 从诊断视图退回刷题
 document.addEventListener("keydown", e => {
-  if (inStats || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Escape" && inStats) { e.preventDefault(); renderLive(); window.scrollTo(0,0); return; }
+  if (inStats) return;
   if (e.key === "ArrowLeft")  { const b=$("#daynav .dayarrow.left:not(.gone)");  if(b){e.preventDefault();b.click();} }
   if (e.key === "ArrowRight") { const b=$("#daynav .dayarrow.right:not(.gone)"); if(b){e.preventDefault();b.click();} }
 });
