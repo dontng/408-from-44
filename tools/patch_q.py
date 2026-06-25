@@ -10,7 +10,7 @@
 """
 import sys, os, subprocess, tempfile
 import fitz
-from imgtrim import trim_file
+from imgtrim import trim_file, remove_page_gap_file
 
 DPI = 200
 ZOOM = DPI / 72.0
@@ -87,6 +87,7 @@ def cut2(year, qnum, p0, a0, a1, p1, b0, b1):
     outdir = os.path.join("bank", year); os.makedirs(outdir, exist_ok=True)
     path = os.path.join(outdir, f"q{int(qnum):02d}.png")
     out.save(path)
+    remove_page_gap_file(path, min_gap=120)   # 去掉页码+页边距留白带
     trim_file(path)
     print(f"已切(跨页) → {path}")
 

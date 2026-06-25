@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>战斧图标预览</title>
+<style>
+body{background:#f4f1e9;display:flex;flex-wrap:wrap;gap:56px;padding:80px 60px;align-items:flex-start;
+  font-family:"Noto Serif CJK SC",serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:16px}
+/* 真实按钮尺寸 */
+.btn{width:86px;height:64px;border:none;cursor:pointer;display:grid;place-items:center;
+  border-radius:40px;background:radial-gradient(ellipse 60% 70% at center,
+    rgba(244,241,233,.96) 55%,rgba(244,241,233,0) 78%);color:#33302a}
+.btn svg{display:block;overflow:visible;filter:url(#sketch)}
+.btn:hover{color:#a13c3c;transform:scale(1.08)}
+/* 放大2x供审看 */
+.big .btn{width:172px;height:128px}
+.big .btn svg{width:156px;height:114px}
+.label{font-size:11px;letter-spacing:.15em;color:#9b9384;text-align:center}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <filter id="sketch">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<!--
+  几何说明：柄从 (28,50)→(60,18)，方向 (32,-32)，即45°。
+  垂直方向 (32,32)/45.2 ≈ (0.707,0.707)，即右下45°。
+  两端刃尖沿垂直方向延伸 ±22px：
+  上端(60,18) → 刃尖NW(44,2)，刃尖SE(76,34)
+  下端(28,50) → 刃尖NW(12,34)，刃尖SE(44,66)
+  切刃弧向外大扫（远离柄中心方向）
+-->
+
+<!-- A: 纯轮廓，两刃对称，无填充 -->
+<div class="col big">
+<button class="btn">
+  <svg viewBox="0 0 88 64" fill="none" stroke="currentColor"
+       stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 柄双线 -->
+    <path d="M 25 48 L 57 16"/>
+    <path d="M 31 52 L 63 20"/>
+    <!-- 上刃：切刃大弧（向外扫）+ 背刃两段 -->
+    <path d="M 44 2 C 64 -12, 90 14, 76 34"/>
+    <path d="M 44 2 C 48 9, 55 15, 60 18"/>
+    <path d="M 76 34 C 70 29, 65 23, 60 18"/>
+    <!-- 下刃：切刃大弧（向外扫）+ 背刃两段 -->
+    <path d="M 44 66 C 24 78, -2 54, 12 34"/>
+    <path d="M 44 66 C 38 59, 32 53, 28 50"/>
+    <path d="M 12 34 C 17 39, 22 45, 28 50"/>
+  </svg>
+</button>
+<div class="label">A · 纯轮廓</div>
+</div>
+
+<!-- B: 切刃双描边，更有手绘重量感 -->
+<div class="col big">
+<button class="btn">
+  <svg viewBox="0 0 88 64" fill="none" stroke="currentColor"
+       stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 柄双线 -->
+    <path d="M 25 48 L 57 16"/>
+    <path d="M 31 52 L 63 20"/>
+    <!-- 上刃双线切刃 -->
+    <path d="M 44 2 C 64 -12, 90 14, 76 34"/>
+    <path d="M 46 6 C 65 -4, 86 16, 73 34"/>
+    <!-- 上刃背 -->
+    <path d="M 44 2 C 48 9, 55 15, 60 18"/>
+    <path d="M 76 34 C 70 29, 65 23, 60 18"/>
+    <!-- 下刃双线切刃 -->
+    <path d="M 44 66 C 24 78, -2 54, 12 34"/>
+    <path d="M 42 62 C 23 72, 2 50, 15 34"/>
+    <!-- 下刃背 -->
+    <path d="M 44 66 C 38 59, 32 53, 28 50"/>
+    <path d="M 12 34 C 17 39, 22 45, 28 50"/>
+  </svg>
+</button>
+<div class="label">B · 双描边切刃</div>
+</div>
+
+<!-- C: 刃尖向外大张，气势最猛 -->
+<div class="col big">
+<button class="btn">
+  <svg viewBox="0 0 88 64" fill="none" stroke="currentColor"
+       stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 柄双线 -->
+    <path d="M 25 48 L 57 16"/>
+    <path d="M 31 52 L 63 20"/>
+    <!-- 上刃：刃尖再向外延伸，张角更大 -->
+    <path d="M 38 -2 C 62 -16, 92 12, 80 36"/>
+    <path d="M 40 3 C 63 -8, 88 14, 77 36"/>
+    <!-- 上刃背 -->
+    <path d="M 38 -2 C 44 6, 53 14, 60 18"/>
+    <path d="M 80 36 C 73 31, 66 24, 60 18"/>
+    <!-- 下刃 -->
+    <path d="M 50 68 C 26 80, -4 56, 8 30"/>
+    <path d="M 48 63 C 25 74, 0 52, 11 30"/>
+    <!-- 下刃背 -->
+    <path d="M 50 68 C 42 60, 33 54, 28 50"/>
+    <path d="M 8 30 C 14 37, 21 44, 28 50"/>
+  </svg>
+</button>
+<div class="label">C · 大张最猛</div>
+</div>
+
+<!-- D: 柄加中段装饰环，武器质感 -->
+<div class="col big">
+<button class="btn">
+  <svg viewBox="0 0 88 64" fill="none" stroke="currentColor"
+       stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 柄双线 -->
+    <path d="M 25 48 L 57 16"/>
+    <path d="M 31 52 L 63 20"/>
+    <!-- 柄中段绑环（垂直于柄的短线段） -->
+    <path d="M 37 25 L 43 37"/>
+    <path d="M 43 29 L 49 41"/>
+    <!-- 上刃双线切刃 -->
+    <path d="M 44 2 C 64 -12, 90 14, 76 34"/>
+    <path d="M 46 6 C 65 -4, 86 16, 73 34"/>
+    <!-- 上刃背 -->
+    <path d="M 44 2 C 48 9, 55 15, 60 18"/>
+    <path d="M 76 34 C 70 29, 65 23, 60 18"/>
+    <!-- 下刃双线切刃 -->
+    <path d="M 44 66 C 24 78, -2 54, 12 34"/>
+    <path d="M 42 62 C 23 72, 2 50, 15 34"/>
+    <!-- 下刃背 -->
+    <path d="M 44 66 C 38 59, 32 53, 28 50"/>
+    <path d="M 12 34 C 17 39, 22 45, 28 50"/>
+  </svg>
+</button>
+<div class="label">D · 绑环装饰</div>
+</div>
+
+</body>
+</html>

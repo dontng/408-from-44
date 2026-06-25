@@ -8,7 +8,7 @@
 import sys, re, os
 import fitz  # pymupdf
 from PIL import Image
-from imgtrim import trim_file
+from imgtrim import trim_file, remove_page_gap_file
 
 DPI = 200
 ZOOM = DPI / 72.0
@@ -123,6 +123,7 @@ def crop(doc, markers, outdir):
                 stitched.paste(p, (0, y_off))
                 y_off += p.height
             stitched.save(path)
+            remove_page_gap_file(path)
 
         trim_file(path)
         saved += 1

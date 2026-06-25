@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Claude Compile</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='248' height='248' viewBox='0 0 248 248' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M52.4285 162.873L98.7844 136.879L99.5485 134.602L98.7844 133.334H96.4921L88.7237 132.862L62.2346 132.153L39.3113 131.207L17.0249 130.026L11.4214 128.844L6.2 121.873L6.7094 118.447L11.4214 115.257L18.171 115.847L33.0711 116.911L55.485 118.447L71.6586 119.392L95.728 121.873H99.5485L100.058 120.337L98.7844 119.392L97.7656 118.447L74.5877 102.732L49.4995 86.1905L36.3823 76.62L29.3779 71.7757L25.8121 67.2858L24.2839 57.3608L30.6515 50.2716L39.3113 50.8623L41.4763 51.4531L50.2636 58.1879L68.9842 72.7209L93.4357 90.6804L97.0015 93.6343L98.4374 92.6652L98.6571 91.9801L97.0015 89.2625L83.757 65.2772L69.621 40.8192L63.2534 30.6579L61.5978 24.632C60.9565 22.1032 60.579 20.0111 60.579 17.4246L67.8381 7.49965L71.9133 6.19995L81.7193 7.49965L85.7946 11.0443L91.9074 24.9865L101.714 46.8451L116.996 76.62L121.453 85.4816L123.873 93.6343L124.764 96.1155H126.292V94.6976L127.566 77.9197L129.858 57.3608L132.15 30.8942L132.915 23.4505L136.608 14.4708L143.994 9.62643L149.725 12.344L154.437 19.0788L153.8 23.4505L150.998 41.6463L145.522 70.1215L141.957 89.2625H143.994L146.414 86.7813L156.093 74.0206L172.266 53.698L179.398 45.6635L187.803 36.802L193.152 32.5484H203.34L210.726 43.6549L207.415 55.1159L196.972 68.3492L188.312 79.5739L175.896 96.2095L168.191 109.585L168.882 110.689L170.738 110.53L198.755 104.504L213.91 101.787L231.994 98.7149L240.144 102.496L241.036 106.395L237.852 114.311L218.495 119.037L195.826 123.645L162.07 131.592L161.696 131.893L162.137 132.547L177.36 133.925L183.855 134.279H199.774L229.447 136.524L237.215 141.605L241.8 147.867L241.036 152.711L229.065 158.737L213.019 154.956L175.45 145.977L162.587 142.787H160.805V143.85L171.502 154.366L191.242 172.089L215.82 195.011L217.094 200.682L213.91 205.172L210.599 204.699L188.949 188.394L180.544 181.069L161.696 165.118H160.422V166.772L164.752 173.152L187.803 207.771L188.949 218.405L187.294 221.832L181.308 223.959L174.813 222.777L161.187 203.754L147.305 182.486L136.098 163.345L134.745 164.2L128.075 235.42L125.019 239.082L117.887 241.8L111.902 237.31L108.718 229.984L111.902 215.452L115.722 196.547L118.779 181.541L121.58 162.873L123.291 156.636L123.14 156.219L121.773 156.449L107.699 175.752L86.304 204.699L69.3663 222.777L65.291 224.431L58.2867 220.768L58.9235 214.27L62.8713 208.48L86.304 178.705L100.44 160.155L109.551 149.507L109.462 147.967L108.959 147.924L46.6977 188.512L35.6182 189.93L30.7788 185.44L31.4156 178.115L33.7079 175.752L52.4285 162.873Z' fill='%23D97757'/%3E%3C/svg%3E">
+<title>408 chaos2clarity</title>
+<!-- <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='248' height='248' viewBox='0 0 248 248' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M52.4285 162.873L98.7844 136.879L99.5485 134.602L98.7844 133.334H96.4921L88.7237 132.862L62.2346 132.153L39.3113 131.207L17.0249 130.026L11.4214 128.844L6.2 121.873L6.7094 118.447L11.4214 115.257L18.171 115.847L33.0711 116.911L55.485 118.447L71.6586 119.392L95.728 121.873H99.5485L100.058 120.337L98.7844 119.392L97.7656 118.447L74.5877 102.732L49.4995 86.1905L36.3823 76.62L29.3779 71.7757L25.8121 67.2858L24.2839 57.3608L30.6515 50.2716L39.3113 50.8623L41.4763 51.4531L50.2636 58.1879L68.9842 72.7209L93.4357 90.6804L97.0015 93.6343L98.4374 92.6652L98.6571 91.9801L97.0015 89.2625L83.757 65.2772L69.621 40.8192L63.2534 30.6579L61.5978 24.632C60.9565 22.1032 60.579 20.0111 60.579 17.4246L67.8381 7.49965L71.9133 6.19995L81.7193 7.49965L85.7946 11.0443L91.9074 24.9865L101.714 46.8451L116.996 76.62L121.453 85.4816L123.873 93.6343L124.764 96.1155H126.292V94.6976L127.566 77.9197L129.858 57.3608L132.15 30.8942L132.915 23.4505L136.608 14.4708L143.994 9.62643L149.725 12.344L154.437 19.0788L153.8 23.4505L150.998 41.6463L145.522 70.1215L141.957 89.2625H143.994L146.414 86.7813L156.093 74.0206L172.266 53.698L179.398 45.6635L187.803 36.802L193.152 32.5484H203.34L210.726 43.6549L207.415 55.1159L196.972 68.3492L188.312 79.5739L175.896 96.2095L168.191 109.585L168.882 110.689L170.738 110.53L198.755 104.504L213.91 101.787L231.994 98.7149L240.144 102.496L241.036 106.395L237.852 114.311L218.495 119.037L195.826 123.645L162.07 131.592L161.696 131.893L162.137 132.547L177.36 133.925L183.855 134.279H199.774L229.447 136.524L237.215 141.605L241.8 147.867L241.036 152.711L229.065 158.737L213.019 154.956L175.45 145.977L162.587 142.787H160.805V143.85L171.502 154.366L191.242 172.089L215.82 195.011L217.094 200.682L213.91 205.172L210.599 204.699L188.949 188.394L180.544 181.069L161.696 165.118H160.422V166.772L164.752 173.152L187.803 207.771L188.949 218.405L187.294 221.832L181.308 223.959L174.813 222.777L161.187 203.754L147.305 182.486L136.098 163.345L134.745 164.2L128.075 235.42L125.019 239.082L117.887 241.8L111.902 237.31L108.718 229.984L111.902 215.452L115.722 196.547L118.779 181.541L121.58 162.873L123.291 156.636L123.14 156.219L121.773 156.449L107.699 175.752L86.304 204.699L69.3663 222.777L65.291 224.431L58.2867 220.768L58.9235 214.27L62.8713 208.48L86.304 178.705L100.44 160.155L109.551 149.507L109.462 147.967L108.959 147.924L46.6977 188.512L35.6182 189.93L30.7788 185.44L31.4156 178.115L33.7079 175.752L52.4285 162.873Z' fill='%23D97757'/%3E%3C/svg%3E"> -->
 <style>
 :root{
   --bg:#f4f1e9; --paper:#fcfaf4; --ink:#33302a; --sub:#9b9384; --faint:#c3bbab;
   --line:#e7e0d1; --hair:#ece6d8; --akane:#a13c3c; --ai:#3c5a78; --moss:#5e7a58;
-  --dot-bg:#e4dccb;
+  --dot-bg:#e4dccb; --dot-new:#cdd4da;
   --halo:rgba(244,241,233,.96); --halo0:rgba(244,241,233,0);
   --hm-n:#ebe4d6; --hm-1:#bcd3ab; --hm-2:#94b884; --hm-3:#6f9963; --hm-4:#5e7a58;
 }
@@ -17,7 +17,7 @@
 :root[data-theme="dark"]{
   --bg:#1a1613; --paper:#241f1a; --ink:#e7ddcc; --sub:#9a8e7c; --faint:#6b6253;
   --line:#39322b; --hair:#322c25; --akane:#d77f72; --ai:#82a8cb; --moss:#8bb079;
-  --dot-bg:#3a332b;
+  --dot-bg:#3a332b; --dot-new:#2e3a45;
   --halo:rgba(36,31,26,.95); --halo0:rgba(36,31,26,0);
   --hm-n:#2b2520; --hm-1:#46663a; --hm-2:#5d8a4c; --hm-3:#77a862; --hm-4:#8fc079;
 }
@@ -40,24 +40,29 @@ aside{position:sticky;top:38px;align-self:start}
 /* 中栏：坚持(热力图+近十天) */
 aside.track{min-width:0}
 @media(max-width:1120px){aside.track{border-bottom:1px solid var(--hair);padding-bottom:18px}}
-.ddaywrap{padding:4px 0 30px 0}
-.kicker{font-size:11px;letter-spacing:.5em;color:var(--sub);font-weight:600}
-.dday{font-family:"Noto Serif CJK SC",Georgia,serif;margin:10px 0 0;line-height:1}
-.dday b{font-size:40px;font-weight:700;color:var(--akane);letter-spacing:-.02em}
-.dday i{font-style:normal;font-size:11px;color:var(--akane);letter-spacing:.2em;margin-left:4px}
-.warn{font-size:12px;font-weight:600;letter-spacing:.5em;color:var(--akane);
-  margin-top:11px;padding-top:9px;border-top:2px solid var(--akane);display:inline-block}
-@media(max-width:780px){.ddaywrap{padding:0}}
+.kicker{font-size:10px;letter-spacing:.42em;color:var(--sub)}
+.rail h1{font-family:"Noto Serif CJK SC",serif;font-size:22px;font-weight:600;letter-spacing:.14em;margin-top:4px}
+.dday{margin:22px 0 2px;padding-top:20px;border-top:1px solid var(--line);
+  font-family:Georgia,serif;line-height:1}
+.dday b{font-size:36px;font-weight:600;color:var(--akane)}
+.dday i{font-style:normal;font-size:12px;color:var(--akane);margin-left:4px}
+.dday em{display:block;font-style:normal;margin-top:8px;font-size:11px;
+  color:var(--sub);letter-spacing:.3em}
 .stat{font-size:12.5px;color:var(--sub);letter-spacing:.05em;margin:30px 0 12px}
 .stat b{color:var(--ink);font-weight:600}
-@media(max-width:780px){.dday{margin:0}.dday b{font-size:34px}.warn{margin-top:0}.stat{margin:0}}
-.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;max-width:172px;margin-top:4px}
-.dots .d{aspect-ratio:1;border-radius:5px;background:var(--dot-bg);color:var(--sub);
+@media(max-width:780px){.dday{margin:0}.dday b{font-size:30px}.stat{margin:0}}
+.dots{display:flex;align-items:center;gap:4px;margin-top:4px}
+.dot-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:184px}
+.dot-arr{background:none;border:none;cursor:pointer;color:var(--sub);font-size:11px;padding:1px;line-height:1;flex-shrink:0}
+.dot-arr:disabled{opacity:.15;cursor:default;pointer-events:none}
+.dot-arr:not(:disabled):hover{color:var(--ink)}
+.dot-grid .d{aspect-ratio:1;border-radius:5px;background:var(--dot-bg);color:var(--sub);
   font-family:Georgia,serif;font-size:10.5px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:transform .15s,background .2s}
-.dots .d:hover{transform:scale(1.18)}
-.dots .d.ok{background:var(--moss);color:#fff} .dots .d.no{background:var(--akane);color:#fff}
-.dots .d.pending{background:var(--dot-bg);color:var(--sub)}
+.dot-grid .d:hover{transform:scale(1.18)}
+.dot-grid .d.ok{background:var(--moss);color:#fff} .dot-grid .d.no{background:var(--akane);color:#fff}
+.dot-grid .d.pending{background:var(--dot-bg);color:var(--sub)}
+.dot-grid .d.pending.isnew{background:var(--dot-new);color:var(--sub)}
 .plan{font-size:11.5px;color:var(--ai);letter-spacing:.08em;margin:24px 0 6px;line-height:1.95}
 .plan .ph{display:inline-block;font-size:10px;letter-spacing:.2em;color:var(--moss);
   border:1px solid var(--moss);border-radius:3px;padding:1px 6px;margin-bottom:5px}
@@ -73,11 +78,12 @@ main{min-width:0}
 .dayarrow{pointer-events:auto;width:86px;height:64px;padding:0;border:none;cursor:pointer;
   color:var(--ink);display:grid;place-items:center;border-radius:40px;
   background:radial-gradient(ellipse 60% 70% at center,var(--halo) 55%,var(--halo0) 78%);
-  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s}
-.dayarrow svg{width:78px;height:57px;display:block;overflow:visible;filter:url(#sketch);transition:transform .15s ease}
-.dayarrow:hover{color:var(--akane)}
-.dayarrow.left:hover svg{transform:translateX(-4px) scale(1.06)}
-.dayarrow.right:hover svg{transform:translateX(4px) scale(1.06)}
+  box-shadow:0 4px 18px rgba(0,0,0,.09),0 1px 4px rgba(0,0,0,.05);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s,box-shadow .2s}
+.dayarrow svg{width:78px;height:57px;display:block;overflow:visible;filter:url(#sketch)}
+.dayarrow:hover{color:var(--akane);box-shadow:0 8px 28px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.07)}
+.dayarrow.left:hover{transform:translateX(-5px) scale(1.06)}
+.dayarrow.right:hover{transform:translateX(5px) scale(1.06)}
 .dayarrow.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
 .dayarrow.gone{visibility:hidden;pointer-events:none}
 .stitle{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
@@ -90,7 +96,7 @@ main{min-width:0}
   display:flex;align-items:baseline;gap:12px}
 .grouphd:not(:first-child){margin-top:64px}
 .grouphd small{font-size:11px;color:var(--sub);letter-spacing:.08em;font-family:inherit;font-weight:400}
-.qblock{padding:0 0 44px;margin-bottom:44px;border-bottom:1px solid var(--hair)}
+.qblock{padding:0;margin-bottom:28px}
 .qblock:last-child{border-bottom:none}
 .qmeta{font-family:"Noto Serif CJK SC",serif;font-size:12px;letter-spacing:.22em;
   color:var(--faint);margin-bottom:18px}
@@ -99,7 +105,13 @@ main{min-width:0}
    max-width:100% 仅作超宽表格的兜底，避免溢出主栏 */
 .qimg{width:auto;max-width:100%;height:auto;display:block;border-radius:3px}
 
-.opts{margin-top:20px;max-width:560px;display:flex;gap:10px}
+.opts{margin-top:20px;max-width:560px;display:flex;gap:10px;position:relative;padding-bottom:48px}
+.submit-pop{position:absolute;transform:scale(.7) translateY(-4px);
+  background:var(--ai);color:#fff;border:none;border-radius:6px;
+  padding:0 13px;height:33px;font-size:13px;letter-spacing:.12em;
+  cursor:pointer;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .15s,transform .15s,left .12s}
+.submit-pop.show{opacity:1;pointer-events:auto;transform:scale(1) translateY(0)}
 .opt{width:46px;height:33px;display:flex;align-items:center;justify-content:center;
   font-family:Georgia,serif;font-size:14px;color:var(--sub);
   background:var(--paper);border:1px solid var(--line);border-radius:6px;
@@ -126,12 +138,13 @@ main{min-width:0}
 .done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
 
 /* ── 战况诊断面板 ── */
-.stats-toggle{display:inline-grid;place-items:center;margin-top:28px;margin-left:28px;
-  padding:0 22px;height:50px;border:none;cursor:pointer;color:var(--ink);
-  border-radius:30px;background:var(--paper);
-  box-shadow:0 3px 12px rgba(0,0,0,.09),0 1px 4px rgba(0,0,0,.06);
+.stats-toggle{display:inline-grid;place-items:center;margin-top:28px;margin-left:42px;
+  padding:0 16px 0 calc(16px + .14em);height:40px;border:none;cursor:pointer;
+  color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.14em;
+  border-radius:14px;background:var(--paper);
+  box-shadow:0 2px 8px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.05);
   transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,box-shadow .2s}
-.stats-toggle:hover{color:var(--akane);transform:scale(1.06);box-shadow:0 5px 18px rgba(0,0,0,.13),0 2px 6px rgba(0,0,0,.07)}
+.stats-toggle:hover{color:var(--akane);transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.06)}
 .stats-toggle svg{display:block;overflow:visible;filter:url(#sketch)}
 .stats-toggle.press{transform:scale(.74) translateY(4px);opacity:.5;color:var(--akane);transition-duration:.08s}
 .sect{margin-bottom:42px}
@@ -151,7 +164,7 @@ main{min-width:0}
 .empty-s{color:var(--sub);font-size:13px;padding:6px 0}
 /* 坚持热力图 + 近十天趋势 */
 .chart-sub{font-size:11.5px;color:var(--sub);letter-spacing:.1em;margin-bottom:14px}
-.heatwrap{overflow-x:auto;padding-bottom:2px}
+.heatwrap{overflow-x:hidden;padding-bottom:2px}
 .heatwrap svg{display:block}
 .hm-d{transition:opacity .15s}.hm-d:hover{opacity:.7}
 .hm-n{fill:var(--hm-n)}.hm-1{fill:var(--hm-1)}.hm-2{fill:var(--hm-2)}.hm-3{fill:var(--hm-3)}.hm-4{fill:var(--hm-4)}
@@ -162,7 +175,7 @@ main{min-width:0}
 .hm-legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
 /* 中栏底部：答题进度圆点 + 跳题 */
 .dotscard{margin-top:38px}
-.dotscard .dots{padding-left:28px}
+.dotscard .dots{padding-left:14px}
 .dotscard .hint{padding-left:28px}
 .recent{border-collapse:collapse;font-size:12px;margin-top:12px;width:100%}
 .recent th{font-weight:400;color:var(--sub);text-align:left;font-size:10px;letter-spacing:.12em;padding:5px 3px;border-bottom:1px solid var(--line)}
@@ -210,6 +223,9 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 .rx-bottom{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sub)}
 .rx-bottom b{color:var(--akane)}
 .drill-btn{font-size:11px;padding:3px 12px;margin-left:auto;letter-spacing:.06em}
+.pager{display:flex;align-items:center;justify-content:center;gap:20px;
+  margin-top:40px;padding-top:28px;border-top:1px solid var(--hair)}
+.pager-info{font-size:12px;color:var(--sub);letter-spacing:.12em;font-family:Georgia,serif}
 </style>
 <script>
 /* 预着色：首帧前定明暗，避免白闪。优先本机记忆，否则跟随系统。 */
@@ -227,18 +243,15 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 </defs></svg>
 <div class="layout">
   <aside class="rail">
-    <div class="ddaywrap">
-      <div class="kicker">距 考 研</div>
-      <div class="dday"><b id="dday">—</b><i>日</i></div>
-      <div class="warn">只 进 不 退</div>
-    </div>
+    <div class="kicker">408 · CHAOS2CLARITY</div>
+    <h1>真题刷题</h1>
+    <div class="dday"><b id="dday">—</b><i>天</i><em>距 考 试</em></div>
   </aside>
   <aside class="track">
     <div class="trackcard" id="track"></div>
     <div class="dotscard">
       <div class="stitle"><h2>答题进度</h2><small id="stat">—</small></div>
       <div class="dots" id="dots"></div>
-      <div class="hint">点数字跳到对应题</div>
     </div>
     <div class="plan" id="plan"></div>
     <button id="stats-toggle" class="stats-toggle" onclick="toggleStats()">战况诊断</button>
@@ -295,10 +308,14 @@ function paintStatsBtn(){
 }
 function toggleStats(){
   const b = document.getElementById("stats-toggle"); b.classList.add("press");
-  setTimeout(()=>{ b.classList.remove("press"); inStats ? (renderLive(), window.scrollTo(0,0)) : showStats(); }, 140);
+  setTimeout(()=>{ b.classList.remove("press"); if(inStats){ curFeedPage=0; curDotPage=0; renderLive(); window.scrollTo(0,0); } else showStats(); }, 140);
 }
 let curDay = null;          // 正在回顾的历史日期；null=今日实时
 let inStats = false;        // 战况诊断视图
+const PAGE_SIZE = 10;
+const DOT_PAGE = 21;
+let curFeedPage = 0;        // 当前题页(0起)
+let curDotPage = 0;         // 点区当前页(0起)
 paintStatsBtn();
 let navPrev = "", navNext = "";   // 当前页左右可去的日期，供键盘用
 const $ = s => document.querySelector(s);
@@ -310,6 +327,8 @@ async function load(){
   if (DATA.theme && DATA.theme !== "auto") applyTheme(DATA.theme, false);   // 服务端记忆为准
   TODAY_ISO = DATA.today;
   $("#dday").textContent = DATA.dday;
+  const firstIdx = DATA.items.findIndex(it => it.status === "pending");
+  curFeedPage = firstIdx >= 0 ? Math.floor(firstIdx / PAGE_SIZE) : 0;
   renderLive();
   const first = DATA.items.find(it => it.status === "pending");
   if (first) document.getElementById("blk-"+first.id)
@@ -364,7 +383,7 @@ function navDay(date, btn){
 // 切到某天：今日→实时可答页；其它→只读历史回顾。
 function gotoDay(date){
   if (!date) return;
-  if (date === TODAY_ISO){ renderLive(); window.scrollTo(0,0); return; }
+  if (date === TODAY_ISO){ curFeedPage=0; curDotPage=0; renderLive(); window.scrollTo(0,0); return; }
   curDay = date; inStats = false;
   fetch("/api/day?d="+encodeURIComponent(date)).then(r=>r.json()).then(d=>{
     if (curDay !== date) return;   // 期间又切走了
@@ -433,15 +452,39 @@ function renderSidebar(){
 
 function fillDots(items){
   const box = $("#dots"); box.innerHTML = "";
-  items.forEach((it, i) => {
+  const totalDotPages = Math.ceil(items.length / DOT_PAGE);
+  const base = curDotPage * DOT_PAGE;
+  const slice = items.slice(base, base + DOT_PAGE);
+
+  const hasPager = totalDotPages > 1;
+  const prev = document.createElement("button"); prev.className = "dot-arr";
+  prev.textContent = "◀"; prev.disabled = curDotPage === 0;
+  prev.onclick = () => { curDotPage--; fillDots(items); };
+  if (hasPager) box.appendChild(prev);
+
+  const grid = document.createElement("div"); grid.className = "dot-grid";
+  slice.forEach((it, i) => {
+    const gi = base + i;
     const d = document.createElement("div");
-    d.className = "d " + (it.status==="done" ? (it.ok?"ok":"no") : "pending");
-    d.textContent = i + 1;
+    const isNew = it.isNew ? " isnew" : "";
+    d.className = "d " + (it.status==="done" ? (it.ok?"ok":"no") : "pending") + isNew;
+    d.textContent = gi + 1;
     d.title = `${it.year} 第${it.q}题`;
-    d.onclick = () => document.getElementById("blk-"+it.id)
-      ?.scrollIntoView({behavior:"smooth",block:"center"});
-    box.appendChild(d);
+    d.onclick = () => {
+      const page = Math.floor(gi / PAGE_SIZE);
+      if (page !== curFeedPage){ curFeedPage = page; renderFeed(); }
+      setTimeout(() => document.getElementById("blk-"+it.id)
+        ?.scrollIntoView({behavior:"smooth",block:"center"}), 50);
+    };
+    grid.appendChild(d);
   });
+
+  const next = document.createElement("button"); next.className = "dot-arr";
+  next.textContent = "▶"; next.disabled = curDotPage >= totalDotPages - 1;
+  next.onclick = () => { curDotPage++; fillDots(items); };
+
+  box.appendChild(grid);
+  if (hasPager) box.appendChild(next);
 }
 
 function renderFeed(){
@@ -452,21 +495,29 @@ function renderFeed(){
       <p>错题会按遗忘曲线再回来找你。</p></div>`;
     return;
   }
-  let curKey = null;
-  for (const it of DATA.items){
-    if (it.status !== "done"){            // 只对待做题按 科目·章节 分组成块
-      const key = it.subjectCN + "·" + it.chapter;
-      if (key !== curKey){
-        curKey = key;
-        const hd = document.createElement("div");
-        hd.className = "grouphd";
-        hd.innerHTML = `${it.subjectCN}　<small>${prettyCh(it.chapter)}</small>`;
-        feed.appendChild(hd);
-      }
-    }
+  // 同步点区：让当前题页的第一题落在点区可见范围内
+  const needDotPage = Math.floor(curFeedPage * PAGE_SIZE / DOT_PAGE);
+  if (needDotPage !== curDotPage){ curDotPage = needDotPage; fillDots(DATA.items); }
+
+  const totalPages = Math.ceil(DATA.items.length / PAGE_SIZE);
+  const pageItems = DATA.items.slice(curFeedPage * PAGE_SIZE, (curFeedPage + 1) * PAGE_SIZE);
+  for (const it of pageItems){
     feed.appendChild(renderBlock(it));
   }
-  if (DATA.items.every(it=>it.status==="done")) appendDoneNote(feed);
+  if (pageItems.every(it=>it.status==="done")) appendDoneNote(feed);
+  if (totalPages > 1){
+    const nav = document.createElement("div"); nav.className = "pager";
+    const prev = document.createElement("button"); prev.className = "sj";
+    prev.textContent = "← 上一页"; prev.disabled = curFeedPage === 0;
+    prev.onclick = () => { curFeedPage--; renderFeed(); window.scrollTo(0,0); };
+    const info = document.createElement("span"); info.className = "pager-info";
+    info.textContent = `第 ${curFeedPage+1} / ${totalPages} 页`;
+    const next = document.createElement("button"); next.className = "sj";
+    next.textContent = "下一页 →"; next.disabled = curFeedPage >= totalPages - 1;
+    next.onclick = () => { curFeedPage++; renderFeed(); window.scrollTo(0,0); };
+    nav.append(prev, info, next);
+    feed.appendChild(nav);
+  }
 }
 
 function renderBlock(it){
@@ -485,27 +536,38 @@ function renderBlock(it){
   opts.className = "opts";
   opts.innerHTML = LETTERS.map(o=>`<div class="opt" data-o="${o}">${o}</div>`).join("");
   const fb = document.createElement("div"); fb.className = "fb";
+  // 浮层提交按钮，跟着被选选项出现
+  const pop = document.createElement("button"); pop.className = "submit-pop";
+  pop.textContent = "提交"; pop.onclick = () => submitAnswer(it, opts, fb, pop);
+  opts.appendChild(pop);
   b.appendChild(opts); b.appendChild(fb);
   opts.querySelectorAll(".opt").forEach(el=>{
-    el.onclick = () => pickOpt(it, opts, fb, el.dataset.o);
+    el.onclick = () => pickOpt(it, opts, fb, el, pop);
   });
-  const submit = mkBtn("提交", () => submitAnswer(it, opts, fb));
-  submit.className = "sj submit"; submit.disabled = true;
-  fb.appendChild(submit);
   return b;
 }
 
 // 选选项：只高亮、可反复改，不判分(避免手滑/瞎填就被锁定)
-function pickOpt(it, opts, fb, o){
+function pickOpt(it, opts, fb, el, pop){
   if (it._answered) return;
-  it._pick = o;
-  opts.querySelectorAll(".opt").forEach(el=>el.classList.toggle("pick", el.dataset.o===o));
-  const sb = fb.querySelector(".submit"); if (sb) sb.disabled = false;
+  // 再次点击已选项 → 取消选择
+  if (it._pick === el.dataset.o){
+    it._pick = null;
+    el.classList.remove("pick");
+    pop.classList.remove("show");
+    return;
+  }
+  it._pick = el.dataset.o;
+  opts.querySelectorAll(".opt").forEach(e=>e.classList.toggle("pick", e===el));
+  pop.style.left = el.offsetLeft + "px";
+  pop.style.top = (el.offsetTop + el.offsetHeight + 8) + "px";
+  pop.classList.add("show");
 }
 
 // 点“提交”才判分锁定
-async function submitAnswer(it, opts, fb){
+async function submitAnswer(it, opts, fb, pop){
   if (it._answered || !it._pick) return;
+  if (pop) pop.classList.remove("show");
   it._answered = true;
   const res = await (await fetch("/api/grade",{method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -601,18 +663,22 @@ function drillChapter(subjectEN, chapterRaw){
 }
 // ── 坚持热力图 + 近十天趋势 ──
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const HM_WINDOW = 5;     // 热力图滚动窗口：最近 5 个月(今天 6 月→覆盖到 2 月)
+const HM_WINDOW = 5;     // 热力图回溯月数
 const fmtIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const hmLevel = acc => acc>=80?4 : acc>=65?3 : acc>=50?2 : 1;   // 按当天正确率定深浅(做了至少 1 档)
 
 function renderHeat(chart){
   const cells = chart.cells||{}, todayIso = chart.today;
   const today = new Date(todayIso+"T00:00:00");
-  let start = new Date(today.getFullYear(), today.getMonth()-(HM_WINDOW-1), 1);
-  start.setDate(start.getDate()-start.getDay());        // 回退到周日
   const CELL=12, GAP=3, STEP=CELL+GAP, TOP=14, LEFT=28;
+  const MAX_COLS = 20;   // 固定列数，宽度恒为 28+20×15=328px
+  // 从"本周周日"往前推 MAX_COLS-1 周，保证当前周是最后一列
+  const thisSun = new Date(today);
+  thisSun.setDate(today.getDate() - today.getDay());
+  let start = new Date(thisSun);
+  start.setDate(thisSun.getDate() - (MAX_COLS - 1) * 7);
   let rects="", months="", wi=0, lastM=-1;
-  for (let d=new Date(start); d<=today; wi++){
+  for (let d=new Date(start); d<=today && wi < MAX_COLS; wi++){
     const x = LEFT + wi*STEP;
     if (d.getMonth()!==lastM){ lastM=d.getMonth(); months+=`<text class="hm-label" x="${x}" y="9">${HM_MONTHS[lastM]}</text>`; }
     for (let di=0; di<7; di++){

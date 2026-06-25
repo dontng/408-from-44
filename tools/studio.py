@@ -21,6 +21,8 @@ PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
 NORM_FILE = REPO / "review" / "imgnorm.json"   # 每题显示宽(见 tools/imgnorm.py)：让屏幕字号一致
 THEME_FILE = REPO / ".studio-theme"            # 明暗偏好：每机本地，不入 git
+SESSION_DIR = REPO / "sessions"
+_MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
 
 
 def read_theme():
@@ -132,6 +134,39 @@ def load_state():
 def save_state(s):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(s, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def _session_path(date_iso, day):
+    d = datetime.date.fromisoformat(date_iso)
+    month = _MONTHS[d.month - 1]
+    return SESSION_DIR / month / f"{d.strftime('%m%d')}-day{day}-session.json"
+
+
+def _sync_session(state, date_iso=None):
+    if date_iso is None:
+        date_iso = today()
+    log = state.get("_progress", {}).get(date_iso, {})
+    dn = day_num(date_iso, state)
+    path = _session_path(date_iso, dn)
+    res = log.get("res", {})
+    answers = {}
+    for qid in log.get("done", []):
+        s = state.get(qid, {})
+        entry = {"ok": res.get(qid, s.get("last_ok", True))}
+        pick = s.get("last_pick")
+        if pick:
+            entry["pick"] = pick
+        answers[qid] = entry
+    data = {
+        "date": date_iso,
+        "day": dn,
+        "roster": log.get("roster") or list(log.get("done", [])),
+        "answers": answers,
+        "ok": log.get("ok", 0),
+        "total": len(log.get("done", []))
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def today():
@@ -280,16 +315,18 @@ def build_today(state):
         new_today = pool[:remaining_new]
 
     pending = order_questions(due + new_today, phase, active)
+    new_ids = {it["id"] for it in new_today}
 
     out = []
     for qid in done:
         it = QUESTIONS.get(qid)
         if it:
             ent = state.get(qid, {})
-            out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True)})
+            out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True),
+                        "isNew": qid in new_ids})
     for it in pending:
-        out.append({**_pub(it), "status": "pending"})
-    return out, log
+        out.append({**_pub(it), "status": "pending", "isNew": it["id"] in new_ids})
+    return out, log, new_ids
 
 
 # ── 历史回顾：左右键翻看过去某天(题单存 state.json 的 _progress) ──
@@ -308,15 +345,24 @@ def day_nav(date, days):
     return (days[i - 1] if i > 0 else "", days[i + 1] if i < len(days) - 1 else "")
 
 
-def snapshot_roster(state, items):
+def snapshot_roster(state, items, new_ids=None):
     """把当天完整题单(含未答)记进 _progress[今天].roster，供回顾显示未答题。
-    只在题单有新增时落盘。"""
+    只在题单有新增时落盘。new_ids 为首次出现的题 id 集合。"""
     log = day_log(state)
     ids = {it["id"] for it in items}
     cur = set(log.get("roster", []))
-    if not ids <= cur:
+    changed = not ids <= cur
+    if changed:
         log["roster"] = sorted(cur | ids)
+    if new_ids:
+        cur_new = set(log.get("new_ids", []))
+        merged = cur_new | set(new_ids)
+        if merged != cur_new:
+            log["new_ids"] = sorted(merged)
+            changed = True
+    if changed:
         save_state(state)
+        _sync_session(state)
 
 
 def build_day(state, date):
@@ -331,20 +377,22 @@ def build_day(state, date):
     res = log.get("res", {})
     done_set = set(log.get("done", []))
     roster = log.get("roster") or list(log.get("done", []))   # 旧记录无 roster 则回退到答过的题
+    new_ids = set(log.get("new_ids", []))
     items = []
     for qid in roster:
         it = QUESTIONS.get(qid)
         if not it:
             continue
+        is_new = qid in new_ids
         if qid in done_set:
             ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
-            d = {**_pub(it), "status": "done", "ok": ok}
+            d = {**_pub(it), "status": "done", "ok": ok, "isNew": is_new}
             pick = state.get(qid, {}).get("last_pick")
             if pick and not ok:
                 d["pick"] = pick
             items.append(d)
         else:
-            items.append({**_pub(it), "status": "pending"})
+            items.append({**_pub(it), "status": "pending", "isNew": is_new})
     okn = sum(1 for x in items if x.get("ok"))
     return {**base, "exists": bool(items), "items": items, "total": len(items),
             "done": len(done_set), "ok": okn}
@@ -505,6 +553,7 @@ def grade(state, qid, pick=None, selfok=None):
             log["new"] += 1
     log.setdefault("res", {})[qid] = correct   # 记当天每题对错，回顾不受日后复习影响
     save_state(state)
+    _sync_session(state)
     return {"known": True, "correct": correct, "answer": ans}
 
 
@@ -544,8 +593,8 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, PAGE.read_text(encoding="utf-8"), "text/html; charset=utf-8")
         if path == "/api/today":
             state = load_state()
-            items, log = build_today(state)
-            snapshot_roster(state, items)        # 记下当天完整题单(含未答)，供回顾页
+            items, log, new_ids = build_today(state)
+            snapshot_roster(state, items, new_ids)   # 记下当天完整题单(含未答)，供回顾页
             phase = phase_today()
             prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {
@@ -594,7 +643,17 @@ class H(BaseHTTPRequestHandler):
         return self._send(404, {"error": "not found"})
 
 
+def _migrate_sessions():
+    """把 _progress 里已有的历史天迁移成 session 文件(幂等，已存在则跳过)。"""
+    state = load_state()
+    for date_iso in state.get("_progress", {}):
+        dn = day_num(date_iso, state)
+        if not _session_path(date_iso, dn).exists():
+            _sync_session(state, date_iso)
+
+
 def main():
+    _migrate_sessions()
     print(f"408 studio · http://127.0.0.1:{PORT}  （题库 {len(QUESTIONS)} 题，距考试 {dday()} 天）")
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
 
