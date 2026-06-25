@@ -147,6 +147,15 @@ def dday():
     return (datetime.date.fromisoformat(EXAM_DATE) - datetime.date.today()).days - 1
 
 
+def daily_quota(state):
+    """每日建议题数：剩余未做题量 / 剩余天数，夹在 [10, 30] 区间。"""
+    done_all = set()
+    for log in state.get("_progress", {}).values():
+        done_all.update(log.get("done", []))
+    unseen = sum(1 for qid in QUESTIONS if qid not in done_all)
+    return max(10, min(30, round(unseen / max(1, dday()))))
+
+
 def day1_anchor(state):
     """day1 = 第一天做题的日期(最早有记录的天)；还没记录时就是今天。"""
     days = state.get("_progress", {}).keys()
@@ -414,7 +423,7 @@ def build_stats(state):
         if not s or not s.get("seen"):
             continue
         subj, ch = q_subject(it), q_chapter(it)
-        ck = (SUBJECT_CN[subj], pretty_ch(ch))
+        ck = (subj, ch)
         ch_agg[ck]["seen"] += s["seen"]; ch_agg[ck]["right"] += s.get("right", 0)
         subj_agg[subj]["seen"] += s["seen"]; subj_agg[subj]["right"] += s.get("right", 0)
         if s.get("stuck"):                  # ⓪ 待解清单：手动标"没懂"，持久不清
@@ -423,10 +432,29 @@ def build_stats(state):
             mistakes.append(_pub(it))
 
     # ② 弱项诊断：章节正确率升序(最弱在前)
-    weak = [{"subject": s, "chapter": c, "seen": v["seen"],
-             "acc": round(v["right"] / v["seen"] * 100)}
+    weak = [{"subject": SUBJECT_CN[s], "subjectEN": s, "chapter": pretty_ch(c), "chapterRaw": c,
+             "seen": v["seen"], "acc": round(v["right"] / v["seen"] * 100)}
             for (s, c), v in ch_agg.items()]
     weak.sort(key=lambda w: (w["acc"], -w["seen"]))
+
+    # ⑤ 今日处方：按补分价值推荐最值得练的章节(正确率低于 75% 且做题够数)
+    prescription = []
+    for w in weak:
+        if len(prescription) >= 3:
+            break
+        if w["seen"] < 3 or w["acc"] >= 75:
+            continue
+        pts = EXAM_POINTS.get(w["subjectEN"], 0)
+        ch_count = max(1, sum(1 for s, _ in ch_agg if s == w["subjectEN"]))
+        gap = (75 - w["acc"]) / 100
+        value = round(gap * pts / ch_count, 1)
+        rec_n = max(5, min(12, round(gap * 40)))
+        prescription.append({
+            "subject": w["subject"], "subjectEN": w["subjectEN"],
+            "chapter": w["chapter"], "chapterRaw": w["chapterRaw"],
+            "acc": w["acc"], "seen": w["seen"],
+            "value": value, "rec_n": rec_n,
+        })
 
     mistakes.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
     stuck.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
@@ -444,7 +472,8 @@ def build_stats(state):
                   "target": 120, "by_subject": by_subj}
 
     return {"today": today_summary, "weak": weak, "stuck": stuck,
-            "mistakes": mistakes, "projection": projection}
+            "mistakes": mistakes, "projection": projection,
+            "prescription": prescription}
 
 
 def grade(state, qid, pick=None, selfok=None):
@@ -531,6 +560,7 @@ class H(BaseHTTPRequestHandler):
                 "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
                             "random": "全真模拟"}[phase],
                 "subjects": [SUBJECT_CN[s] for s in active_subjects()],
+                "quota": daily_quota(state),
             })
         if path == "/api/day":
             date = (parse_qs(urlparse(self.path).query).get("d") or [""])[0]

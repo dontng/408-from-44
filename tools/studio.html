@@ -188,6 +188,28 @@ footer{margin-top:30px;text-align:center;font-size:10.5px;color:var(--faint);let
 .theme-toggle:hover svg{transform:rotate(-14deg) scale(1.08)}
 .theme-toggle.press{transform:scale(.72) translateY(3px);opacity:.55;
   color:var(--akane);transition-duration:.08s}
+
+/* 今日配额进度条 */
+.quota-wrap{margin-top:14px}
+.quota-label{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);letter-spacing:.06em;margin-bottom:5px}
+.quota-done-mark{color:var(--moss);font-weight:600}
+.quota-track{height:5px;background:var(--hair);border-radius:3px;overflow:hidden;max-width:144px}
+.quota-fill{height:100%;background:var(--moss);border-radius:3px;transition:width .5s}
+.quota-fill.over{background:var(--akane)}
+/* 今日小结 */
+.ts-row{display:flex;align-items:baseline;gap:14px;margin-bottom:10px}
+.ts-big{font-size:15px;font-weight:600;letter-spacing:.04em}
+.ts-sub{font-size:12.5px;color:var(--sub)}
+.ts-chips{display:flex;flex-wrap:wrap;gap:6px}
+/* 今日处方 */
+.rx-item{padding:13px 0;border-bottom:1px solid var(--hair)}
+.rx-item:last-child{border-bottom:none;padding-bottom:4px}
+.rx-top{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.rx-name{font-size:13px;font-weight:600;letter-spacing:.04em}
+.rx-stat{font-size:11.5px;color:var(--sub)}
+.rx-bottom{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sub)}
+.rx-bottom b{color:var(--akane)}
+.drill-btn{font-size:11px;padding:3px 12px;margin-left:auto;letter-spacing:.06em}
 </style>
 <script>
 /* 预着色：首帧前定明暗，避免白闪。优先本机记忆，否则跟随系统。 */
@@ -395,9 +417,17 @@ function imgW(it){ return it.dispW ? ` style="width:${it.dispW}px"` : ` style="m
 
 function renderSidebar(){
   const total = DATA.items.length;
-  $("#stat").innerHTML = `今日 <b>${DATA.done}</b>/${total}　对 <b>${DATA.ok}</b>`;
+  const done = DATA.done;
+  const quota = DATA.quota || total || 10;
+  const pct = Math.min(100, Math.round(done / quota * 100));
+  const over = done >= quota;
+  $("#stat").innerHTML = `今日 <b>${done}</b>/${total}　对 <b>${DATA.ok}</b>`;
   const subs = (DATA.subjects||[]).join(" + ");
-  $("#plan").innerHTML = subs ? `今日两门：<b>${subs}</b>` : "";
+  $("#plan").innerHTML = (subs ? `今日两门：<b>${subs}</b>` : "")
+    + `<div class="quota-wrap">
+         <div class="quota-label"><span>日配额 ${done}/${quota} 题</span>${over?'<span class="quota-done-mark">✓ 达标</span>':''}</div>
+         <div class="quota-track"><div class="quota-fill${over?' over':''}" style="width:${pct}%"></div></div>
+       </div>`;
   fillDots(DATA.items);
 }
 
@@ -551,6 +581,24 @@ function sect(title, inner){
   d.innerHTML = `<h3>${title}</h3>${inner}`;
   return d;
 }
+function barDrill(label, acc, valtext, subjectEN, chapterRaw){
+  const w = acc == null ? 0 : acc;
+  const cls = acc == null ? "" : (acc < 60 ? "weak" : acc >= 85 ? "good" : "");
+  const val = acc == null ? "未做" : `${acc}%`;
+  return `<div class="bar"><span class="lab">${label}</span>
+    <span class="track"><span class="fill ${cls}" style="width:${w}%"></span></span>
+    <span class="val">${val}${valtext?" · "+valtext:""}</span>
+    <button class="sj drill-btn" data-subj="${subjectEN}" data-ch="${chapterRaw}">练 →</button></div>`;
+}
+function drillChapter(subjectEN, chapterRaw){
+  inStats = false; paintStatsBtn();
+  renderLive(); window.scrollTo(0,0);
+  requestAnimationFrame(() => {
+    const t = DATA.items.find(it =>
+      it.subject === subjectEN && it.chapter === chapterRaw && it.status === "pending");
+    if (t) document.getElementById("blk-"+t.id)?.scrollIntoView({behavior:"smooth",block:"center"});
+  });
+}
 // ── 坚持热力图 + 近十天趋势 ──
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const HM_WINDOW = 5;     // 热力图滚动窗口：最近 5 个月(今天 6 月→覆盖到 2 月)
@@ -606,10 +654,43 @@ function renderChart(chart){
 async function showStats(){
   inStats = true; curDay = null; paintStatsBtn();
   $("#daynav").innerHTML = ""; $("#daytitle").innerHTML = "";
+  const feed = $("#feed");
+  feed.innerHTML = `<div class="empty-s" style="padding:20px 0">加载中…</div>`;
   const st = await (await fetch("/api/stats")).json();
-  const feed = $("#feed"); feed.innerHTML = "";
+  feed.innerHTML = "";
 
-  // ⓪ 待解清单(没懂) — 顶部·今晚要解决的
+  // ① 今日小结
+  const tod = st.today;
+  const todInner = tod.done === 0
+    ? `<div class="empty-s">今天还没做题，去刷几道再来看。</div>`
+    : `<div class="ts-row"><span class="ts-big">${tod.done} 题</span>`
+      + `<span class="ts-sub">对 ${tod.ok}　正确率 <b>${tod.acc}%</b></span></div>`
+      + (tod.wrong.length
+        ? `<div class="ts-chips">${tod.wrong.slice(0,4).map(w=>`<span class="chip">${w.label} ×${w.n}</span>`).join("")}</div>`
+        : `<div style="font-size:13px;color:var(--moss)">今日全对 🎯</div>`);
+  feed.appendChild(sect("今日小结", todInner));
+
+  // ② 今日处方
+  const rx = st.prescription || [];
+  const rxSect = document.createElement("div"); rxSect.className = "sect";
+  rxSect.innerHTML = `<h3>今日处方</h3>`;
+  if (rx.length) {
+    for (const r of rx) {
+      const item = document.createElement("div"); item.className = "rx-item";
+      item.innerHTML = `<div class="rx-top"><span class="rx-name">${r.subject}·${r.chapter}</span>`
+        + `<span class="rx-stat">当前 ${r.acc}%　做了 ${r.seen} 次</span></div>`
+        + `<div class="rx-bottom">做 <b>${r.rec_n}</b> 题，可补约 <b>+${r.value}</b> 分</div>`;
+      const btn = mkBtn("立即练 →", () => drillChapter(r.subjectEN, r.chapterRaw));
+      btn.className = "sj drill-btn";
+      item.querySelector(".rx-bottom").appendChild(btn);
+      rxSect.appendChild(item);
+    }
+  } else {
+    rxSect.innerHTML += `<div class="empty-s">做几题后，这里给出今日最值得练的章节。</div>`;
+  }
+  feed.appendChild(rxSect);
+
+  // ⓪ 待解清单(没懂)
   const stk = st.stuck || [];
   feed.appendChild(sect(`待解清单 · 没懂（${stk.length}）`,
     stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
@@ -618,19 +699,31 @@ async function showStats(){
         <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
       : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
 
-  // ② 弱项诊断
-  feed.appendChild(sect("弱项诊断",
-    st.weak.length ? st.weak.slice(0,12).map(w=>bar(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`)).join("")
-      : `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`));
+  // ③ 弱项诊断（带立即练按钮）
+  const weakSect = document.createElement("div"); weakSect.className = "sect";
+  weakSect.innerHTML = `<h3>弱项诊断</h3>`;
+  if (st.weak.length) {
+    const weakInner = document.createElement("div");
+    weakInner.innerHTML = st.weak.slice(0,12).map(w =>
+      barDrill(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`, w.subjectEN||"", w.chapterRaw||"")
+    ).join("");
+    weakInner.querySelectorAll(".drill-btn").forEach(btn => {
+      btn.onclick = () => drillChapter(btn.dataset.subj, btn.dataset.ch);
+    });
+    weakSect.appendChild(weakInner);
+  } else {
+    weakSect.innerHTML += `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`;
+  }
+  feed.appendChild(weakSect);
 
-  // ③ 错题本(全部最近做错，含疏忽)
+  // ④ 错题本
   feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
     st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
         <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
       : `<div class="empty-s">暂无错题 👍</div>`));
 
-  // ④ 冲刺预测分 — 垫底·参考
+  // ⑤ 冲刺预测分
   const p = st.projection;
   feed.appendChild(sect("冲刺预测分",
     `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
