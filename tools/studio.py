@@ -167,6 +167,47 @@ def _sync_session(state, date_iso=None):
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    _write_md(path, data)
+
+
+def _write_md(json_path, data):
+    roster   = data.get("roster", [])
+    answers  = data.get("answers", {})
+    ok_count = data.get("ok", 0)
+    total    = data.get("total", 0)
+    date_iso = data.get("date", "")
+    day      = data.get("day", "?")
+
+    # sessions/<month>/ → bank/ 的相对路径
+    img_base = "../../bank"
+
+    lines = [f"# Day {day} · {date_iso}", ""]
+    if total:
+        pct = round(ok_count / total * 100)
+        lines += [f"今日已答 {total} 题 · 对 {ok_count} · 正确率 {pct}%", ""]
+    else:
+        lines += [f"共 {len(roster)} 题，今日未作答", ""]
+
+    for i, qid in enumerate(roster, 1):
+        year, num = qid.split("-")
+        img = f"{img_base}/{year}/q{int(num):02d}.png"
+        ans = answers.get(qid)
+        if ans:
+            mark = "✓" if ans.get("ok") else "✗"
+            pick = ans.get("pick", "")
+            status = f"选：{pick}　{mark}" if pick else mark
+        else:
+            status = "（未作答）"
+        lines += [
+            f"### Q{i} · {qid}",
+            f"![{qid}]({img})",
+            "",
+            status,
+            "",
+        ]
+
+    md_path = json_path.with_suffix(".md")
+    md_path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def today():
@@ -413,7 +454,7 @@ def build_chart(state):
         streak += 1
         d -= datetime.timedelta(days=1)
     recent = []                                 # 近七天(有记录的日期，降序)
-    for date in sorted(prog.keys(), reverse=True)[:7]:
+    for date in sorted(prog.keys(), reverse=True)[:3]:
         log = prog[date]
         done = len(log.get("done", []))
         ok = log.get("ok", 0)
