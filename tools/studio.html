@@ -72,7 +72,7 @@ aside.track{min-width:0}
 
 /* ── 题流 ── */
 main{min-width:0}
-/* 历史导航：手绘风左右箭头(过 #sketch 滤镜抖成手绘味)，键盘 ←/→ 翻日；sticky 悬浮于正文顶部 */
+/* 历史导航：手绘风左右箭头(过 #sketch 滤镜抖成手绘味)；sticky 悬浮于正文顶部 */
 .daynav{position:sticky;top:4px;z-index:30;display:flex;justify-content:space-between;align-items:center;
   height:60px;margin:-8px -14px 4px;pointer-events:none}
 .dayarrow{pointer-events:auto;width:86px;height:64px;padding:0;border:none;cursor:pointer;
@@ -408,7 +408,7 @@ const ARROW = {
 const arrowSvg = p => `<svg viewBox="0 0 88 64" fill="none" stroke="currentColor" stroke-width="3.6"`
   + ` stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 
-// 顶部一左一右翻日箭头；无目标的一侧隐藏但占位
+// 顶部一左一右切换日期箭头；无目标的一侧隐藏但占位
 function renderDayNav(prev, next){
   navPrev = prev || ""; navNext = next || "";
   $("#daynav").innerHTML =
@@ -418,7 +418,7 @@ function renderDayNav(prev, next){
 function renderDayTitle(main, sub){
   $("#daytitle").innerHTML = `<div class="stitle"><h2>${main}</h2>${sub?`<small>${sub}</small>`:""}</div>`;
 }
-// 点击/按键：先加 .press 下沉反馈，再翻日
+// 点击：先加 .press 下沉反馈，再切换日期
 function navDay(date, btn){
   if (!date) return;
   btn.classList.add("press");
@@ -959,7 +959,7 @@ async function unstick(id){
     body:JSON.stringify({id, stuck:false})});
   document.getElementById("stuck-"+id)?.remove();
 }
-// 方向键不映射网页行为，翻日用顶部手绘箭头点击
+// 方向键不映射网页行为，切换日期用顶部手绘箭头点击
 
 load().then(() => { if (location.hash === "#stats") showStats(); });
 
