@@ -726,14 +726,16 @@ function makePocket(id, notes, readonly){
     ta.placeholder = "记录你对这道题的疑问或困惑…"; ta.rows = 2;
     // 恢复草稿
     try { const d = localStorage.getItem(DRAFT_KEY); if (d) ta.value = d; } catch(e) {}
-    // 打字时自动存草稿（debounce 2s），点「记下」后清除
+    // 离开编辑区立刻存（像 VSCode），打字 debounce 2s 兜底（比如直接关标签页没触发 blur）
+    const saveDraft = () => {
+      try { if (ta.value.trim()) localStorage.setItem(DRAFT_KEY, ta.value);
+            else localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+    };
+    ta.addEventListener("blur", saveDraft);
     let draftTimer = null;
     ta.addEventListener("input", () => {
       clearTimeout(draftTimer);
-      draftTimer = setTimeout(() => {
-        try { if (ta.value.trim()) localStorage.setItem(DRAFT_KEY, ta.value);
-              else localStorage.removeItem(DRAFT_KEY); } catch(e) {}
-      }, 2000);
+      draftTimer = setTimeout(saveDraft, 2000);
     });
     const btn = document.createElement("button"); btn.className = "sj pocket-submit";
     btn.textContent = "记下";
