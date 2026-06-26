@@ -959,9 +959,12 @@ async function unstick(id){
     body:JSON.stringify({id, stuck:false})});
   document.getElementById("stuck-"+id)?.remove();
 }
-// 左右方向键翻看历史(战况诊断视图里不响应)
+// 左右方向键翻看历史(战况诊断视图、输入框内不响应)
 document.addEventListener("keydown", e => {
   if (inStats || e.metaKey || e.ctrlKey || e.altKey) return;
+  // 焦点在输入框/文本域时不劫持方向键，避免写疑问时误翻页
+  const tag = e.target.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || e.target.isContentEditable) return;
   if (e.key === "ArrowLeft")  { const b=$("#daynav .dayarrow.left:not(.gone)");  if(b){e.preventDefault();b.click();} }
   if (e.key === "ArrowRight") { const b=$("#daynav .dayarrow.right:not(.gone)"); if(b){e.preventDefault();b.click();} }
 });
