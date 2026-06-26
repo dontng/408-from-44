@@ -7,7 +7,7 @@ usage:  studio.py [repo_dir] [port]   （由根目录 studio.sh 启动）
 题目图片在 bank/<年>/qNN.png，答案在 answers/<年>.txt，
 学习状态(遗忘曲线)存 review/state.json —— 纯文本，可随仓库多机同步。
 """
-import sys, os, re, json, datetime, mimetypes, random, time
+import sys, os, re, json, datetime, mimetypes, random, time, subprocess, threading
 SERVER_STARTED = str(int(time.time()))
 from collections import defaultdict, deque, Counter
 from pathlib import Path
@@ -796,8 +796,28 @@ def _migrate_sessions():
             _sync_session(state, date_iso)
 
 
+def _autocommit_loop():
+    """后台线程：每小时自动提交 review/ sessions/ 的进度变更。"""
+    while True:
+        time.sleep(3600)
+        try:
+            r = subprocess.run(["git", "diff", "--quiet", "review/", "sessions/"],
+                               cwd=REPO, capture_output=True)
+            if r.returncode == 0:
+                continue  # 没改动，跳过
+            subprocess.run(["git", "add", "review/", "sessions/"], cwd=REPO, check=True)
+            stamp = datetime.datetime.now().strftime("%m/%d %H:%M")
+            subprocess.run(["git", "commit", "-m", f"auto: 进度自动提交 {stamp}"],
+                           cwd=REPO, check=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=REPO, check=True)
+        except Exception:
+            pass  # 静默失败，不影响刷题
+
+
 def main():
     _migrate_sessions()
+    t = threading.Thread(target=_autocommit_loop, daemon=True)
+    t.start()
     print(f"408 studio · http://127.0.0.1:{PORT}  （题库 {len(QUESTIONS)} 题，距考试 {dday()} 天）")
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
 
