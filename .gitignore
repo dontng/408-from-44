@@ -4,3 +4,6 @@ __pycache__/
 
 # 深色模式偏好（每机本地）
 .studio-theme
+
+# 自动提交日志
+.autocommit.log
