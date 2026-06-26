@@ -157,6 +157,31 @@ main{min-width:0}
 .pocket-body textarea::placeholder{color:var(--faint)}
 .pocket-note{font-size:13px;color:var(--sub);line-height:1.75;padding:4px 0}
 
+/* 笔记时间线 */
+.pocket-timeline{margin-bottom:12px}
+.pocket-row{display:flex;align-items:flex-start;gap:7px;font-size:12px;
+  padding:5px 0;line-height:1.6}
+.pocket-row+.pocket-row{border-top:1px solid var(--hair)}
+.pocket-ts{color:var(--faint);font-size:10px;white-space:nowrap;flex-shrink:0;
+  min-width:78px;padding-top:1px}
+.pocket-st{font-size:9.5px;padding:1px 5px;border-radius:3px;flex-shrink:0;letter-spacing:.06em}
+.pocket-st.open{background:var(--akane);color:#fff}
+.pocket-st.progress{background:var(--ai);color:#fff}
+.pocket-st.resolved{background:var(--moss);color:#fff}
+.pocket-text{color:var(--ink);flex:1;min-width:0}
+.pocket-st-toggle{cursor:pointer;font-size:10px;color:var(--faint);flex-shrink:0;
+  padding:1px 4px;transition:color .15s;user-select:none}
+.pocket-st-toggle:hover{color:var(--akane)}
+/* 输入区 */
+.pocket-input-row{display:flex;gap:8px;align-items:flex-start}
+.pocket-input-row textarea{flex:1;min-height:52px;
+  background:var(--paper);border:1px solid var(--line);border-radius:6px;
+  padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
+  resize:vertical;line-height:1.7}
+.pocket-input-row textarea:focus{outline:none;border-color:var(--ai)}
+.pocket-input-row textarea::placeholder{color:var(--faint)}
+.pocket-submit{flex-shrink:0;align-self:flex-end}
+
 /* ── 战况诊断面板 ── */
 .stats-toggle{display:inline-grid;place-items:center;margin-top:28px;margin-left:42px;
   padding:0 16px 0 calc(16px + .14em);height:40px;border:none;cursor:pointer;
@@ -444,7 +469,7 @@ function renderReviewBlock(it){
   const pick = (it.pick && !it.ok) ? `　<span class="done-tag">选了 ${it.pick}</span>` : "";
   b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}${pick}</div>
     <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
-  b.appendChild(makePocket(it.id, true));
+  b.appendChild(makePocket(it.id, it.notes, true));
   return b;
 }
 
@@ -551,7 +576,7 @@ function renderBlock(it){
     tag.className = "fb";
     tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
     b.appendChild(tag);
-    b.appendChild(makePocket(it.id, false));
+    b.appendChild(makePocket(it.id, it.notes, false));
     return b;
   }
   const opts = document.createElement("div");
@@ -563,7 +588,7 @@ function renderBlock(it){
   pop.textContent = "提交"; pop.onclick = () => submitAnswer(it, opts, fb, pop);
   opts.appendChild(pop);
   b.appendChild(opts); b.appendChild(fb);
-  b.appendChild(makePocket(it.id, false));
+  b.appendChild(makePocket(it.id, it.notes, false));
   opts.querySelectorAll(".opt").forEach(el=>{
     el.onclick = () => pickOpt(it, opts, fb, el, pop);
   });
@@ -644,37 +669,73 @@ async function markStuck(it, fb){
 function mkBtn(t, fn){ const b=document.createElement("button"); b.className="sj";
   b.textContent=t; b.onclick=fn; return b; }
 
-// ── 疑问口袋：localStorage 持久化 ──
-function getPocketNote(id){
-  try { return localStorage.getItem("pocket-"+id) || ""; } catch(e) { return ""; }
-}
-function savePocketNote(id, text){
-  try { localStorage.setItem("pocket-"+id, text); } catch(e) {}
-}
-function makePocket(id, readonly){
+// ── 疑问口袋：后端 notes.json 持久化 ──
+const NOTE_STATUS_CN = {"open":"未解决","progress":"有进展","resolved":"已解决"};
+
+function makePocket(id, notes, readonly){
   const pocket = document.createElement("div");
   pocket.className = "pocket";
   const toggle = document.createElement("span");
   toggle.className = "pocket-toggle";
   const body = document.createElement("div");
   body.className = "pocket-body";
-  const saved = getPocketNote(id);
 
-  if (readonly){
-    if (!saved) { pocket.style.display = "none"; return pocket; }
-    toggle.textContent = "疑问";
-    const note = document.createElement("div");
-    note.className = "pocket-note";
-    note.innerHTML = saved.replace(/\n/g, "<br>");
-    body.appendChild(note);
-  } else {
-    toggle.textContent = "疑问";
-    if (saved) toggle.classList.add("has-note");
+  notes = notes || [];
+  const hasUnresolved = notes.some(n => n.status !== "resolved");
+
+  if (readonly && !notes.length) { pocket.style.display = "none"; return pocket; }
+
+  toggle.textContent = "疑问";
+  if (hasUnresolved) toggle.classList.add("has-note");
+
+  // ── 笔记时间线 ──
+  if (notes.length) {
+    const tl = document.createElement("div"); tl.className = "pocket-timeline";
+    notes.forEach((n, i) => {
+      const row = document.createElement("div"); row.className = "pocket-row";
+      const st = n.status || "open";
+      const role = n.role || "";
+      const tsShort = (n.ts||"").replace("T"," ").slice(0,16);
+      row.innerHTML = `<span class="pocket-ts">${n.day?`D${n.day} `:""}${tsShort}</span>`
+        + `<span class="pocket-st ${st}">${role==="ai"?"AI":NOTE_STATUS_CN[st]||st}</span>`
+        + `<span class="pocket-text">${escHtml(n.text||"")}</span>`;
+      // 状态切换（只对用户笔记，不对 AI 回答）
+      if (!readonly && role !== "ai") {
+        const stTgl = document.createElement("span");
+        stTgl.className = "pocket-st-toggle"; stTgl.title = "切换状态"; stTgl.textContent = "◷";
+        stTgl.onclick = async () => {
+          const next = st === "open" ? "progress" : st === "progress" ? "resolved" : "open";
+          const r = await fetch("/api/notes", {method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({qid:id, idx:i, status:next})});
+          const j = await r.json();
+          if (j.ok) { const np = makePocket(id, j.notes, false); pocket.replaceWith(np); }
+        };
+        row.appendChild(stTgl);
+      }
+      tl.appendChild(row);
+    });
+    body.appendChild(tl);
+  }
+
+  // ── 输入区 ──
+  if (!readonly) {
+    const ir = document.createElement("div"); ir.className = "pocket-input-row";
     const ta = document.createElement("textarea");
-    ta.placeholder = "记录你对这道题的疑问或困惑…";
-    ta.value = saved || "";
-    ta.addEventListener("input", () => savePocketNote(id, ta.value));
-    body.appendChild(ta);
+    ta.placeholder = "记录你对这道题的疑问或困惑…"; ta.rows = 2;
+    const btn = document.createElement("button"); btn.className = "sj pocket-submit";
+    btn.textContent = "记下";
+    btn.onclick = async () => {
+      const text = ta.value.trim(); if (!text) return;
+      btn.disabled = true; btn.textContent = "…";
+      const r = await fetch("/api/notes", {method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({qid:id, text:text, status:"open"})});
+      const j = await r.json();
+      if (j.ok) { const np = makePocket(id, j.notes, false); pocket.replaceWith(np); }
+    };
+    ir.appendChild(ta); ir.appendChild(btn);
+    body.appendChild(ir);
   }
 
   pocket.appendChild(toggle);
@@ -687,6 +748,7 @@ function makePocket(id, readonly){
 
   return pocket;
 }
+function escHtml(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 
 function appendDoneNote(feed){
   const n = document.createElement("div"); n.className="empty";
@@ -831,6 +893,31 @@ async function showStats(){
           <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
         <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
       : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
+
+  // ⓪+ 未解疑问（笔记口袋里 status != resolved 的条目）
+  const unr = st.unresolved_notes || [];
+  const unrBySubj = {};
+  unr.forEach(u => {
+    const key = u.subjectCN;
+    if (!unrBySubj[key]) unrBySubj[key] = [];
+    unrBySubj[key].push(u);
+  });
+  const unrInner = unr.length
+    ? Object.entries(unrBySubj).map(([subj, items]) =>
+        `<div style="font-size:11.5px;color:var(--sub);letter-spacing:.1em;margin:14px 0 6px">${subj}</div>`
+        + items.map(u => {
+            const st = u.note.status || "open";
+            const stLabel = NOTE_STATUS_CN[st] || st;
+            return `<div class="mk">
+              <div class="mkmeta">${u.subjectCN} · ${u.chapter} · ${u.year} 第${u.q}题
+                <span class="pocket-st ${st}" style="margin-left:8px">${stLabel}</span>
+                <button class="sj" disabled style="margin-left:8px;opacity:.35;font-size:10px">🤖 问 AI</button></div>
+              <div style="font-size:13px;color:var(--ink);line-height:1.7;margin:4px 0">${escHtml(u.note.text||"")}</div>
+            </div>`;
+          }).join("")
+      ).join("")
+    : `<div class="empty-s">没有未解决的疑问 🎉</div>`;
+  feed.appendChild(sect(`未解疑问（${unr.length}）`, unrInner));
 
   // ③ 弱项诊断（带立即练按钮）
   const weakSect = document.createElement("div"); weakSect.className = "sect";

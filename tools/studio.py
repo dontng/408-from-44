@@ -19,6 +19,7 @@ PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8408
 HERE = Path(__file__).resolve().parent
 PAGE = HERE / "studio.html"
 STATE_FILE = REPO / "review" / "state.json"
+NOTES_FILE = REPO / "review" / "notes.json"    # 疑问口袋：每道题的笔记时间线
 NORM_FILE = REPO / "review" / "imgnorm.json"   # 每题显示宽(见 tools/imgnorm.py)：让屏幕字号一致
 THEME_FILE = REPO / ".studio-theme"            # 明暗偏好：每机本地，不入 git
 SESSION_DIR = REPO / "sessions"
@@ -136,6 +137,44 @@ def save_state(s):
     STATE_FILE.write_text(json.dumps(s, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
+def load_notes():
+    try:
+        if NOTES_FILE.exists():
+            return json.loads(NOTES_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        pass
+    return {}
+
+
+def save_notes(notes):
+    NOTES_FILE.parent.mkdir(parents=True, exist_ok=True)
+    NOTES_FILE.write_text(json.dumps(notes, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def add_note(qid, text=None, status="open", idx=None, day=0):
+    """新增或更新一条笔记。有 text → 追加；只有 status → 更新第 idx 条的状态。"""
+    notes = load_notes()
+    if qid not in notes:
+        notes[qid] = []
+    if text:
+        entry = {
+            "ts": datetime.datetime.now().isoformat(timespec="minutes"),
+            "day": day,
+            "text": text,
+            "status": status or "open"
+        }
+        notes[qid].append(entry)
+        result = notes[qid]
+    elif idx is not None and 0 <= idx < len(notes[qid]):
+        notes[qid][idx]["status"] = status
+        notes[qid][idx]["ts"] = datetime.datetime.now().isoformat(timespec="minutes")
+        result = notes[qid]
+    else:
+        result = notes[qid]
+    save_notes(notes)
+    return result
+
+
 def _session_path(date_iso, day):
     d = datetime.date.fromisoformat(date_iso)
     month = _MONTHS[d.month - 1]
@@ -157,6 +196,12 @@ def _sync_session(state, date_iso=None):
         if pick:
             entry["pick"] = pick
         answers[qid] = entry
+    # 当天涉及的题目的 notes（有则带，无则略）
+    all_notes = load_notes()
+    session_notes = {}
+    for qid in log.get("roster") or log.get("done", []):
+        if qid in all_notes:
+            session_notes[qid] = all_notes[qid]
     data = {
         "date": date_iso,
         "day": dn,
@@ -165,12 +210,14 @@ def _sync_session(state, date_iso=None):
         "ok": log.get("ok", 0),
         "total": len(log.get("done", []))
     }
+    if session_notes:
+        data["notes"] = session_notes
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    _write_md(path, data)
+    _write_md(path, data, session_notes)
 
 
-def _write_md(json_path, data):
+def _write_md(json_path, data, session_notes=None):
     roster   = data.get("roster", [])
     answers  = data.get("answers", {})
     ok_count = data.get("ok", 0)
@@ -212,6 +259,15 @@ def _write_md(json_path, data):
             status,
             "",
         ]
+        # 笔记时间线
+        qnotes = (session_notes or {}).get(qid)
+        if qnotes:
+            for note in qnotes:
+                st = note.get("status", "open")
+                status_map = {"open": "❓", "progress": "🔍", "resolved": "✅"}
+                emoji = status_map.get(st, "❓")
+                lines.append(f"> {emoji} {note.get('ts','')}　{note.get('text','')}")
+            lines.append("")
 
     md_path = json_path.with_suffix(".md")
     md_path.write_text("\n".join(lines), encoding="utf-8")
@@ -323,11 +379,12 @@ def order_questions(items, phase, active):
 
 
 def build_today(state):
-    """返回今日全量清单(含已做)：[{id,year,q,img,subject,chapter,status,ok}]。
+    """返回今日全量清单(含已做)：[{id,year,q,img,subject,chapter,status,ok,notes}]。
 
     复习题(due)按遗忘曲线始终全出(retention 优先)；新题在 blocked/interleaved
     阶段只从今日激活科目对引入；最终顺序按阶段 分块→交错→随机 排列。
     """
+    all_notes = load_notes()
     log = day_log(state)
     done = list(log["done"])
     done_set = set(done)
@@ -371,9 +428,10 @@ def build_today(state):
         if it:
             ent = state.get(qid, {})
             out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True),
-                        "isNew": qid in new_ids})
+                        "isNew": qid in new_ids, "notes": all_notes.get(qid)})
     for it in pending:
-        out.append({**_pub(it), "status": "pending", "isNew": it["id"] in new_ids})
+        out.append({**_pub(it), "status": "pending", "isNew": it["id"] in new_ids,
+                    "notes": all_notes.get(it["id"])})
     return out, log, new_ids
 
 
@@ -415,6 +473,7 @@ def snapshot_roster(state, items, new_ids=None):
 
 def build_day(state, date):
     """只读回顾历史某天：完整题单(答对/答错/未答) + 小结 + 前后导航。"""
+    all_notes = load_notes()
     days = progress_days(state)
     prev, nxt = day_nav(date, days)
     base = {"date": date, "isToday": date == today(), "prev": prev, "next": nxt,
@@ -434,13 +493,15 @@ def build_day(state, date):
         is_new = qid in new_ids
         if qid in done_set:
             ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
-            d = {**_pub(it), "status": "done", "ok": ok, "isNew": is_new}
+            d = {**_pub(it), "status": "done", "ok": ok, "isNew": is_new,
+                 "notes": all_notes.get(qid)}
             pick = state.get(qid, {}).get("last_pick")
             if pick and not ok:
                 d["pick"] = pick
             items.append(d)
         else:
-            items.append({**_pub(it), "status": "pending", "isNew": is_new})
+            items.append({**_pub(it), "status": "pending", "isNew": is_new,
+                          "notes": all_notes.get(qid)})
     okn = sum(1 for x in items if x.get("ok"))
     return {**base, "exists": bool(items), "items": items, "total": len(items),
             "done": len(done_set), "ok": okn}
@@ -497,6 +558,7 @@ EXAM_POINTS = {"data_structures": 45, "computer_organization": 45,
 def build_stats(state):
     t = today()
     log = state.get("_progress", {}).get(t, {"done": [], "ok": 0})
+    all_notes = load_notes()
 
     # ① 今日小结：今日错题按 科目·章节 计数
     tw = Counter()
@@ -555,6 +617,22 @@ def build_stats(state):
     mistakes.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
     stuck.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
 
+    # ⑤ 未解疑问：所有 status != "resolved" 的笔记
+    unresolved_notes = []
+    for qid, entries in all_notes.items():
+        it = QUESTIONS.get(qid)
+        if not it:
+            continue
+        for i, note in enumerate(entries):
+            if note.get("status") != "resolved":
+                unresolved_notes.append({
+                    "qid": qid, "year": it["year"], "q": it["q"],
+                    "subjectCN": SUBJECT_CN[q_subject(it)],
+                    "chapter": pretty_ch(q_chapter(it)),
+                    "idx": i, "note": note
+                })
+    unresolved_notes.sort(key=lambda n: (n["note"].get("ts", ""),))
+
     # ④ 冲刺预测分：各科正确率 × 满分，求和(粗估，仅基于选择题表现)
     by_subj, total = [], 0.0
     for subj, pts in EXAM_POINTS.items():
@@ -569,7 +647,8 @@ def build_stats(state):
 
     return {"today": today_summary, "weak": weak, "stuck": stuck,
             "mistakes": mistakes, "projection": projection,
-            "prescription": prescription}
+            "prescription": prescription,
+            "unresolved_notes": unresolved_notes}
 
 
 def grade(state, qid, pick=None, selfok=None):
@@ -688,6 +767,23 @@ class H(BaseHTTPRequestHandler):
         if self.path == "/api/theme":
             write_theme(data.get("theme", ""))
             return self._send(200, {"ok": True, "theme": read_theme()})
+        if self.path == "/api/notes":
+            state = load_state()
+            qid = data.get("qid", "")
+            if not qid or qid not in QUESTIONS:
+                return self._send(400, {"error": "invalid qid"})
+            dn = day_num(today(), state)
+            if data.get("text"):
+                result = add_note(qid, text=data["text"],
+                                  status=data.get("status", "open"), day=dn)
+                _sync_session(state)
+                return self._send(200, {"ok": True, "notes": result})
+            elif "status" in data and data.get("idx") is not None:
+                result = add_note(qid, status=data["status"], idx=data["idx"])
+                _sync_session(state)
+                return self._send(200, {"ok": True, "notes": result})
+            else:
+                return self._send(400, {"error": "need text or status+idx"})
         return self._send(404, {"error": "not found"})
 
 
