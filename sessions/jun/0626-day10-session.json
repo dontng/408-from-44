@@ -48,8 +48,16 @@
   "2024-12": {
    "ok": false,
    "pick": "C"
+  },
+  "2024-14": {
+   "ok": false,
+   "pick": "B"
+  },
+  "2024-15": {
+   "ok": true,
+   "pick": "D"
   }
  },
- "ok": 0,
- "total": 1
+ "ok": 1,
+ "total": 3
 }

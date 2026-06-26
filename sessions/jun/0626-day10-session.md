@@ -1,6 +1,6 @@
 # Day 10 · 2026-06-26
 
-今日已答 1 题 · 对 0 · 正确率 0%
+今日已答 3 题 · 对 1 · 正确率 33%
 
 ### Q1 · 2024-01
 <img src="../../bank/2024/q01.png" width="660" style="max-width:100%">
@@ -40,12 +40,12 @@
 ### Q8 · 2024-14
 <img src="../../bank/2024/q14.png" width="660" style="max-width:100%">
 
-（未作答）
+选：B　✗
 
 ### Q9 · 2024-15
 <img src="../../bank/2024/q15.png" width="508" style="max-width:100%">
 
-（未作答）
+选：D　✓
 
 ### Q10 · 2024-16
 <img src="../../bank/2024/q16.png" width="607" style="max-width:100%">
