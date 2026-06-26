@@ -3,101 +3,101 @@
 共 20 题，今日未作答
 
 ### Q1 · 2024-12
-![2024-12](../../bank/2024/q12.png)
+<img src="../../bank/2024/q12.png" width="358" style="max-width:100%">
 
 （未作答）
 
 ### Q2 · 2024-14
-![2024-14](../../bank/2024/q14.png)
+<img src="../../bank/2024/q14.png" width="660" style="max-width:100%">
 
 （未作答）
 
 ### Q3 · 2024-15
-![2024-15](../../bank/2024/q15.png)
+<img src="../../bank/2024/q15.png" width="508" style="max-width:100%">
 
 （未作答）
 
 ### Q4 · 2024-16
-![2024-16](../../bank/2024/q16.png)
+<img src="../../bank/2024/q16.png" width="607" style="max-width:100%">
 
 （未作答）
 
 ### Q5 · 2024-17
-![2024-17](../../bank/2024/q17.png)
+<img src="../../bank/2024/q17.png" width="660" style="max-width:100%">
 
 （未作答）
 
 ### Q6 · 2024-18
-![2024-18](../../bank/2024/q18.png)
+<img src="../../bank/2024/q18.png" width="571" style="max-width:100%">
 
 （未作答）
 
 ### Q7 · 2024-23
-![2024-23](../../bank/2024/q23.png)
+<img src="../../bank/2024/q23.png" width="446" style="max-width:100%">
 
 （未作答）
 
 ### Q8 · 2024-24
-![2024-24](../../bank/2024/q24.png)
+<img src="../../bank/2024/q24.png" width="466" style="max-width:100%">
 
 （未作答）
 
 ### Q9 · 2024-25
-![2024-25](../../bank/2024/q25.png)
+<img src="../../bank/2024/q25.png" width="573" style="max-width:100%">
 
 （未作答）
 
 ### Q10 · 2024-27
-![2024-27](../../bank/2024/q27.png)
+<img src="../../bank/2024/q27.png" width="509" style="max-width:100%">
 
 （未作答）
 
 ### Q11 · 2024-28
-![2024-28](../../bank/2024/q28.png)
+<img src="../../bank/2024/q28.png" width="660" style="max-width:100%">
 
 （未作答）
 
 ### Q12 · 2024-30
-![2024-30](../../bank/2024/q30.png)
+<img src="../../bank/2024/q30.png" width="661" style="max-width:100%">
 
 （未作答）
 
 ### Q13 · 2025-12
-![2025-12](../../bank/2025/q12.png)
+<img src="../../bank/2025/q12.png" width="599" style="max-width:100%">
 
 （未作答）
 
 ### Q14 · 2025-13
-![2025-13](../../bank/2025/q13.png)
+<img src="../../bank/2025/q13.png" width="605" style="max-width:100%">
 
 （未作答）
 
 ### Q15 · 2025-14
-![2025-14](../../bank/2025/q14.png)
+<img src="../../bank/2025/q14.png" width="605" style="max-width:100%">
 
 （未作答）
 
 ### Q16 · 2025-15
-![2025-15](../../bank/2025/q15.png)
+<img src="../../bank/2025/q15.png" width="602" style="max-width:100%">
 
 （未作答）
 
 ### Q17 · 2025-23
-![2025-23](../../bank/2025/q23.png)
+<img src="../../bank/2025/q23.png" width="605" style="max-width:100%">
 
 （未作答）
 
 ### Q18 · 2025-24
-![2025-24](../../bank/2025/q24.png)
+<img src="../../bank/2025/q24.png" width="604" style="max-width:100%">
 
 （未作答）
 
 ### Q19 · 2025-25
-![2025-25](../../bank/2025/q25.png)
+<img src="../../bank/2025/q25.png" width="606" style="max-width:100%">
 
 （未作答）
 
 ### Q20 · 2025-26
-![2025-26](../../bank/2025/q26.png)
+<img src="../../bank/2025/q26.png" width="605" style="max-width:100%">
 
 （未作答）

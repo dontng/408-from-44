@@ -178,7 +178,11 @@ def _write_md(json_path, data):
     date_iso = data.get("date", "")
     day      = data.get("day", "?")
 
-    # sessions/<month>/ → bank/ 的相对路径
+    try:
+        norm = json.loads(NORM_FILE.read_text(encoding="utf-8")).get("items", {})
+    except OSError:
+        norm = {}
+
     img_base = "../../bank"
 
     lines = [f"# Day {day} · {date_iso}", ""]
@@ -191,6 +195,9 @@ def _write_md(json_path, data):
     for i, qid in enumerate(roster, 1):
         year, num = qid.split("-")
         img = f"{img_base}/{year}/q{int(num):02d}.png"
+        w = norm.get(qid)
+        img_tag = (f'<img src="{img}" width="{w}" style="max-width:100%">'
+                   if w else f'<img src="{img}" style="max-width:100%">')
         ans = answers.get(qid)
         if ans:
             mark = "✓" if ans.get("ok") else "✗"
@@ -200,7 +207,7 @@ def _write_md(json_path, data):
             status = "（未作答）"
         lines += [
             f"### Q{i} · {qid}",
-            f"![{qid}]({img})",
+            img_tag,
             "",
             status,
             "",
