@@ -718,11 +718,23 @@ function makePocket(id, notes, readonly){
     body.appendChild(tl);
   }
 
-  // ── 输入区 ──
+  // ── 输入区（草稿自动保存到 localStorage，点「记下」后清除）──
   if (!readonly) {
+    const DRAFT_KEY = "draft-"+id;
     const ir = document.createElement("div"); ir.className = "pocket-input-row";
     const ta = document.createElement("textarea");
     ta.placeholder = "记录你对这道题的疑问或困惑…"; ta.rows = 2;
+    // 恢复草稿
+    try { const d = localStorage.getItem(DRAFT_KEY); if (d) ta.value = d; } catch(e) {}
+    // 打字时自动存草稿（debounce 2s），点「记下」后清除
+    let draftTimer = null;
+    ta.addEventListener("input", () => {
+      clearTimeout(draftTimer);
+      draftTimer = setTimeout(() => {
+        try { if (ta.value.trim()) localStorage.setItem(DRAFT_KEY, ta.value);
+              else localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+      }, 2000);
+    });
     const btn = document.createElement("button"); btn.className = "sj pocket-submit";
     btn.textContent = "记下";
     btn.onclick = async () => {
@@ -732,7 +744,10 @@ function makePocket(id, notes, readonly){
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({qid:id, text:text, status:"open"})});
       const j = await r.json();
-      if (j.ok) { const np = makePocket(id, j.notes, false); pocket.replaceWith(np); }
+      if (j.ok) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+        const np = makePocket(id, j.notes, false); pocket.replaceWith(np);
+      }
     };
     ir.appendChild(ta); ir.appendChild(btn);
     body.appendChild(ir);
