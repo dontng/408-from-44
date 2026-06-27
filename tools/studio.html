@@ -520,8 +520,26 @@ function fillDots(items){
     d.onclick = () => {
       const page = Math.floor(gi / PAGE_SIZE);
       if (page !== curFeedPage){ curFeedPage = page; renderFeed(); }
-      setTimeout(() => document.getElementById("blk-"+it.id)
-        ?.scrollIntoView({behavior:"smooth",block:"center"}), 50);
+      // 等当前页所有题图加载完再滚动，避免图片未加载时计算位置偏上
+      const scrollToBlk = () => {
+        const el = document.getElementById("blk-"+it.id);
+        if (!el) return;
+        const imgs = [...document.querySelectorAll(".qblock img")];
+        const pending = imgs.filter(img => !img.complete);
+        if (pending.length) {
+          let waited = 0;
+          pending.forEach(img => {
+            const done = () => { waited++; if (waited >= pending.length) el.scrollIntoView({behavior:"smooth",block:"center"}); };
+            img.addEventListener("load", done, {once: true});
+            img.addEventListener("error", done, {once: true});
+          });
+          // 兜底：300ms 后无论如何滚一次
+          setTimeout(() => el.scrollIntoView({behavior:"smooth",block:"center"}), 300);
+        } else {
+          el.scrollIntoView({behavior:"smooth",block:"center"});
+        }
+      };
+      requestAnimationFrame(() => requestAnimationFrame(scrollToBlk));
     };
     grid.appendChild(d);
   });
@@ -712,7 +730,7 @@ function makePocket(id, notes, readonly, done){
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({qid:id, idx:i, status:next})});
           const j = await r.json();
-          if (j.ok) { const np = makePocket(id, j.notes, false, done); pocket.replaceWith(np); }
+          if (j.ok) { const np = makePocket(id, j.notes, false, done); pocket.replaceWith(np); np.querySelector(".pocket-toggle").classList.add("open"); np.querySelector(".pocket-body").classList.add("show"); }
         };
         row.appendChild(stTgl);
       }
@@ -774,6 +792,9 @@ function makePocket(id, notes, readonly, done){
       if (j && j.ok) {
         try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
         const np = makePocket(id, j.notes, false, done); pocket.replaceWith(np);
+        // 记下后强制展开，让用户直接看到刚保存的内容
+        np.querySelector(".pocket-toggle").classList.add("open");
+        np.querySelector(".pocket-body").classList.add("show");
       } else {
         btn.disabled = false; btn.textContent = "记下";
       }

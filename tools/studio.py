@@ -747,7 +747,7 @@ class H(BaseHTTPRequestHandler):
                 "phaseCN": {"blocked": "分块期", "interleaved": "交错期",
                             "random": "全真模拟"}[phase],
                 "subjects": [SUBJECT_CN[s] for s in active_subjects()],
-                "quota": daily_quota(state),
+                "quota": len(items),  # 今日实际题单总数(含复习+新题)，非匀速估算
             })
         if path == "/api/day":
             date = (parse_qs(urlparse(self.path).query).get("d") or [""])[0]
