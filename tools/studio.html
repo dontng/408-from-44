@@ -152,7 +152,7 @@ main{min-width:0}
 .pocket-body textarea{width:100%;max-width:560px;min-height:78px;
   background:var(--paper);border:1px solid var(--line);border-radius:6px;
   padding:10px 12px;font:inherit;font-size:13px;color:var(--ink);
-  resize:vertical;line-height:1.75}
+  overflow:hidden;line-height:1.75}
 .pocket-body textarea:focus{outline:none;border-color:var(--ai)}
 .pocket-body textarea::placeholder{color:var(--faint)}
 .pocket-note{font-size:13px;color:var(--sub);line-height:1.75;padding:4px 0}
@@ -177,10 +177,11 @@ main{min-width:0}
 .pocket-input-row textarea{flex:1;min-height:52px;
   background:var(--paper);border:1px solid var(--line);border-radius:6px;
   padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
-  resize:vertical;line-height:1.7}
+  overflow:hidden;line-height:1.7}
 .pocket-input-row textarea:focus{outline:none;border-color:var(--ai)}
 .pocket-input-row textarea::placeholder{color:var(--faint)}
-.pocket-submit{flex-shrink:0;align-self:flex-end}
+.pocket-submit{flex-shrink:0;align-self:flex-end;display:none}
+.pocket-submit.dirty{display:inline-block}
 
 /* ── 战况诊断面板 ── */
 .stats-toggle{display:inline-grid;place-items:center;margin-top:28px;margin-left:42px;
@@ -469,7 +470,7 @@ function renderReviewBlock(it){
   const pick = (it.pick && !it.ok) ? `　<span class="done-tag">选了 ${it.pick}</span>` : "";
   b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}${pick}</div>
     <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
-  b.appendChild(makePocket(it.id, it.notes, true));
+  b.appendChild(makePocket(it.id, it.notes, true, false));
   return b;
 }
 
@@ -576,7 +577,7 @@ function renderBlock(it){
     tag.className = "fb";
     tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
     b.appendChild(tag);
-    b.appendChild(makePocket(it.id, it.notes, false));
+    b.appendChild(makePocket(it.id, it.notes, false, true));
     return b;
   }
   const opts = document.createElement("div");
@@ -588,7 +589,7 @@ function renderBlock(it){
   pop.textContent = "提交"; pop.onclick = () => submitAnswer(it, opts, fb, pop);
   opts.appendChild(pop);
   b.appendChild(opts); b.appendChild(fb);
-  b.appendChild(makePocket(it.id, it.notes, false));
+  b.appendChild(makePocket(it.id, it.notes, false, false));
   opts.querySelectorAll(".opt").forEach(el=>{
     el.onclick = () => pickOpt(it, opts, fb, el, pop);
   });
@@ -672,7 +673,7 @@ function mkBtn(t, fn){ const b=document.createElement("button"); b.className="sj
 // ── 疑问口袋：后端 notes.json 持久化 ──
 const NOTE_STATUS_CN = {"open":"未解决","progress":"有进展","resolved":"已解决"};
 
-function makePocket(id, notes, readonly){
+function makePocket(id, notes, readonly, done){
   const pocket = document.createElement("div");
   pocket.className = "pocket";
   const toggle = document.createElement("span");
@@ -682,6 +683,8 @@ function makePocket(id, notes, readonly){
 
   notes = notes || [];
   const hasUnresolved = notes.some(n => n.status !== "resolved");
+  // 做过且有笔记 → 默认展开；其余默认折叠
+  const defaultOpen = done && notes.length > 0;
 
   if (readonly && !notes.length) { pocket.style.display = "none"; return pocket; }
 
@@ -709,7 +712,7 @@ function makePocket(id, notes, readonly){
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({qid:id, idx:i, status:next})});
           const j = await r.json();
-          if (j.ok) { const np = makePocket(id, j.notes, false); pocket.replaceWith(np); }
+          if (j.ok) { const np = makePocket(id, j.notes, false, done); pocket.replaceWith(np); }
         };
         row.appendChild(stTgl);
       }
@@ -719,36 +722,60 @@ function makePocket(id, notes, readonly){
   }
 
   // ── 输入区（草稿自动保存到 localStorage，点「记下」后清除）──
+  let ta = null;
   if (!readonly) {
     const DRAFT_KEY = "draft-"+id;
     const ir = document.createElement("div"); ir.className = "pocket-input-row";
-    const ta = document.createElement("textarea");
+    ta = document.createElement("textarea");
     ta.placeholder = "记录你对这道题的疑问或困惑…"; ta.rows = 2;
     // 恢复草稿
     try { const d = localStorage.getItem(DRAFT_KEY); if (d) ta.value = d; } catch(e) {}
-    // 离开编辑区立刻存（像 VSCode），打字 debounce 2s 兜底（比如直接关标签页没触发 blur）
+    // 离开编辑区立刻存草稿到 localStorage，同时静默提交到后端
     const saveDraft = () => {
       try { if (ta.value.trim()) localStorage.setItem(DRAFT_KEY, ta.value);
             else localStorage.removeItem(DRAFT_KEY); } catch(e) {}
     };
-    ta.addEventListener("blur", saveDraft);
-    let draftTimer = null;
-    ta.addEventListener("input", () => {
-      clearTimeout(draftTimer);
-      draftTimer = setTimeout(saveDraft, 2000);
+    const submitNote = async (text) => {
+      if (!text || !text.trim()) return null;
+      const r = await fetch("/api/notes", {method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({qid:id, text:text.trim(), status:"open"})});
+      return await r.json();
+    };
+    ta.addEventListener("blur", () => {
+      saveDraft();
+      if (ta.value.trim()) submitNote(ta.value);  // 静默提交，不重建口袋
     });
+    // 自动撑高，不出现滚动条
+    const autoResize = () => {
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + "px";
+    };
     const btn = document.createElement("button"); btn.className = "sj pocket-submit";
     btn.textContent = "记下";
+    let draftTimer = null;
+    ta.addEventListener("input", () => {
+      autoResize();
+      clearTimeout(draftTimer);
+      draftTimer = setTimeout(saveDraft, 2000);
+      // 有内容就显示记下按钮，空了就藏
+      btn.classList.toggle("dirty", ta.value.trim().length > 0);
+    });
+    // 恢复草稿后也做一次撑开 + 显示按钮 — 此时口袋可能折叠着，scrollHeight 为 0，
+    // 所以把 textarea 记下，等展开时再补一次 resize（见 toggle 处）
+    if (ta.value) {
+      btn.classList.add("dirty");
+      requestAnimationFrame(() => { if (body.classList.contains("show")) autoResize(); });
+    }
     btn.onclick = async () => {
       const text = ta.value.trim(); if (!text) return;
       btn.disabled = true; btn.textContent = "…";
-      const r = await fetch("/api/notes", {method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({qid:id, text:text, status:"open"})});
-      const j = await r.json();
-      if (j.ok) {
+      const j = await submitNote(text);
+      if (j && j.ok) {
         try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
-        const np = makePocket(id, j.notes, false); pocket.replaceWith(np);
+        const np = makePocket(id, j.notes, false, done); pocket.replaceWith(np);
+      } else {
+        btn.disabled = false; btn.textContent = "记下";
       }
     };
     ir.appendChild(ta); ir.appendChild(btn);
@@ -758,9 +785,22 @@ function makePocket(id, notes, readonly){
   pocket.appendChild(toggle);
   pocket.appendChild(body);
 
+  // 做过且有笔记 → 默认展开
+  if (defaultOpen) {
+    body.classList.add("show");
+    toggle.classList.add("open");
+  }
+
   toggle.addEventListener("click", () => {
     const open = body.classList.toggle("show");
     toggle.classList.toggle("open", open);
+    // 展开时重新撑高（折叠时 scrollHeight 为 0，必须展开后再算）
+    if (open && ta) {
+      requestAnimationFrame(() => {
+        ta.style.height = "auto";
+        ta.style.height = ta.scrollHeight + "px";
+      });
+    }
   });
 
   return pocket;

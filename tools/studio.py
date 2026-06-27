@@ -152,18 +152,29 @@ def save_notes(notes):
 
 
 def add_note(qid, text=None, status="open", idx=None, day=0):
-    """新增或更新一条笔记。有 text → 追加；只有 status → 更新第 idx 条的状态。"""
+    """新增或更新一条笔记。有 text → 当天同题更新，否则追加；只有 status → 更新第 idx 条的状态。"""
     notes = load_notes()
     if qid not in notes:
         notes[qid] = []
     if text:
-        entry = {
-            "ts": datetime.datetime.now().isoformat(timespec="minutes"),
-            "day": day,
-            "text": text,
-            "status": status or "open"
-        }
-        notes[qid].append(entry)
+        # 当天同一道题 → 更新已有笔记文字，不追加
+        updated = False
+        for prev in notes[qid]:
+            if prev.get("day") == day:
+                prev["text"] = text
+                prev["ts"] = datetime.datetime.now().isoformat(timespec="minutes")
+                if status:
+                    prev["status"] = status
+                updated = True
+                break
+        if not updated:
+            entry = {
+                "ts": datetime.datetime.now().isoformat(timespec="minutes"),
+                "day": day,
+                "text": text,
+                "status": status or "open"
+            }
+            notes[qid].append(entry)
         result = notes[qid]
     elif idx is not None and 0 <= idx < len(notes[qid]):
         notes[qid][idx]["status"] = status
