@@ -1,6 +1,6 @@
 # Day 11 · 2026-06-27
 
-今日已答 6 题 · 对 5 · 正确率 83%
+今日已答 10 题 · 对 7 · 正确率 70%
 
 ### Q1 · 2009-34
 <img src="../../bank/2009/q34.png" width="605" style="max-width:100%">
@@ -55,7 +55,7 @@
 ### Q10 · 2024-06
 <img src="../../bank/2024/q06.png" width="659" style="max-width:100%">
 
-选：A　✓
+选：B　✗
 
 > ❓ 2026-06-27T17:10　本题的KMP next数组的考察较为简单，存在更灵活的考察方式
 
@@ -141,17 +141,19 @@
 ### Q26 · 2025-03
 <img src="../../bank/2025/q03.png" width="593" style="max-width:100%">
 
-（未作答）
+选：D　✓
 
 ### Q27 · 2025-04
 <img src="../../bank/2025/q04.png" width="343" style="max-width:100%">
 
-（未作答）
+选：B　✓
+
+> ❓ 2026-06-27T17:20　分支结点和叶结点之间的关系不够清楚；什么是链式树，怎么保存，怎么计算，都不清楚
 
 ### Q28 · 2025-05
 <img src="../../bank/2025/q05.png" width="592" style="max-width:100%">
 
-（未作答）
+选：B　✗
 
 ### Q29 · 2025-06
 <img src="../../bank/2025/q06.png" width="424" style="max-width:100%">
@@ -176,7 +178,7 @@
 ### Q33 · 2025-33
 <img src="../../bank/2025/q33.png" width="603" style="max-width:100%">
 
-（未作答）
+选：A　✗
 
 ### Q34 · 2025-34
 <img src="../../bank/2025/q34.png" width="602" style="max-width:100%">
