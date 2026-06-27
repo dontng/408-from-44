@@ -570,7 +570,7 @@ function renderFeed(){
   for (const it of pageItems){
     feed.appendChild(renderBlock(it));
   }
-  if (pageItems.every(it=>it.status==="done")) appendDoneNote(feed);
+  if (DATA.items.every(it=>it.status==="done")) appendDoneNote(feed);
   if (totalPages > 1){
     const nav = document.createElement("div"); nav.className = "pager";
     const prev = document.createElement("button"); prev.className = "sj";
