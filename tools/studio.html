@@ -873,7 +873,12 @@ function drillChapter(subjectEN, chapterRaw){
 const HM_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const HM_WINDOW = 5;     // 热力图回溯月数
 const fmtIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const hmLevel = acc => acc>=80?4 : acc>=65?3 : acc>=50?2 : 1;   // 按当天正确率定深浅(做了至少 1 档)
+// 按完成题数/配额比例分档；无 roster 时以 20 题为满额兜底
+// <30%→灰米(同无数据), 30-50%→浅绿, 50-75%→中绿, 75-85%→深绿, ≥85%→最深绿
+const hmLevel = c => {
+  const ratio = c.quota > 0 ? c.n / c.quota : c.n / 20;
+  return ratio >= 0.85 ? 4 : ratio >= 0.75 ? 3 : ratio >= 0.5 ? 2 : ratio >= 0.3 ? 1 : "n";
+};
 
 function renderHeat(chart){
   const cells = chart.cells||{}, todayIso = chart.today;
@@ -892,9 +897,11 @@ function renderHeat(chart){
     for (let di=0; di<7; di++){
       if (d<=today){
         const iso=fmtIso(d), c=cells[iso];
-        const cls = c===undefined ? "hm-n" : "hm-"+hmLevel(c.acc);
+        const cls = c===undefined ? "hm-n" : "hm-"+hmLevel(c);
         const here = iso===todayIso ? " today" : "";
-        const tip = c===undefined ? `${iso} · 未做` : `${iso} · 正确率 ${c.acc}% · ${c.ok}/${c.n}`;
+        const pct = c && c.quota > 0 ? Math.round(c.n/c.quota*100)+"%" : "";
+        const tip = c===undefined ? `${iso} · 未做`
+          : `${iso} · 完成 ${c.n}${c.quota>0?" / "+c.quota:""}题${pct?" ("+pct+")":""} · 正确率 ${c.acc}%`;
         rects += `<rect class="hm-d ${cls}${here}" x="${x}" y="${TOP+di*STEP}" width="${CELL}" height="${CELL}" rx="2"><title>${tip}</title></rect>`;
       }
       d.setDate(d.getDate()+1);

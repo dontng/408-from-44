@@ -526,7 +526,9 @@ def build_chart(state):
     for date, log in prog.items():
         done = len(log.get("done", []))
         ok = log.get("ok", 0)
-        cells[date] = {"n": done, "ok": ok, "acc": round(ok / done * 100) if done else 0}
+        quota = len(log.get("roster", []))
+        cells[date] = {"n": done, "ok": ok, "acc": round(ok / done * 100) if done else 0,
+                       "quota": quota}
     streak = 0                                  # 连续天数：今天起往回数有记录的日子
     d = datetime.date.today()
     while d.isoformat() in cells:
