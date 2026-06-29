@@ -671,11 +671,15 @@ function showVerdict(it, opts, fb, pick, correct, answer){
   it.status = "done"; it.ok = correct;
   DATA.done += 1; if (correct) DATA.ok += 1;
   renderSidebar();
-  if (!correct){      // 错了：疏忽(跳过) / 没懂(进持久待解清单)
-    const slip = mkBtn("疏忽·跳过", ()=>fb.querySelector(".markrow")?.remove());
-    const stk  = mkBtn("没懂·进待解", ()=>markStuck(it, fb));
+  {
     const row = document.createElement("span"); row.className = "markrow";
-    row.style.marginLeft = "6px"; row.append(slip, stk);
+    row.style.marginLeft = "6px";
+    if (!correct) {
+      const slip = mkBtn("疏忽·跳过", ()=>fb.querySelector(".markrow")?.remove());
+      row.append(slip);
+    }
+    const stk = mkBtn("没懂·进待解", ()=>markStuck(it, fb));
+    row.append(stk);
     fb.appendChild(row);
   }
 }
@@ -939,37 +943,6 @@ async function showStats(){
   const st = await (await fetch("/api/stats")).json();
   feed.innerHTML = "";
 
-  // ① 今日小结
-  const tod = st.today;
-  const todInner = tod.done === 0
-    ? `<div class="empty-s">今天还没做题，去刷几道再来看。</div>`
-    : `<div class="ts-row"><span class="ts-big">${tod.done} 题</span>`
-      + `<span class="ts-sub">对 ${tod.ok}　正确率 <b>${tod.acc}%</b></span></div>`
-      + (tod.wrong.length
-        ? `<div class="ts-chips">${tod.wrong.slice(0,4).map(w=>`<span class="chip">${w.label} ×${w.n}</span>`).join("")}</div>`
-        : `<div style="font-size:13px;color:var(--moss)">今日全对 🎯</div>`);
-  feed.appendChild(sect("今日小结", todInner));
-
-  // ② 今日处方
-  const rx = st.prescription || [];
-  const rxSect = document.createElement("div"); rxSect.className = "sect";
-  rxSect.innerHTML = `<h3>今日处方</h3>`;
-  if (rx.length) {
-    for (const r of rx) {
-      const item = document.createElement("div"); item.className = "rx-item";
-      item.innerHTML = `<div class="rx-top"><span class="rx-name">${r.subject}·${r.chapter}</span>`
-        + `<span class="rx-stat">当前 ${r.acc}%　做了 ${r.seen} 次</span></div>`
-        + `<div class="rx-bottom">做 <b>${r.rec_n}</b> 题，可补约 <b>+${r.value}</b> 分</div>`;
-      const btn = mkBtn("立即练 →", () => drillChapter(r.subjectEN, r.chapterRaw));
-      btn.className = "sj drill-btn";
-      item.querySelector(".rx-bottom").appendChild(btn);
-      rxSect.appendChild(item);
-    }
-  } else {
-    rxSect.innerHTML += `<div class="empty-s">做几题后，这里给出今日最值得练的章节。</div>`;
-  }
-  feed.appendChild(rxSect);
-
   // ⓪ 待解清单(没懂)
   const stk = st.stuck || [];
   feed.appendChild(sect(`待解清单 · 没懂（${stk.length}）`,
@@ -1003,38 +976,6 @@ async function showStats(){
       ).join("")
     : `<div class="empty-s">没有未解决的疑问 🎉</div>`;
   feed.appendChild(sect(`未解疑问（${unr.length}）`, unrInner));
-
-  // ③ 弱项诊断（带立即练按钮）
-  const weakSect = document.createElement("div"); weakSect.className = "sect";
-  weakSect.innerHTML = `<h3>弱项诊断</h3>`;
-  if (st.weak.length) {
-    const weakInner = document.createElement("div");
-    weakInner.innerHTML = st.weak.slice(0,12).map(w =>
-      barDrill(`${w.subject}·${w.chapter}`, w.acc, `${w.seen}次`, w.subjectEN||"", w.chapterRaw||"")
-    ).join("");
-    weakInner.querySelectorAll(".drill-btn").forEach(btn => {
-      btn.onclick = () => drillChapter(btn.dataset.subj, btn.dataset.ch);
-    });
-    weakSect.appendChild(weakInner);
-  } else {
-    weakSect.innerHTML += `<div class="empty-s">还没数据。做几题后，这里按章节正确率把最弱的排在最前。</div>`;
-  }
-  feed.appendChild(weakSect);
-
-  // ④ 错题本
-  feed.appendChild(sect(`错题本（${st.mistakes.length}）`,
-    st.mistakes.length ? st.mistakes.map(m=>`<div class="mk">
-        <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题</div>
-        <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
-      : `<div class="empty-s">暂无错题 👍</div>`));
-
-  // ⑤ 冲刺预测分
-  const p = st.projection;
-  feed.appendChild(sect("冲刺预测分",
-    `<div class="proj"><b>≈${p.total}</b><span class="full">/ ${p.full}</span>
-       <span class="tgt">目标 ${p.target}</span></div>`
-    + p.by_subject.map(s=>bar(s.subject, s.acc, `${s.score}/${s.points}分`)).join("")
-    + `<div class="empty-s">粗估：各科正确率×满分求和，仅基于已做选择题，参考用。</div>`));
 
   feed.querySelectorAll(".solved").forEach(b => b.onclick = () => unstick(b.dataset.id));
   window.scrollTo(0,0);
