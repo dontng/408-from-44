@@ -576,90 +576,41 @@ EXAM_POINTS = {"data_structures": 45, "computer_organization": 45,
                "operating_systems": 35, "computer_networks": 25}
 
 
-def build_stats(state):
-    t = today()
-    log = state.get("_progress", {}).get(t, {"done": [], "ok": 0})
+def build_stats(state, date=None):
+    """返回某天的待攻克列表：该天答错的题 + 答对但标了没懂的题，按答题顺序。"""
+    if date is None:
+        date = today()
+    log = state.get("_progress", {}).get(date, {})
     all_notes = load_notes()
 
-    # ① 今日小结：今日错题按 科目·章节 计数
-    tw = Counter()
-    for qid in log.get("done", []):
-        s = state.get(qid, {})
-        it = QUESTIONS.get(qid)
-        if it and not s.get("last_ok", True):
-            tw[f"{SUBJECT_CN[q_subject(it)]}·{pretty_ch(q_chapter(it))}"] += 1
-    done = len(log.get("done", []))
-    today_summary = {"done": done, "ok": log.get("ok", 0),
-                     "acc": round(log.get("ok", 0) / done * 100) if done else 0,
-                     "wrong": [{"label": k, "n": n} for k, n in tw.most_common()]}
+    done_list = log.get("done", [])   # 答题顺序
+    res = log.get("res", {})          # 该天每题对错记录
 
-    # 累积聚合(全历史)：按 科目·章节 与 科目
-    ch_agg = defaultdict(lambda: {"seen": 0, "right": 0})
-    subj_agg = defaultdict(lambda: {"seen": 0, "right": 0})
-    mistakes, stuck = [], []
-    for qid, it in QUESTIONS.items():
-        s = state.get(qid)
-        if not s or not s.get("seen"):
-            continue
-        subj, ch = q_subject(it), q_chapter(it)
-        ck = (subj, ch)
-        ch_agg[ck]["seen"] += s["seen"]; ch_agg[ck]["right"] += s.get("right", 0)
-        subj_agg[subj]["seen"] += s["seen"]; subj_agg[subj]["right"] += s.get("right", 0)
-        if s.get("stuck"):                  # ⓪ 待解清单：手动标记，持久不清
-            stuck.append({**_pub(it), "pick": s.get("last_pick"), "reason": s.get("stuck_reason", "stuck")})
-        if not s.get("last_ok", True):      # ③ 错题本：最近一次做错
-            mistakes.append(_pub(it))
-
-    # ② 弱项诊断：章节正确率升序(最弱在前)
-    weak = [{"subject": SUBJECT_CN[s], "subjectEN": s, "chapter": pretty_ch(c), "chapterRaw": c,
-             "seen": v["seen"], "acc": round(v["right"] / v["seen"] * 100)}
-            for (s, c), v in ch_agg.items()]
-    weak.sort(key=lambda w: (w["acc"], -w["seen"]))
-
-    # ⑤ 今日处方：按补分价值推荐最值得练的章节(正确率低于 75% 且做题够数)
-    prescription = []
-    for w in weak:
-        if len(prescription) >= 3:
-            break
-        if w["seen"] < 3 or w["acc"] >= 75:
-            continue
-        pts = EXAM_POINTS.get(w["subjectEN"], 0)
-        ch_count = max(1, sum(1 for s, _ in ch_agg if s == w["subjectEN"]))
-        gap = (75 - w["acc"]) / 100
-        value = round(gap * pts / ch_count, 1)
-        rec_n = max(5, min(12, round(gap * 40)))
-        prescription.append({
-            "subject": w["subject"], "subjectEN": w["subjectEN"],
-            "chapter": w["chapter"], "chapterRaw": w["chapterRaw"],
-            "acc": w["acc"], "seen": w["seen"],
-            "value": value, "rec_n": rec_n,
-        })
-
-    # 合并待解清单和未解疑问：按 qid 聚合，题目图片 + 笔记一并输出
-    stuck_map = {m["id"]: m for m in stuck}
-    pending_map = {}  # qid -> item
-
-    for m in stuck:
-        pending_map[m["id"]] = {**m, "notes": []}
-
-    for qid, entries in all_notes.items():
+    pending_items = []
+    for qid in done_list:
         it = QUESTIONS.get(qid)
         if not it:
             continue
-        unresolved = [n for n in entries if n.get("status") != "resolved"]
-        if not unresolved:
+        s = state.get(qid, {})
+        day_ok = res.get(qid, s.get("last_ok", True))
+        is_stuck = bool(s.get("stuck"))
+
+        # 答错 → 自动进入；答对但手动标了没懂 → 也进入
+        if day_ok and not is_stuck:
             continue
-        if qid not in pending_map:
-            pending_map[qid] = {**_pub(it), "stuck": False, "notes": []}
-        pending_map[qid]["notes"] = unresolved
 
-    pending_items = sorted(
-        pending_map.values(),
-        key=lambda m: (m["subjectCN"], m.get("chapter", ""), m["year"], m["q"])
-    )
+        notes = [n for n in all_notes.get(qid, []) if n.get("status") != "resolved"]
+        pick = s.get("last_pick") if not day_ok else None
+        pending_items.append({
+            **_pub(it),
+            "day_ok": day_ok,
+            "stuck": is_stuck,
+            "reason": s.get("stuck_reason") if is_stuck else None,
+            "pick": pick,
+            "notes": notes,
+        })
 
-    return {"today": today_summary, "weak": weak,
-            "pending_items": pending_items}
+    return {"pending_items": pending_items, "date": date}
 
 
 def grade(state, qid, pick=None, selfok=None):
@@ -758,7 +709,8 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/ping":
             return self._send(200, {"started": SERVER_STARTED})
         if path == "/api/stats":
-            return self._send(200, build_stats(load_state()))
+            date = (parse_qs(urlparse(self.path).query).get("d") or [None])[0]
+            return self._send(200, build_stats(load_state(), date))
         if path.startswith("/bank/"):
             f = (REPO / path.lstrip("/")).resolve()
             if REPO in f.parents and f.exists():

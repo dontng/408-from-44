@@ -606,18 +606,16 @@ function renderBlock(it){
     const tag = document.createElement("div");
     tag.className = "fb";
     tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
-    if (it.stuck) {
-      const STUCK_LABEL = {"slip":"疏忽·已入待解", "stuck":"没懂·已入待解"};
-      tag.innerHTML += ` <span class="done-tag no">${STUCK_LABEL[it.stuck_reason]||"已入待解"}</span>`;
-    } else {
-      const row = document.createElement("span"); row.className = "markrow"; row.style.marginLeft = "6px";
-      if (!it.ok) {
-        const slip = mkBtn("疏忽·进待解", async () => { await markStuckById(it.id, "slip"); row.outerHTML = `<span class="done-tag no">疏忽·已入待解</span>`; });
-        row.append(slip);
+    if (it.ok) {
+      // 答对的题：可标"没懂"进待攻克（答错的自动进，无需按钮）
+      if (it.stuck) {
+        tag.innerHTML += ` <span class="done-tag no">没懂·已入待解</span>`;
+      } else {
+        const row = document.createElement("span"); row.className = "markrow"; row.style.marginLeft = "6px";
+        const stk = mkBtn("没懂·进待解", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">没懂·已入待解</span>`; });
+        row.append(stk);
+        tag.appendChild(row);
       }
-      const stk = mkBtn("没懂·进待解", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">没懂·已入待解</span>`; });
-      row.append(stk);
-      tag.appendChild(row);
     }
     b.appendChild(tag);
     b.appendChild(makePocket(it.id, it.notes, false, true));
@@ -695,13 +693,10 @@ function showVerdict(it, opts, fb, pick, correct, answer){
   it.status = "done"; it.ok = correct;
   DATA.done += 1; if (correct) DATA.ok += 1;
   renderSidebar();
-  {
+  // 答对了但不确定：可以手动标入待攻克（答错的题自动进待攻克，无需按钮）
+  if (correct) {
     const row = document.createElement("span"); row.className = "markrow";
     row.style.marginLeft = "6px";
-    if (!correct) {
-      const slip = mkBtn("疏忽·进待解", ()=>markStuck(it, fb, "slip"));
-      row.append(slip);
-    }
     const stk = mkBtn("没懂·进待解", ()=>markStuck(it, fb, "stuck"));
     row.append(stk);
     fb.appendChild(row);
@@ -965,46 +960,43 @@ function renderChart(chart){
 
 async function showStats(){
   inStats = true; paintStatsBtn();
-  // 保留 curDay 上下文，保留左右箭头（箭头点 gotoDay 会自然退出 stats）
-  // 只更新标题，不清空 daynav
   const dayCtx = curDay || TODAY_ISO;
   const dayLabel = curDay ? `${fmtMD(curDay)} 回顾` : "今日";
   renderDayTitle("战况诊断", dayLabel);
-  // 确保箭头还在（进 stats 前可能是历史日，prev/next 已存在；今日则用 DATA）
   if (!curDay) renderDayNav(DATA.prev, "");
   const feed = $("#feed");
   feed.innerHTML = `<div class="empty-s" style="padding:20px 0">加载中…</div>`;
-  const st = await (await fetch("/api/stats")).json();
+  const st = await (await fetch("/api/stats?d="+encodeURIComponent(dayCtx))).json();
   feed.innerHTML = "";
 
-  // 待攻克：待解清单 + 未解疑问合并
-  const STUCK_LABEL = {"slip":"疏忽", "stuck":"没懂"};
+  // 待攻克：该天答错的题 + 答对但标了没懂的题，按答题顺序
   const pending = st.pending_items || [];
+  let remaining = pending.length;
   const pendingSect = document.createElement("div"); pendingSect.className = "sect";
-  pendingSect.innerHTML = `<h3>待攻克（${pending.length}）</h3>`;
+  pendingSect.innerHTML = `<h3>待攻克（${remaining}）</h3>`;
   if (pending.length) {
     pending.forEach(m => {
       const card = document.createElement("section"); card.className = "qblock"; card.id = "stuck-"+m.id;
       // meta 行
       const meta = document.createElement("div"); meta.className = "qmeta";
       meta.innerHTML = `<b>${m.year}</b>　第 ${m.q} 题　<span class="done-tag">${m.subjectCN} · ${prettyCh(m.chapter)}</span>`;
+      if (!m.day_ok) meta.innerHTML += `　<span class="done-tag no">答错</span>`;
       if (m.pick) meta.innerHTML += `　<span class="done-tag">你选了 ${m.pick}</span>`;
+      if (m.day_ok && m.stuck) meta.innerHTML += `　<span class="done-tag no">猜对了</span>`;
       card.appendChild(meta);
       // 题目图片
       const img = document.createElement("img"); img.className = "qimg";
       img.src = m.img; img.loading = "lazy";
       if (m.dispW) img.style.maxWidth = m.dispW + "px";
       card.appendChild(img);
-      // fb 行：stuck 标签 + 搞懂了按钮
-      if (m.reason) {
+      // 答对但猜的题：有「搞懂了」按钮可以从列表移除
+      if (m.day_ok && m.stuck) {
         const fb = document.createElement("div"); fb.className = "fb";
-        fb.innerHTML = `<span class="done-tag no">${STUCK_LABEL[m.reason]||"没懂"}</span>`;
         const btn = mkBtn("✓ 搞懂了", async () => {
           await unstick(m.id);
           card.remove();
-          pendingSect.querySelector("h3").textContent = `待攻克（${--pendingSect._count}）`;
+          pendingSect.querySelector("h3").textContent = `待攻克（${--remaining}）`;
         });
-        pendingSect._count = pending.length;
         fb.appendChild(btn);
         card.appendChild(fb);
       }
@@ -1013,7 +1005,7 @@ async function showStats(){
       pendingSect.appendChild(card);
     });
   } else {
-    pendingSect.innerHTML += `<div class="empty-s">没有待攻克的题 🎉</div>`;
+    pendingSect.innerHTML += `<div class="empty-s">该天没有待攻克的题 🎉</div>`;
   }
   feed.appendChild(pendingSect);
   window.scrollTo(0,0);
