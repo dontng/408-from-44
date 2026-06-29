@@ -702,8 +702,7 @@ function makePocket(id, notes, readonly, done){
 
   notes = notes || [];
   const hasUnresolved = notes.some(n => n.status !== "resolved");
-  // 做过且有笔记 → 默认展开；其余默认折叠
-  const defaultOpen = done && notes.length > 0;
+  const defaultOpen = true;
 
   if (readonly && !notes.length) { pocket.style.display = "none"; return pocket; }
 
