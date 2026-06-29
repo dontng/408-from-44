@@ -609,10 +609,10 @@ function renderBlock(it){
     if (it.ok) {
       // 答对的题：可标"没懂"进待攻克（答错的自动进，无需按钮）
       if (it.stuck) {
-        tag.innerHTML += ` <span class="done-tag no">没懂·已入待解</span>`;
+        tag.innerHTML += ` <span class="done-tag no">仍需攻克·已标</span>`;
       } else {
         const row = document.createElement("span"); row.className = "markrow"; row.style.marginLeft = "6px";
-        const stk = mkBtn("没懂·进待解", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">没懂·已入待解</span>`; });
+        const stk = mkBtn("仍需攻克", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">仍需攻克·已标</span>`; });
         row.append(stk);
         tag.appendChild(row);
       }
@@ -697,7 +697,7 @@ function showVerdict(it, opts, fb, pick, correct, answer){
   if (correct) {
     const row = document.createElement("span"); row.className = "markrow";
     row.style.marginLeft = "6px";
-    const stk = mkBtn("没懂·进待解", ()=>markStuck(it, fb, "stuck"));
+    const stk = mkBtn("仍需攻克", ()=>markStuck(it, fb, "stuck"));
     row.append(stk);
     fb.appendChild(row);
   }
@@ -708,7 +708,7 @@ async function markStuckById(id, reason="stuck"){
 }
 async function markStuck(it, fb, reason="stuck"){
   await markStuckById(it.id, reason);
-  const label = reason === "slip" ? "疏忽·已入待解" : "没懂·已入待解";
+  const label = reason === "slip" ? "疏忽·已入待解" : "仍需攻克·已标";
   const row = fb.querySelector(".markrow");
   if (row) row.outerHTML = `<span class="done-tag no">${label}</span>`;
 }
@@ -982,7 +982,7 @@ async function showStats(){
       meta.innerHTML = `<b>${m.year}</b>　第 ${m.q} 题　<span class="done-tag">${m.subjectCN} · ${prettyCh(m.chapter)}</span>`;
       if (!m.day_ok) meta.innerHTML += `　<span class="done-tag no">答错</span>`;
       if (m.pick) meta.innerHTML += `　<span class="done-tag">你选了 ${m.pick}</span>`;
-      if (m.day_ok && m.stuck) meta.innerHTML += `　<span class="done-tag no">猜对了</span>`;
+      if (m.day_ok && m.stuck) meta.innerHTML += `　<span class="done-tag no">仍需攻克</span>`;
       card.appendChild(meta);
       // 题目图片
       const img = document.createElement("img"); img.className = "qimg";
