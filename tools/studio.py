@@ -285,7 +285,10 @@ def _write_md(json_path, data, session_notes=None):
 
 
 def today():
-    return datetime.date.today().isoformat()
+    now = datetime.datetime.now()
+    if now.hour < 2:
+        return (now.date() - datetime.timedelta(days=1)).isoformat()
+    return now.date().isoformat()
 
 
 def add_days(d, n):
