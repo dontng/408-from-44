@@ -470,11 +470,12 @@ def snapshot_roster(state, items, new_ids=None):
     """把当天完整题单(含未答)记进 _progress[今天].roster，供回顾显示未答题。
     只在题单有新增时落盘。new_ids 为首次出现的题 id 集合。"""
     log = day_log(state)
-    ids = {it["id"] for it in items}
-    cur = set(log.get("roster", []))
-    changed = not ids <= cur
+    cur = log.get("roster", [])
+    cur_set = set(cur)
+    added = [it["id"] for it in items if it["id"] not in cur_set]
+    changed = bool(added)
     if changed:
-        log["roster"] = sorted(cur | ids)
+        log["roster"] = cur + added   # 保留已有顺序，新题追加到末尾
     if new_ids:
         cur_new = set(log.get("new_ids", []))
         merged = cur_new | set(new_ids)
@@ -497,11 +498,14 @@ def build_day(state, date):
     if not log:
         return {**base, "exists": False, "items": [], "total": 0, "done": 0, "ok": 0}
     res = log.get("res", {})
-    done_set = set(log.get("done", []))
-    roster = log.get("roster") or list(log.get("done", []))   # 旧记录无 roster 则回退到答过的题
+    done_list = log.get("done", [])           # 按实际答题顺序
+    done_set = set(done_list)
+    roster = log.get("roster") or done_list   # 旧记录无 roster 则回退到答过的题
+    # 已答题按做题顺序，未答题按 roster 计划顺序补在末尾
+    ordered = done_list + [qid for qid in roster if qid not in done_set]
     new_ids = set(log.get("new_ids", []))
     items = []
-    for qid in roster:
+    for qid in ordered:
         it = QUESTIONS.get(qid)
         if not it:
             continue
