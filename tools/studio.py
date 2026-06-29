@@ -635,41 +635,31 @@ def build_stats(state):
             "value": value, "rec_n": rec_n,
         })
 
-    mistakes.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
-    stuck.sort(key=lambda m: (m["subjectCN"], m["chapter"], m["year"], m["q"]))
+    # 合并待解清单和未解疑问：按 qid 聚合，题目图片 + 笔记一并输出
+    stuck_map = {m["id"]: m for m in stuck}
+    pending_map = {}  # qid -> item
 
-    # ⑤ 未解疑问：所有 status != "resolved" 的笔记
-    unresolved_notes = []
+    for m in stuck:
+        pending_map[m["id"]] = {**m, "notes": []}
+
     for qid, entries in all_notes.items():
         it = QUESTIONS.get(qid)
         if not it:
             continue
-        for i, note in enumerate(entries):
-            if note.get("status") != "resolved":
-                unresolved_notes.append({
-                    "qid": qid, "year": it["year"], "q": it["q"],
-                    "subjectCN": SUBJECT_CN[q_subject(it)],
-                    "chapter": pretty_ch(q_chapter(it)),
-                    "idx": i, "note": note
-                })
-    unresolved_notes.sort(key=lambda n: (n["note"].get("ts", ""),))
+        unresolved = [n for n in entries if n.get("status") != "resolved"]
+        if not unresolved:
+            continue
+        if qid not in pending_map:
+            pending_map[qid] = {**_pub(it), "stuck": False, "notes": []}
+        pending_map[qid]["notes"] = unresolved
 
-    # ④ 冲刺预测分：各科正确率 × 满分，求和(粗估，仅基于选择题表现)
-    by_subj, total = [], 0.0
-    for subj, pts in EXAM_POINTS.items():
-        v = subj_agg.get(subj, {"seen": 0, "right": 0})
-        acc = v["right"] / v["seen"] if v["seen"] else 0
-        total += acc * pts
-        by_subj.append({"subject": SUBJECT_CN[subj], "points": pts,
-                        "acc": round(acc * 100) if v["seen"] else None,
-                        "score": round(acc * pts, 1), "seen": v["seen"]})
-    projection = {"total": round(total), "full": sum(EXAM_POINTS.values()),
-                  "target": 120, "by_subject": by_subj}
+    pending_items = sorted(
+        pending_map.values(),
+        key=lambda m: (m["subjectCN"], m.get("chapter", ""), m["year"], m["q"])
+    )
 
-    return {"today": today_summary, "weak": weak, "stuck": stuck,
-            "mistakes": mistakes, "projection": projection,
-            "prescription": prescription,
-            "unresolved_notes": unresolved_notes}
+    return {"today": today_summary, "weak": weak,
+            "pending_items": pending_items}
 
 
 def grade(state, qid, pick=None, selfok=None):

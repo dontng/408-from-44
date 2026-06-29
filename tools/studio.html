@@ -960,41 +960,47 @@ async function showStats(){
   const st = await (await fetch("/api/stats")).json();
   feed.innerHTML = "";
 
-  // ⓪ 待解清单
-  const stk = st.stuck || [];
+  // 待攻克：待解清单 + 未解疑问合并
   const STUCK_LABEL = {"slip":"疏忽", "stuck":"没懂"};
-  feed.appendChild(sect(`待解清单（${stk.length}）`,
-    stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
-        <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题${m.pick?` · 你选了 ${m.pick}`:''}
-          <span class="pocket-st open" style="margin-left:6px">${STUCK_LABEL[m.reason]||"没懂"}</span>
-          <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
-        <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
-      : `<div class="empty-s">没有待解的题。答题后点「疏忽·进待解」或「没懂·进待解」加入，直到点"搞懂了"才消。</div>`));
-
-  // ⓪+ 未解疑问（笔记口袋里 status != resolved 的条目）
-  const unr = st.unresolved_notes || [];
-  const unrBySubj = {};
-  unr.forEach(u => {
-    const key = u.subjectCN;
-    if (!unrBySubj[key]) unrBySubj[key] = [];
-    unrBySubj[key].push(u);
-  });
-  const unrInner = unr.length
-    ? Object.entries(unrBySubj).map(([subj, items]) =>
-        `<div style="font-size:11.5px;color:var(--sub);letter-spacing:.1em;margin:14px 0 6px">${subj}</div>`
-        + items.map(u => {
-            const st = u.note.status || "open";
-            const stLabel = NOTE_STATUS_CN[st] || st;
-            return `<div class="mk">
-              <div class="mkmeta">${u.subjectCN} · ${u.chapter} · ${u.year} 第${u.q}题
-                <span class="pocket-st ${st}" style="margin-left:8px">${stLabel}</span>
-                <button class="sj" disabled style="margin-left:8px;opacity:.35;font-size:10px">🤖 问 AI</button></div>
-              <div style="font-size:13px;color:var(--ink);line-height:1.7;margin:4px 0">${escHtml(u.note.text||"")}</div>
-            </div>`;
-          }).join("")
-      ).join("")
-    : `<div class="empty-s">没有未解决的疑问 🎉</div>`;
-  feed.appendChild(sect(`未解疑问（${unr.length}）`, unrInner));
+  const pending = st.pending_items || [];
+  const pendingSect = document.createElement("div"); pendingSect.className = "sect";
+  pendingSect.innerHTML = `<h3>待攻克（${pending.length}）</h3>`;
+  if (pending.length) {
+    pending.forEach(m => {
+      const card = document.createElement("div"); card.className = "mk"; card.id = "stuck-"+m.id;
+      // meta 行
+      const meta = document.createElement("div"); meta.className = "mkmeta";
+      meta.innerHTML = `${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题`
+        + (m.pick ? ` · 你选了 ${m.pick}` : "");
+      if (m.stuck || m.reason) {
+        meta.innerHTML += ` <span class="pocket-st open" style="margin-left:6px">${STUCK_LABEL[m.reason]||"没懂"}</span>`;
+        const btn = mkBtn("✓ 搞懂了", () => unstick(m.id)); btn.classList.add("solved"); btn.dataset.id = m.id;
+        meta.appendChild(btn);
+      }
+      card.appendChild(meta);
+      // 题目图片
+      const img = document.createElement("img");
+      img.src = m.img; img.loading = "lazy";
+      if (m.dispW) img.style.maxWidth = m.dispW + "px";
+      card.appendChild(img);
+      // 未解笔记
+      if (m.notes && m.notes.length) {
+        const nl = document.createElement("div"); nl.style.cssText = "margin:8px 0 4px;border-top:1px solid var(--hair);padding-top:8px";
+        m.notes.forEach(n => {
+          const row = document.createElement("div"); row.style.cssText = "display:flex;align-items:flex-start;gap:7px;font-size:13px;margin:4px 0";
+          const st = n.status || "open";
+          row.innerHTML = `<span class="pocket-st ${st}" style="flex-shrink:0;margin-top:2px">${NOTE_STATUS_CN[st]||st}</span>`
+            + `<span style="color:var(--ink);line-height:1.7">${escHtml(n.text||"")}</span>`;
+          nl.appendChild(row);
+        });
+        card.appendChild(nl);
+      }
+      pendingSect.appendChild(card);
+    });
+  } else {
+    pendingSect.innerHTML += `<div class="empty-s">没有待攻克的题 🎉</div>`;
+  }
+  feed.appendChild(pendingSect);
 
   feed.querySelectorAll(".solved").forEach(b => b.onclick = () => unstick(b.dataset.id));
   window.scrollTo(0,0);
