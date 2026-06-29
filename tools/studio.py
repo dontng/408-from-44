@@ -600,8 +600,8 @@ def build_stats(state):
         ck = (subj, ch)
         ch_agg[ck]["seen"] += s["seen"]; ch_agg[ck]["right"] += s.get("right", 0)
         subj_agg[subj]["seen"] += s["seen"]; subj_agg[subj]["right"] += s.get("right", 0)
-        if s.get("stuck"):                  # ⓪ 待解清单：手动标"没懂"，持久不清
-            stuck.append({**_pub(it), "pick": s.get("last_pick")})
+        if s.get("stuck"):                  # ⓪ 待解清单：手动标记，持久不清
+            stuck.append({**_pub(it), "pick": s.get("last_pick"), "reason": s.get("stuck_reason", "stuck")})
         if not s.get("last_ok", True):      # ③ 错题本：最近一次做错
             mistakes.append(_pub(it))
 
@@ -700,15 +700,18 @@ def grade(state, qid, pick=None, selfok=None):
     return {"known": True, "correct": correct, "answer": ans}
 
 
-def mark_stuck(state, qid, stuck):
-    """标"没懂"→进持久待解清单(只堆不清,不强制通关)；"搞懂了"→撤下。"""
+def mark_stuck(state, qid, stuck, reason=None):
+    """标记进待解清单；reason: 'slip'=疏忽, 'stuck'=没懂；"搞懂了"→撤下。"""
     s = state.get(qid)
     if s is None:
         return {"error": "not graded yet"}
     if stuck:
         s["stuck"] = True
+        if reason:
+            s["stuck_reason"] = reason
     else:
         s.pop("stuck", None)
+        s.pop("stuck_reason", None)
     state[qid] = s
     save_state(state)
     return {"ok": True, "stuck": bool(s.get("stuck"))}
@@ -778,7 +781,7 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, res)
         if self.path == "/api/stuck":
             state = load_state()
-            res = mark_stuck(state, data.get("id"), data.get("stuck"))
+            res = mark_stuck(state, data.get("id"), data.get("stuck"), data.get("reason"))
             return self._send(200, res)
         if self.path == "/api/theme":
             write_theme(data.get("theme", ""))

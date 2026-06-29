@@ -675,19 +675,20 @@ function showVerdict(it, opts, fb, pick, correct, answer){
     const row = document.createElement("span"); row.className = "markrow";
     row.style.marginLeft = "6px";
     if (!correct) {
-      const slip = mkBtn("疏忽·跳过", ()=>fb.querySelector(".markrow")?.remove());
+      const slip = mkBtn("疏忽·进待解", ()=>markStuck(it, fb, "slip"));
       row.append(slip);
     }
-    const stk = mkBtn("没懂·进待解", ()=>markStuck(it, fb));
+    const stk = mkBtn("没懂·进待解", ()=>markStuck(it, fb, "stuck"));
     row.append(stk);
     fb.appendChild(row);
   }
 }
-async function markStuck(it, fb){
+async function markStuck(it, fb, reason="stuck"){
   await fetch("/api/stuck",{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:it.id, stuck:true})});
+    body:JSON.stringify({id:it.id, stuck:true, reason})});
+  const label = reason === "slip" ? "疏忽·已入待解" : "没懂·已入待解";
   const row = fb.querySelector(".markrow");
-  if (row) row.outerHTML = `<span class="done-tag no">已入待解清单</span>`;
+  if (row) row.outerHTML = `<span class="done-tag no">${label}</span>`;
 }
 
 function mkBtn(t, fn){ const b=document.createElement("button"); b.className="sj";
@@ -943,14 +944,16 @@ async function showStats(){
   const st = await (await fetch("/api/stats")).json();
   feed.innerHTML = "";
 
-  // ⓪ 待解清单(没懂)
+  // ⓪ 待解清单
   const stk = st.stuck || [];
-  feed.appendChild(sect(`待解清单 · 没懂（${stk.length}）`,
+  const STUCK_LABEL = {"slip":"疏忽", "stuck":"没懂"};
+  feed.appendChild(sect(`待解清单（${stk.length}）`,
     stk.length ? stk.map(m=>`<div class="mk" id="stuck-${m.id}">
         <div class="mkmeta">${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题${m.pick?` · 你选了 ${m.pick}`:''}
+          <span class="pocket-st open" style="margin-left:6px">${STUCK_LABEL[m.reason]||"没懂"}</span>
           <button class="sj solved" data-id="${m.id}">✓ 搞懂了</button></div>
         <img src="${m.img}" loading="lazy"${imgW(m)}></div>`).join("")
-      : `<div class="empty-s">还没标"没懂"的题。做错时点「没懂·进待解」，会堆在这里、不自动消，直到你点"搞懂了"。</div>`));
+      : `<div class="empty-s">没有待解的题。答题后点「疏忽·进待解」或「没懂·进待解」加入，直到点"搞懂了"才消。</div>`));
 
   // ⓪+ 未解疑问（笔记口袋里 status != resolved 的条目）
   const unr = st.unresolved_notes || [];
