@@ -967,42 +967,38 @@ async function showStats(){
   pendingSect.innerHTML = `<h3>待攻克（${pending.length}）</h3>`;
   if (pending.length) {
     pending.forEach(m => {
-      const card = document.createElement("div"); card.className = "mk"; card.id = "stuck-"+m.id;
+      const card = document.createElement("section"); card.className = "qblock"; card.id = "stuck-"+m.id;
       // meta 行
-      const meta = document.createElement("div"); meta.className = "mkmeta";
-      meta.innerHTML = `${m.subjectCN} · ${prettyCh(m.chapter)} · ${m.year} 第${m.q}题`
-        + (m.pick ? ` · 你选了 ${m.pick}` : "");
-      if (m.stuck || m.reason) {
-        meta.innerHTML += ` <span class="pocket-st open" style="margin-left:6px">${STUCK_LABEL[m.reason]||"没懂"}</span>`;
-        const btn = mkBtn("✓ 搞懂了", () => unstick(m.id)); btn.classList.add("solved"); btn.dataset.id = m.id;
-        meta.appendChild(btn);
-      }
+      const meta = document.createElement("div"); meta.className = "qmeta";
+      meta.innerHTML = `<b>${m.year}</b>　第 ${m.q} 题　<span class="done-tag">${m.subjectCN} · ${prettyCh(m.chapter)}</span>`;
+      if (m.pick) meta.innerHTML += `　<span class="done-tag">你选了 ${m.pick}</span>`;
       card.appendChild(meta);
       // 题目图片
-      const img = document.createElement("img");
+      const img = document.createElement("img"); img.className = "qimg";
       img.src = m.img; img.loading = "lazy";
       if (m.dispW) img.style.maxWidth = m.dispW + "px";
       card.appendChild(img);
-      // 未解笔记
-      if (m.notes && m.notes.length) {
-        const nl = document.createElement("div"); nl.style.cssText = "margin:8px 0 4px;border-top:1px solid var(--hair);padding-top:8px";
-        m.notes.forEach(n => {
-          const row = document.createElement("div"); row.style.cssText = "display:flex;align-items:flex-start;gap:7px;font-size:13px;margin:4px 0";
-          const st = n.status || "open";
-          row.innerHTML = `<span class="pocket-st ${st}" style="flex-shrink:0;margin-top:2px">${NOTE_STATUS_CN[st]||st}</span>`
-            + `<span style="color:var(--ink);line-height:1.7">${escHtml(n.text||"")}</span>`;
-          nl.appendChild(row);
+      // fb 行：stuck 标签 + 搞懂了按钮
+      if (m.reason) {
+        const fb = document.createElement("div"); fb.className = "fb";
+        fb.innerHTML = `<span class="done-tag no">${STUCK_LABEL[m.reason]||"没懂"}</span>`;
+        const btn = mkBtn("✓ 搞懂了", async () => {
+          await unstick(m.id);
+          card.remove();
+          pendingSect.querySelector("h3").textContent = `待攻克（${--pendingSect._count}）`;
         });
-        card.appendChild(nl);
+        pendingSect._count = pending.length;
+        fb.appendChild(btn);
+        card.appendChild(fb);
       }
+      // 疑问口袋（可编辑，默认展开）
+      card.appendChild(makePocket(m.id, m.notes, false, true));
       pendingSect.appendChild(card);
     });
   } else {
     pendingSect.innerHTML += `<div class="empty-s">没有待攻克的题 🎉</div>`;
   }
   feed.appendChild(pendingSect);
-
-  feed.querySelectorAll(".solved").forEach(b => b.onclick = () => unstick(b.dataset.id));
   window.scrollTo(0,0);
 }
 async function unstick(id){
