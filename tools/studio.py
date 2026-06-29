@@ -442,7 +442,8 @@ def build_today(state):
         if it:
             ent = state.get(qid, {})
             out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True),
-                        "isNew": qid in new_ids, "notes": all_notes.get(qid)})
+                        "isNew": qid in new_ids, "notes": all_notes.get(qid),
+                        "stuck": bool(ent.get("stuck")), "stuck_reason": ent.get("stuck_reason", "stuck")})
     for it in pending:
         out.append({**_pub(it), "status": "pending", "isNew": it["id"] in new_ids,
                     "notes": all_notes.get(it["id"])})

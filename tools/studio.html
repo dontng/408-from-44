@@ -595,6 +595,19 @@ function renderBlock(it){
     const tag = document.createElement("div");
     tag.className = "fb";
     tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
+    if (it.stuck) {
+      const STUCK_LABEL = {"slip":"疏忽·已入待解", "stuck":"没懂·已入待解"};
+      tag.innerHTML += ` <span class="done-tag no">${STUCK_LABEL[it.stuck_reason]||"已入待解"}</span>`;
+    } else {
+      const row = document.createElement("span"); row.className = "markrow"; row.style.marginLeft = "6px";
+      if (!it.ok) {
+        const slip = mkBtn("疏忽·进待解", async () => { await markStuckById(it.id, "slip"); row.outerHTML = `<span class="done-tag no">疏忽·已入待解</span>`; });
+        row.append(slip);
+      }
+      const stk = mkBtn("没懂·进待解", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">没懂·已入待解</span>`; });
+      row.append(stk);
+      tag.appendChild(row);
+    }
     b.appendChild(tag);
     b.appendChild(makePocket(it.id, it.notes, false, true));
     return b;
@@ -683,9 +696,12 @@ function showVerdict(it, opts, fb, pick, correct, answer){
     fb.appendChild(row);
   }
 }
-async function markStuck(it, fb, reason="stuck"){
+async function markStuckById(id, reason="stuck"){
   await fetch("/api/stuck",{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:it.id, stuck:true, reason})});
+    body:JSON.stringify({id, stuck:true, reason})});
+}
+async function markStuck(it, fb, reason="stuck"){
+  await markStuckById(it.id, reason);
   const label = reason === "slip" ? "疏忽·已入待解" : "没懂·已入待解";
   const row = fb.querySelector(".markrow");
   if (row) row.outerHTML = `<span class="done-tag no">${label}</span>`;
