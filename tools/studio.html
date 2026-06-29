@@ -355,7 +355,18 @@ function paintStatsBtn(){
 }
 function toggleStats(){
   const b = document.getElementById("stats-toggle"); b.classList.add("press");
-  setTimeout(()=>{ b.classList.remove("press"); if(inStats){ curFeedPage=0; curDotPage=0; renderLive(); window.scrollTo(0,0); } else showStats(); }, 140);
+  setTimeout(()=>{
+    b.classList.remove("press");
+    if(inStats){
+      // 返回到之前所在的那天（历史日 or 今日）
+      const backDay = curDay;
+      curFeedPage=0; curDotPage=0;
+      if(backDay){ gotoDay(backDay); }
+      else { renderLive(); window.scrollTo(0,0); }
+    } else {
+      showStats();
+    }
+  }, 140);
 }
 let curDay = null;          // 正在回顾的历史日期；null=今日实时
 let inStats = false;        // 战况诊断视图
@@ -953,8 +964,14 @@ function renderChart(chart){
 }
 
 async function showStats(){
-  inStats = true; curDay = null; paintStatsBtn();
-  $("#daynav").innerHTML = ""; $("#daytitle").innerHTML = "";
+  inStats = true; paintStatsBtn();
+  // 保留 curDay 上下文，保留左右箭头（箭头点 gotoDay 会自然退出 stats）
+  // 只更新标题，不清空 daynav
+  const dayCtx = curDay || TODAY_ISO;
+  const dayLabel = curDay ? `${fmtMD(curDay)} 回顾` : "今日";
+  renderDayTitle("战况诊断", dayLabel);
+  // 确保箭头还在（进 stats 前可能是历史日，prev/next 已存在；今日则用 DATA）
+  if (!curDay) renderDayNav(DATA.prev, "");
   const feed = $("#feed");
   feed.innerHTML = `<div class="empty-s" style="padding:20px 0">加载中…</div>`;
   const st = await (await fetch("/api/stats")).json();
