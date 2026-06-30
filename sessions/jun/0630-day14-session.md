@@ -1,11 +1,11 @@
 # Day 14 · 2026-06-30
 
-共 33 题，今日未作答
+今日已答 3 题 · 对 0 · 正确率 0%
 
 ### Q1 · 2024-12
 <img src="../../bank/2024/q12.png" width="358" style="max-width:100%">
 
-（未作答）
+选：A　✗
 
 ### Q2 · 2024-13
 <img src="../../bank/2024/q13.png" width="559" style="max-width:100%">
@@ -15,12 +15,12 @@
 ### Q3 · 2024-14
 <img src="../../bank/2024/q14.png" width="660" style="max-width:100%">
 
-（未作答）
+选：A　✗
 
 ### Q4 · 2024-15
 <img src="../../bank/2024/q15.png" width="508" style="max-width:100%">
 
-（未作答）
+选：A　✗
 
 ### Q5 · 2024-16
 <img src="../../bank/2024/q16.png" width="607" style="max-width:100%">
