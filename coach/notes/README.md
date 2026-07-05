@@ -5,7 +5,7 @@ Durable notes from the one-problem coaching flow.
 Keep the structure parallel to `src/`:
 
 ```text
-coach/notes/<month>/MMDD-dayNN.md
+coach/notes/<month>/MMDD-dayNN-note.md
 ```
 
 Only preserve notes worth seeing again:
