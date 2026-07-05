@@ -19,6 +19,7 @@ SYNC_PATHS = [
     "docs",
     "src",
     "today.sh",
+    "answer",
     "answer.sh",
     "tools/answer.html",
     "tools/answer.py",

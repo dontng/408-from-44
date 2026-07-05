@@ -13,6 +13,7 @@ import grade_today
 
 REPO = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8409
+DEFAULT_DATE = sys.argv[3] if len(sys.argv) > 3 else ""
 HERE = Path(__file__).resolve().parent
 PAGE = HERE / "answer.html"
 ROSTER_DIR = REPO / "data" / "rosters"
@@ -133,7 +134,8 @@ class H(BaseHTTPRequestHandler):
 
 
 def main():
-    print(f"answer card · http://127.0.0.1:{PORT}/?date=0705")
+    date = safe_date(DEFAULT_DATE) or "MMDD"
+    print(f"answer card · http://127.0.0.1:{PORT}/?date={date}", flush=True)
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
 
 
