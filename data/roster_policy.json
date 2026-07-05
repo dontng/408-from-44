@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "name": "408-from-44 roster policy",
+  "start_date": "2026-07-05",
+  "exam_date": "2026-12-19",
+  "daily_limits": {
+    "restart_days": 7,
+    "restart": {
+      "total": 10,
+      "new": 3,
+      "review": 7
+    },
+    "stable": {
+      "total": 20,
+      "new": 6,
+      "review": 14
+    },
+    "main": {
+      "total": 26,
+      "new": 6,
+      "review": 20
+    },
+    "hard_cap": 30,
+    "low_energy": {
+      "total": 10,
+      "new": 0,
+      "review": 10
+    }
+  },
+  "choice_tiers": [
+    {
+      "role": "core",
+      "years": ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+      "target_passes": 7,
+      "default_new_pool": true
+    },
+    {
+      "role": "training",
+      "years": ["2015", "2016", "2017"],
+      "target_passes": 3,
+      "default_new_pool": true
+    },
+    {
+      "role": "patch",
+      "years": ["2013", "2014"],
+      "target_passes": 1,
+      "default_new_pool": false
+    },
+    {
+      "role": "reserve",
+      "years": ["2009", "2010", "2011", "2012"],
+      "target_passes": 0,
+      "default_new_pool": false
+    }
+  ],
+  "review_priority": [
+    "stuck",
+    "last_wrong",
+    "due",
+    "core_year",
+    "recent_year"
+  ],
+  "answer_tokens": ["A", "B", "C", "D", "不会"]
+}

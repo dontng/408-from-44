@@ -7,3 +7,5 @@ __pycache__/
 
 # 自动提交日志
 .autocommit.log
+.autopull.log
+.autopull.lock

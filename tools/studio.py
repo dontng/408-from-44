@@ -40,7 +40,11 @@ def write_theme(v):
 
 # ── 可调参数（设计见 memory: project-408-study-system）──────
 EXAM_DATE = "2026-12-19"          # 初试日期；考前最后一天 12-18
-NEW_PER_DAY = 20                  # 每日新题上限(待最终敲定)
+DAILY_TOTAL_LIMIT = 10            # 七天重启期：每日总题量硬上限，先恢复出勤
+NEW_PER_DAY = 5                   # 七天重启期：每日新题上限
+CORE_YEARS = set(str(y) for y in range(2018, 2026))  # 近年核心卷：优先复现
+SAMPLE_YEARS = set(str(y) for y in range(2009, 2013)) # 早年样本卷：低频补洞
+DIAG_STATUS = {"outside", "misselect", "uncertain", "solid"}
 
 # 选择题遗忘曲线：单题间隔“扩张”(先短后长，抓住遗忘陡崖)，共 7 次曝光。
 # 注：最后 1~2 次理想应“锁定”到 11/12 月做考前冲刺，目前先用纯间隔近似(TODO 日期锁定)。
@@ -203,9 +207,12 @@ def _sync_session(state, date_iso=None):
     for qid in log.get("done", []):
         s = state.get(qid, {})
         entry = {"ok": res.get(qid, s.get("last_ok", True))}
-        pick = s.get("last_pick")
+        pick = log.get("pick", {}).get(qid, s.get("last_pick"))
         if pick:
             entry["pick"] = pick
+        diag = log.get("diagnosis", {}).get(qid, s.get("diagnosis"))
+        if diag:
+            entry["diagnosis"] = diag
         answers[qid] = entry
     # 当天涉及的题目的 notes（有则带，无则略）
     all_notes = load_notes()
@@ -261,6 +268,9 @@ def _write_md(json_path, data, session_notes=None):
             mark = "✓" if ans.get("ok") else "✗"
             pick = ans.get("pick", "")
             status = f"选：{pick}　{mark}" if pick else mark
+            diag = ans.get("diagnosis")
+            if diag:
+                status += f"　{diag_label(diag)}"
         else:
             status = "（未作答）"
         lines += [
@@ -323,6 +333,25 @@ def day_num(date_iso, state):
 
 def day_log(state):
     return state.setdefault("_progress", {}).setdefault(today(), {"done": [], "ok": 0, "new": 0})
+
+
+DIAG_CN = {
+    "outside": "圈外",
+    "misselect": "误选",
+    "uncertain": "心虚",
+    "solid": "稳了",
+}
+
+
+def diag_label(v):
+    return DIAG_CN.get(v, v or "")
+
+
+def normalize_log(log):
+    log.setdefault("done", [])
+    log.setdefault("ok", 0)
+    log.setdefault("new", 0)
+    return log
 
 
 # ── 调度器：科目轮转 + 分块→交错(见 memory: project-408-study-system) ──
@@ -392,6 +421,34 @@ def order_questions(items, phase, active):
     return items
 
 
+def year_weight(year):
+    if year in CORE_YEARS:
+        return 0
+    if year in SAMPLE_YEARS:
+        return 2
+    return 1
+
+
+def risk_rank(state, it, t):
+    """风险驱动排序：待解/错题/到期靠前，核心卷优先，早年样本降权。"""
+    s = state.get(it["id"], {})
+    due_days = 999
+    if s.get("due"):
+        try:
+            due_days = (datetime.date.fromisoformat(s["due"]) - datetime.date.fromisoformat(t)).days
+        except ValueError:
+            due_days = 999
+    risk = 0
+    if s.get("stuck"):
+        risk -= 60
+    if s.get("last_ok") is False:
+        risk -= 40
+    if s.get("diagnosis") in ("outside", "uncertain"):
+        risk -= 25
+    risk += max(-30, min(30, due_days))
+    return (risk, year_weight(it["year"]), it["year"], it["q"])
+
+
 def build_today(state):
     """返回今日全量清单(含已做)：[{id,year,q,img,subject,chapter,status,ok,notes}]。
 
@@ -399,7 +456,7 @@ def build_today(state):
     阶段只从今日激活科目对引入；最终顺序按阶段 分块→交错→随机 排列。
     """
     all_notes = load_notes()
-    log = day_log(state)
+    log = normalize_log(day_log(state))
     done = list(log["done"])
     done_set = set(done)
     t = today()
@@ -417,8 +474,27 @@ def build_today(state):
         else:
             fresh.append(it)
 
-    # 新题配额
-    remaining_new = max(0, NEW_PER_DAY - log["new"])
+    # 今日已列但未做的题优先保留，避免刷新后任务漂移；仍受总题量上限保护。
+    roster = log.get("roster", [])
+    planned_ids = [qid for qid in roster if qid not in done_set and qid in QUESTIONS]
+    planned = [QUESTIONS[qid] for qid in planned_ids]
+    planned_set = set(planned_ids)
+
+    slots = max(0, DAILY_TOTAL_LIMIT - len(done))
+    pending_seed = planned[:slots]
+    used_ids = {it["id"] for it in pending_seed}
+    slots = max(0, slots - len(pending_seed))
+
+    due = [it for it in due if it["id"] not in used_ids]
+    due.sort(key=lambda it: risk_rank(state, it, t))
+    due_today = due[:slots]
+    used_ids.update(it["id"] for it in due_today)
+    slots = max(0, slots - len(due_today))
+
+    # 新题配额同时受每日总量和新题上限约束。
+    remaining_new = min(slots, max(0, NEW_PER_DAY - log["new"]))
+    fresh = [it for it in fresh if it["id"] not in used_ids and it["id"] not in planned_set]
+    fresh.sort(key=lambda it: (year_weight(it["year"]), it["year"], it["q"]))
     if phase in ("blocked", "interleaved"):
         # 只从今日激活科目对引入，且在两门间均衡(round-robin)，保证每天两门都出
         pools = [deque(_cluster([it for it in fresh if q_subject(it) == s], active))
@@ -433,7 +509,7 @@ def build_today(state):
         random.Random(today() + "f").shuffle(pool)
         new_today = pool[:remaining_new]
 
-    pending = order_questions(due + new_today, phase, active)
+    pending = order_questions(pending_seed + due_today + new_today, phase, active)
     new_ids = {it["id"] for it in new_today}
 
     out = []
@@ -443,10 +519,12 @@ def build_today(state):
             ent = state.get(qid, {})
             out.append({**_pub(it), "status": "done", "ok": ent.get("last_ok", True),
                         "isNew": qid in new_ids, "notes": all_notes.get(qid),
+                        "diagnosis": ent.get("diagnosis"),
                         "stuck": bool(ent.get("stuck")), "stuck_reason": ent.get("stuck_reason", "stuck")})
     for it in pending:
         out.append({**_pub(it), "status": "pending", "isNew": it["id"] in new_ids,
-                    "notes": all_notes.get(it["id"])})
+                    "notes": all_notes.get(it["id"]),
+                    "diagnosis": state.get(it["id"], {}).get("diagnosis")})
     return out, log, new_ids
 
 
@@ -514,9 +592,12 @@ def build_day(state, date):
             ok = res.get(qid, state.get(qid, {}).get("last_ok", True))
             d = {**_pub(it), "status": "done", "ok": ok, "isNew": is_new,
                  "notes": all_notes.get(qid)}
-            pick = state.get(qid, {}).get("last_pick")
-            if pick and not ok:
+            pick = log.get("pick", {}).get(qid, state.get(qid, {}).get("last_pick"))
+            if pick:
                 d["pick"] = pick
+            diag = log.get("diagnosis", {}).get(qid, state.get(qid, {}).get("diagnosis"))
+            if diag:
+                d["diagnosis"] = diag
             items.append(d)
         else:
             items.append({**_pub(it), "status": "pending", "isNew": is_new,
@@ -606,6 +687,7 @@ def build_stats(state, date=None):
             "day_ok": day_ok,
             "stuck": is_stuck,
             "reason": s.get("stuck_reason") if is_stuck else None,
+            "diagnosis": s.get("diagnosis"),
             "pick": pick,
             "notes": notes,
         })
@@ -633,7 +715,7 @@ def grade(state, qid, pick=None, selfok=None):
     if pick:
         s["last_pick"] = pick        # 记下选了哪个干扰项，供拷打扎具体错念
     state[qid] = s
-    log = day_log(state)
+    log = normalize_log(day_log(state))
     if qid not in log["done"]:
         log["done"].append(qid)
         if correct:
@@ -641,9 +723,33 @@ def grade(state, qid, pick=None, selfok=None):
         if is_new:
             log["new"] += 1
     log.setdefault("res", {})[qid] = correct   # 记当天每题对错，回顾不受日后复习影响
+    if pick:
+        log.setdefault("pick", {})[qid] = pick
     save_state(state)
     _sync_session(state)
     return {"known": True, "correct": correct, "answer": ans}
+
+
+def set_diagnosis(state, qid, diagnosis):
+    if diagnosis not in DIAG_STATUS:
+        return {"error": "bad diagnosis"}
+    s = state.get(qid)
+    if s is None:
+        return {"error": "not graded yet"}
+    s["diagnosis"] = diagnosis
+    # 四档诊断直接映射待攻克状态：圈外/误选/心虚都回来，稳了就撤下。
+    if diagnosis == "solid":
+        s.pop("stuck", None)
+        s.pop("stuck_reason", None)
+    else:
+        s["stuck"] = True
+        s["stuck_reason"] = diagnosis
+    state[qid] = s
+    log = normalize_log(day_log(state))
+    log.setdefault("diagnosis", {})[qid] = diagnosis
+    save_state(state)
+    _sync_session(state)
+    return {"ok": True, "diagnosis": diagnosis, "stuck": bool(s.get("stuck"))}
 
 
 def mark_stuck(state, qid, stuck, reason=None):
@@ -691,6 +797,7 @@ class H(BaseHTTPRequestHandler):
             prev, nxt = day_nav(today(), progress_days(state))
             return self._send(200, {
                 "dday": dday(), "examDate": EXAM_DATE, "newPerDay": NEW_PER_DAY,
+                "dailyTotalLimit": DAILY_TOTAL_LIMIT,
                 "theme": read_theme(),
                 "items": items,
                 "done": len(log["done"]), "ok": log["ok"],
@@ -729,6 +836,10 @@ class H(BaseHTTPRequestHandler):
         if self.path == "/api/stuck":
             state = load_state()
             res = mark_stuck(state, data.get("id"), data.get("stuck"), data.get("reason"))
+            return self._send(200, res)
+        if self.path == "/api/diagnosis":
+            state = load_state()
+            res = set_diagnosis(state, data.get("id"), data.get("diagnosis"))
             return self._send(200, res)
         if self.path == "/api/theme":
             write_theme(data.get("theme", ""))

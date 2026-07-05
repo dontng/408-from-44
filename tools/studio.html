@@ -136,6 +136,16 @@ main{min-width:0}
 
 .done-tag{font-size:12px;letter-spacing:.15em;color:var(--faint)}
 .done-tag.ok{color:var(--moss)} .done-tag.no{color:var(--akane)}
+.diag{font-size:12px;letter-spacing:.12em;color:var(--ai);border:1px solid var(--line);
+  border-radius:4px;padding:2px 7px}
+.diag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.diag-row .sj{padding:4px 10px}
+.quota-wrap{margin-top:8px;max-width:184px}
+.quota-label{display:flex;justify-content:space-between;gap:8px;font-size:10.5px;color:var(--sub);letter-spacing:.12em}
+.quota-done-mark{color:var(--moss)}
+.quota-track{height:6px;background:var(--hair);border-radius:3px;overflow:hidden;margin-top:5px}
+.quota-fill{height:100%;background:var(--ai);border-radius:3px;transition:width .25s}
+.quota-fill.over{background:var(--moss)}
 
 /* ── 疑问口袋：默认折叠，点击展开 ── */
 .pocket{margin-top:0;border-top:1px solid var(--hair)}
@@ -379,6 +389,8 @@ let navPrev = "", navNext = "";   // 当前页左右可去的日期，供键盘�
 const $ = s => document.querySelector(s);
 const LETTERS = ["A","B","C","D"];
 const fmtMD = iso => { const [,m,d] = iso.split("-"); return `${m}/${d}`; };
+const DIAG_CN = {outside:"圈外", misselect:"误选", uncertain:"心虚", solid:"稳了"};
+const diagTag = d => d ? `　<span class="diag">${DIAG_CN[d]||d}</span>` : "";
 
 async function load(){
   DATA = await (await fetch("/api/today")).json();
@@ -479,9 +491,10 @@ function renderReviewBlock(it){
   const tag = it.status === "done"
     ? `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'答对':'答错'}</span>`
     : `<span class="done-tag">未答</span>`;
-  const pick = (it.pick && !it.ok) ? `　<span class="done-tag">选了 ${it.pick}</span>` : "";
+  const pick = it.pick ? `　<span class="done-tag">选了 ${it.pick}</span>` : "";
   b.innerHTML = `<div class="qmeta"><b>${it.year}</b>　第 ${it.q} 题　${tag}${pick}</div>
     <img class="qimg" src="${it.img}" alt="第${it.q}题" loading="lazy"${imgW(it)}>`;
+  if (it.diagnosis) b.querySelector(".qmeta").insertAdjacentHTML("beforeend", diagTag(it.diagnosis));
   b.appendChild(makePocket(it.id, it.notes, true, false));
   return b;
 }
@@ -605,17 +618,9 @@ function renderBlock(it){
   if (it.status === "done"){
     const tag = document.createElement("div");
     tag.className = "fb";
-    tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>`;
-    if (it.ok) {
-      // 答对的题：可标"没懂"进待攻克（答错的自动进，无需按钮）
-      if (it.stuck) {
-        tag.innerHTML += ` <span class="done-tag no">仍需攻克·已标</span>`;
-      } else {
-        const row = document.createElement("span"); row.className = "markrow"; row.style.marginLeft = "6px";
-        const stk = mkBtn("仍需攻克", async () => { await markStuckById(it.id, "stuck"); row.outerHTML = `<span class="done-tag no">仍需攻克·已标</span>`; });
-        row.append(stk);
-        tag.appendChild(row);
-      }
+    tag.innerHTML = `<span class="done-tag ${it.ok?'ok':'no'}">${it.ok?'已答对':'已答错'}</span>${diagTag(it.diagnosis)}`;
+    if (!it.diagnosis) {
+      tag.appendChild(makeDiagRow(it, it.ok));
     }
     b.appendChild(tag);
     b.appendChild(makePocket(it.id, it.notes, false, true));
@@ -693,14 +698,29 @@ function showVerdict(it, opts, fb, pick, correct, answer){
   it.status = "done"; it.ok = correct;
   DATA.done += 1; if (correct) DATA.ok += 1;
   renderSidebar();
-  // 答对了但不确定：可以手动标入待攻克（答错的题自动进待攻克，无需按钮）
-  if (correct) {
-    const row = document.createElement("span"); row.className = "markrow";
-    row.style.marginLeft = "6px";
-    const stk = mkBtn("仍需攻克", ()=>markStuck(it, fb, "stuck"));
-    row.append(stk);
-    fb.appendChild(row);
-  }
+  fb.appendChild(makeDiagRow(it, correct));
+}
+function makeDiagRow(it, correct){
+  const row = document.createElement("div");
+  row.className = "diag-row";
+  const choices = correct
+    ? [["uncertain","心虚"],["solid","稳了"]]
+    : [["outside","圈外"],["misselect","误选"]];
+  choices.forEach(([code, label]) => {
+    const btn = mkBtn(label, async () => {
+      await setDiagnosis(it, code);
+      row.outerHTML = `<span class="diag">${label}</span>`;
+    });
+    row.appendChild(btn);
+  });
+  return row;
+}
+async function setDiagnosis(it, diagnosis){
+  it.diagnosis = diagnosis;
+  if (diagnosis === "solid") it.stuck = false;
+  else it.stuck = true;
+  await fetch("/api/diagnosis",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id:it.id, diagnosis})});
 }
 async function markStuckById(id, reason="stuck"){
   await fetch("/api/stuck",{method:"POST",headers:{"Content-Type":"application/json"},
@@ -982,7 +1002,8 @@ async function showStats(){
       meta.innerHTML = `<b>${m.year}</b>　第 ${m.q} 题　<span class="done-tag">${m.subjectCN} · ${prettyCh(m.chapter)}</span>`;
       if (!m.day_ok) meta.innerHTML += `　<span class="done-tag no">答错</span>`;
       if (m.pick) meta.innerHTML += `　<span class="done-tag">你选了 ${m.pick}</span>`;
-      if (m.day_ok && m.stuck) meta.innerHTML += `　<span class="done-tag no">仍需攻克</span>`;
+      if (m.diagnosis) meta.innerHTML += diagTag(m.diagnosis);
+      if (m.day_ok && m.stuck && !m.diagnosis) meta.innerHTML += `　<span class="done-tag no">仍需攻克</span>`;
       card.appendChild(meta);
       // 题目图片
       const img = document.createElement("img"); img.className = "qimg";

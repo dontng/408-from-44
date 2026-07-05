@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>408 answer card</title>
+<style>
+:root{
+  --bg:#f6f3eb; --paper:#fffdf7; --ink:#2f2c27; --muted:#918879;
+  --line:#e2dacb; --accent:#3d6478; --ok:#5d7d58; --warn:#a4493d;
+  --halo:rgba(246,243,235,.96); --halo0:rgba(246,243,235,0);
+}
+:root[data-theme="dark"]{
+  --bg:#181512; --paper:#24201b; --ink:#e7ddcf; --muted:#9a8f80;
+  --line:#3b342c; --accent:#83a9bc; --ok:#90b684; --warn:#d48679;
+  --halo:rgba(24,21,18,.95); --halo0:rgba(24,21,18,0);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;font-size:14px;line-height:1.6}
+.wrap{max-width:620px;margin:0 auto;padding:22px 18px 36px}
+header{position:sticky;top:0;background:linear-gradient(var(--bg) 78%,rgba(246,243,235,0));
+  padding:10px 0 16px;z-index:2}
+:root[data-theme="dark"] header{background:linear-gradient(var(--bg) 78%,rgba(24,21,18,0))}
+h1{margin:0;font-size:18px;letter-spacing:.08em;font-weight:650}
+.meta{margin-top:4px;color:var(--muted);font-size:12px;letter-spacing:.06em}
+.hint{margin-top:10px;color:var(--muted);font-size:12px}
+.theme-toggle{position:fixed;right:18px;top:14px;z-index:10;width:60px;height:60px;
+  padding:0;border:none;cursor:pointer;color:var(--muted);display:grid;place-items:center;
+  border-radius:50%;background:radial-gradient(circle,var(--halo) 56%,var(--halo0) 76%);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,opacity .15s}
+.theme-toggle svg{width:40px;height:40px;display:block;overflow:visible;
+  filter:url(#sketch);transition:transform .2s ease}
+.theme-toggle:hover{color:var(--warn)}
+.theme-toggle:hover svg{transform:rotate(-14deg) scale(1.08)}
+.theme-toggle.press{transform:scale(.72) translateY(3px);opacity:.55;
+  color:var(--warn);transition-duration:.08s}
+.actions{display:flex;align-items:center;gap:10px;margin-top:18px;justify-content:flex-end}
+.grade-btn{height:32px;padding:0 16px;border:1px solid var(--accent);border-radius:6px;
+  background:var(--accent);color:#fff;letter-spacing:.08em;cursor:pointer}
+.grade-btn:disabled{opacity:.55;cursor:default}
+.summary{color:var(--muted);font-size:12px}
+.card{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:38px 86px 42px 1fr;gap:8px;align-items:center;
+  min-height:46px;padding:7px 8px;background:var(--paper);border:1px solid var(--line);border-radius:7px}
+.idx{font-family:Georgia,serif;color:var(--muted);font-size:13px;text-align:right}
+.qid{font-family:Georgia,serif;font-size:14px;white-space:nowrap}
+.src{font-size:11px;color:var(--muted);text-align:center;border:1px solid var(--line);border-radius:4px;padding:2px 0}
+.src.new{color:var(--accent);border-color:rgba(61,100,120,.45)}
+.opts{display:flex;gap:6px;justify-content:flex-end}
+.opt{width:34px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--muted);
+  font-family:Georgia,serif;font-size:14px;cursor:pointer;transition:.14s}
+.opt:hover{border-color:var(--accent);color:var(--accent)}
+.opt.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt.unknown{font-family:inherit;font-weight:700}
+.save{display:inline-block;min-width:42px;color:var(--muted)}
+.save.dirty{color:var(--accent)}
+.save.err{color:var(--warn)}
+@media(max-width:520px){
+  .wrap{padding:14px 10px 28px}
+  .row{grid-template-columns:30px 76px 38px 1fr;gap:5px;padding:6px}
+  .opts{gap:4px}.opt{width:29px;height:29px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="sketch">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+<div class="wrap">
+  <header>
+    <h1 id="title">408 答题卡</h1>
+    <div class="meta" id="meta">加载中...</div>
+    <div class="hint">左侧看 MD 题图，右侧点选作答。再次点击已选项可取消；<b>?</b> 表示不会。</div>
+  </header>
+  <main class="card" id="card"></main>
+  <footer class="actions">
+    <span class="summary" id="summary"></span>
+    <button class="grade-btn" id="grade">完成今日答题</button>
+  </footer>
+</div>
+<button class="theme-toggle" id="theme-toggle" aria-label="深色模式开关"></button>
+<script>
+const $ = s => document.querySelector(s);
+const params = new URLSearchParams(location.search);
+const date = params.get("date") || "0705";
+const TOKENS = [["A","A"],["B","B"],["C","C"],["D","D"],["unknown","?"]];
+let answers = {};
+
+const THEME_ICON = {
+  moon: '<path d="M38 13 A 20 20 0 1 0 38 51 A 15 15 0 1 1 38 13 Z" fill="currentColor" stroke="none"/>',
+  sun:  '<circle cx="32" cy="32" r="9"/><path d="M32 7 L32 15 M32 49 L32 57 M7 32 L15 32'
+      + ' M49 32 L57 32 M15 15 L20 20 M44 44 L49 49 M49 15 L44 20 M15 49 L20 44"/>',
+};
+const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
+function paintThemeBtn(){
+  const b = $("#theme-toggle"); if (!b) return;
+  b.setAttribute("aria-label", isDark() ? "切到亮色" : "切到暗色");
+  b.innerHTML = `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.2"`
+    + ` stroke-linecap="round" stroke-linejoin="round">${isDark() ? THEME_ICON.sun : THEME_ICON.moon}</svg>`;
+}
+
+function applyTheme(theme){
+  if(theme === "dark") document.documentElement.setAttribute("data-theme","dark");
+  else document.documentElement.removeAttribute("data-theme");
+  paintThemeBtn();
+  try{ localStorage.setItem("answer-theme", theme); }catch(e){}
+}
+
+function initTheme(){
+  let theme = "light";
+  try{ theme = localStorage.getItem("answer-theme") || "light"; }catch(e){}
+  applyTheme(theme);
+  $("#theme-toggle").onclick = () => {
+    const b = $("#theme-toggle");
+    b.classList.add("press");
+    setTimeout(() => {
+      b.classList.remove("press");
+      applyTheme(isDark() ? "light" : "dark");
+    }, 140);
+  };
+}
+
+async function jget(url){ return await (await fetch(url, {cache:"no-store"})).json(); }
+
+async function save(qid, pick, statusEl){
+  statusEl.textContent = "保存中";
+  statusEl.className = "save dirty";
+  try{
+    const r = await fetch("/api/answer", {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({date, qid, pick})});
+    if(!r.ok) throw new Error(await r.text());
+    statusEl.textContent = "已存";
+    statusEl.className = "save";
+  }catch(e){
+    statusEl.textContent = "失败";
+    statusEl.className = "save err";
+  }
+}
+
+async function grade(){
+  if(!confirm("生成今日处理清单？这会更新结果区和 coach/today。")) return;
+  const btn = $("#grade");
+  const summary = $("#summary");
+  btn.disabled = true;
+  summary.textContent = "生成中...";
+  try{
+    const r = await fetch("/api/grade", {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({date})});
+    if(!r.ok) throw new Error(await r.text());
+    const j = await r.json();
+    summary.textContent = `已答 ${j.answered}/${j.total} · 对 ${j.correct}/${j.known_graded} · 今日清单 ${j.today_open}`;
+  }catch(e){
+    summary.textContent = "生成失败";
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function render(roster){
+  $("#title").textContent = `${date} 答题卡 · Day ${String(roster.day).padStart(2,"0")}`;
+  $("#meta").textContent = `${roster.items.length} 题 · ${roster.limits.review} 复习 / ${roster.limits.new} 新题`;
+  const card = $("#card");
+  card.innerHTML = "";
+  roster.items.forEach(it => {
+    const row = document.createElement("section");
+    row.className = "row";
+    const src = it.source === "new" ? "新" : "复";
+    row.innerHTML = `<div class="idx">${String(it.idx).padStart(2,"0")}</div>
+      <div class="qid">${it.qid}</div>
+      <div class="src ${it.source === "new" ? "new" : ""}">${src}</div>
+      <div class="opts"></div>`;
+    const opts = row.querySelector(".opts");
+    const status = document.createElement("span");
+    status.className = "save";
+    status.textContent = answers[it.qid] ? "已存" : "";
+    TOKENS.forEach(([value,label]) => {
+      const b = document.createElement("button");
+      b.className = "opt" + (value === "unknown" ? " unknown" : "");
+      b.textContent = label;
+      b.title = value === "unknown" ? "不会" : value;
+      b.classList.toggle("on", answers[it.qid] === value);
+      b.onclick = async () => {
+        const next = answers[it.qid] === value ? "" : value;
+        if(next) answers[it.qid] = next; else delete answers[it.qid];
+        opts.querySelectorAll(".opt").forEach(x => x.classList.remove("on"));
+        if(next) b.classList.add("on");
+        await save(it.qid, next, status);
+      };
+      opts.appendChild(b);
+    });
+    opts.appendChild(status);
+    card.appendChild(row);
+  });
+}
+
+async function main(){
+  const [roster, ans] = await Promise.all([
+    jget(`/api/roster?date=${encodeURIComponent(date)}`),
+    jget(`/api/answers?date=${encodeURIComponent(date)}`)
+  ]);
+  answers = ans.answers || {};
+  render(roster);
+  $("#grade").onclick = grade;
+}
+main().catch(e => {
+  $("#meta").textContent = "加载失败";
+  $("#card").textContent = e.message || String(e);
+});
+initTheme();
+</script>
+</body>
+</html>
