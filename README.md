@@ -11,7 +11,7 @@
 ## 今天怎么用
 
 1. 生成今日题单：`bash today.sh 0705`。不传日期时默认今天：`bash today.sh`。
-2. 启动答题卡：`./answer 0705`，或 `bash answer.sh 0705`。
+2. 启动答题卡：`bash answer.sh 0705`。
 3. 打开当天 MD：`src/july/0705-day01.md`。MD 顶部有“打开答题卡”链接，建议 VS Code 左右分屏：左边看题图，右边点 `A/B/C/D/?`，其中 `?` 表示不会，空着表示还没答。
 4. 答完后，在答题卡底部点“完成今日答题”。它会生成结果和教练流入口数据。
 
@@ -34,7 +34,7 @@ coach/pins/                  考前必须拔掉的长期钉子
 | 命令 | 作用 |
 |---|---|
 | `bash today.sh 0705` | 生成当天 MD 和机器题单 |
-| `./answer 0705` | 启动答题卡服务 |
+| `bash answer.sh 0705` | 启动答题卡服务 |
 | `python3 tools/grade_today.py --date 0705` | 手动生成结果和 `coach/today` |
 | `python3 tools/coach_next.py --date 0705` | 从 `coach/today` 取下一题生成 `coach/current.md` |
 | `python3 tools/coach_mark.py --date 0705 --decision revisit` | 标记当前题为 `pass/revisit/pin` |
