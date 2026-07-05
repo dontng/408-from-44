@@ -17,6 +17,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 POLICY_FILE = REPO / "data" / "roster_policy.json"
 STATE_FILE = REPO / "review" / "state.json"
+NORM_FILE = REPO / "review" / "imgnorm.json"
 ROSTER_DIR = REPO / "data" / "rosters"
 SRC_DIR = REPO / "src"
 COACH_TODAY_DIR = REPO / "coach" / "today"
@@ -76,6 +77,12 @@ def load_questions():
                 "answer_known": q in answers,
             }
     return questions
+
+
+def load_norm():
+    """Return qid -> normalized display width in px for consistent image text size."""
+    data = read_json(NORM_FILE, {})
+    return data.get("items", {})
 
 
 def day_index(date_iso, policy):
@@ -278,7 +285,15 @@ def write_roster_json(date_iso, day_no, limits, roster, sources, questions):
     return path
 
 
-def write_md(date_iso, day_no, roster, questions):
+def md_img_tag(md_path, qid, q, norm):
+    src = f"../../{md_rel_img(md_path, q)}"
+    width = norm.get(qid)
+    if width:
+        return f'<img src="{src}" width="{width}" style="max-width:100%; height:auto;">'
+    return f'<img src="{src}" style="max-width:100%; height:auto;">'
+
+
+def write_md(date_iso, day_no, roster, questions, norm):
     date_obj = dt.date.fromisoformat(date_iso)
     month_dir = SRC_DIR / MONTHS[date_obj.month - 1]
     month_dir.mkdir(parents=True, exist_ok=True)
@@ -303,7 +318,7 @@ def write_md(date_iso, day_no, roster, questions):
             "",
             "作答：",
             "",
-            f"![](../../{md_rel_img(md_path, q)})",
+            md_img_tag(md_path, qid, q, norm),
             "",
         ]
     lines += [nav, ""]
@@ -320,9 +335,10 @@ def main():
     policy = read_json(POLICY_FILE, {})
     state = read_json(STATE_FILE, {})
     questions = load_questions()
+    norm = load_norm()
     roster, sources, day_no, limits = select_roster(date_iso, policy, state, questions)
     json_path = write_roster_json(date_iso, day_no, limits, roster, sources, questions)
-    md_path = write_md(date_iso, day_no, roster, questions)
+    md_path = write_md(date_iso, day_no, roster, questions, norm)
     print(f"wrote {md_path.relative_to(REPO)}")
     print(f"wrote {json_path.relative_to(REPO)}")
     print(" ".join(roster))
