@@ -9,3 +9,4 @@ __pycache__/
 .autocommit.log
 .autopull.log
 .autopull.lock
+.sync.log

@@ -10,6 +10,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 LOGS = [REPO / ".sync.log", REPO / ".autopull.log", REPO / ".autocommit.log"]
 SYNC_PATHS = [
+    ".gitignore",
     "AGENTS.md",
     "README.md",
     "STATUS.md",
@@ -21,6 +22,7 @@ SYNC_PATHS = [
     "answer.sh",
     "tools/answer.html",
     "tools/answer.py",
+    "tools/autopull.sh",
     "tools/coach_mark.py",
     "tools/coach_next.py",
     "tools/grade_today.py",

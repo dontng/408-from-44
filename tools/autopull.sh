@@ -20,6 +20,30 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
 }
 
+prune_log() {
+    python3 - "$LOG_FILE" <<'PY'
+import datetime as dt
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+if not path.exists():
+    raise SystemExit
+cutoff = dt.datetime.now() - dt.timedelta(days=7)
+kept = []
+for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+    if len(line) >= 21 and line[0] == "[" and line[20] == "]":
+        try:
+            if dt.datetime.strptime(line[1:20], "%Y-%m-%d %H:%M:%S") >= cutoff:
+                kept.append(line)
+            continue
+        except ValueError:
+            pass
+    kept.append(line)
+path.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
+PY
+}
+
 git_is_busy() {
     [[ -f "$REPO_DIR/.git/index.lock" ]] \
         || [[ -f "$REPO_DIR/.git/MERGE_HEAD" ]] \
@@ -35,7 +59,7 @@ do_pull() {
     fi
 
     local out rc=0
-    out=$(git pull --rebase --autostash origin main 2>&1) || rc=$?
+    out=$(git fetch origin main 2>&1 && git rebase --autostash origin/main 2>&1) || rc=$?
 
     if (( rc != 0 )); then
         log "ERROR: pull --rebase 失败 (exit $rc)"
@@ -49,14 +73,18 @@ do_pull() {
 
     if grep -q 'Already up to date\.' <<< "$out"; then
         : # 已是最新，静默
+    elif grep -q 'Current branch .* is up to date' <<< "$out"; then
+        : # 已是最新，静默
     else
         log "已拉取新提交："
         echo "$out" >> "$LOG_FILE"
     fi
+    prune_log
 }
 
 # 单实例：flock 保护，防止与 autocommit.sh 并发
 (
     flock -n 9 || { log "另一个实例正在运行 — 跳过"; exit 0; }
+    prune_log
     do_pull
 ) 9>"$LOCK_FILE"
