@@ -17,6 +17,7 @@ POLICY_FILE = REPO / "data" / "roster_policy.json"
 STATE_FILE = REPO / "review" / "state.json"
 ROSTER_DIR = REPO / "data" / "rosters"
 SRC_DIR = REPO / "src"
+COACH_TODAY_DIR = REPO / "coach" / "today"
 
 MONTHS = [
     "january", "february", "march", "april", "may", "june",
@@ -103,9 +104,40 @@ def year_rank(year, tiers):
     return (role_rank.get(tier["role"], 9), -int(year))
 
 
-def review_rank(qid, state, questions, date_iso, tiers):
+def load_coach_feedback(date_iso):
+    """Return qid -> highest-risk coach decision before date_iso."""
+    target = dt.date.fromisoformat(date_iso)
+    rank = {"pin": 0, "revisit": 1}
+    feedback = {}
+    for path in sorted(COACH_TODAY_DIR.glob("*.json")):
+        data = read_json(path, {})
+        day = data.get("date")
+        if not day:
+            continue
+        try:
+            if dt.date.fromisoformat(day) >= target:
+                continue
+        except ValueError:
+            continue
+        for item in data.get("items", []):
+            decision = item.get("decision")
+            qid = item.get("qid")
+            if decision not in rank or not qid:
+                continue
+            prev = feedback.get(qid)
+            if prev is None or rank[decision] < rank[prev["decision"]]:
+                feedback[qid] = {
+                    "decision": decision,
+                    "date": day,
+                    "grade": item.get("grade"),
+                }
+    return feedback
+
+
+def review_rank(qid, state, questions, date_iso, tiers, coach_feedback=None):
     s = state.get(qid, {})
     q = questions[qid]
+    coach_feedback = coach_feedback or {}
     due = s.get("due", "9999-12-31")
     due_days = 999
     try:
@@ -113,6 +145,11 @@ def review_rank(qid, state, questions, date_iso, tiers):
     except ValueError:
         pass
     risk = 0
+    decision = coach_feedback.get(qid, {}).get("decision")
+    if decision == "pin":
+        risk -= 250
+    elif decision == "revisit":
+        risk -= 180
     if s.get("stuck"):
         risk -= 100
     if s.get("last_ok") is False:
@@ -127,6 +164,7 @@ def select_roster(date_iso, policy, state, questions):
     day_no = day_index(date_iso, policy)
     limits = limits_for_day(day_no, policy)
     tiers = tier_map(policy)
+    coach_feedback = load_coach_feedback(date_iso)
     allowed_new_years = {
         year
         for year, tier in tiers.items()
@@ -137,13 +175,16 @@ def select_roster(date_iso, policy, state, questions):
     new_candidates = []
     for qid, q in questions.items():
         s = state.get(qid)
-        if s:
+        if qid in coach_feedback:
+            review_candidates.append(qid)
+        elif s:
             if s.get("stuck") or s.get("last_ok") is False or s.get("due", "9999-12-31") <= date_iso:
                 review_candidates.append(qid)
         elif q["year"] in allowed_new_years:
             new_candidates.append(qid)
 
-    review_candidates.sort(key=lambda qid: review_rank(qid, state, questions, date_iso, tiers))
+    review_candidates = list(dict.fromkeys(review_candidates))
+    review_candidates.sort(key=lambda qid: review_rank(qid, state, questions, date_iso, tiers, coach_feedback))
     new_candidates.sort(key=lambda qid: (*year_rank(questions[qid]["year"], tiers), questions[qid]["q"]))
 
     review_ids = review_candidates[: limits["review"]]
@@ -163,6 +204,9 @@ def select_roster(date_iso, policy, state, questions):
                 if len(roster) >= total:
                     break
     roster = roster[:total]
+    for qid in roster:
+        if qid in coach_feedback:
+            sources[qid] = coach_feedback[qid]["decision"]
     return roster, {qid: sources.get(qid, "unknown") for qid in roster}, day_no, limits
 
 

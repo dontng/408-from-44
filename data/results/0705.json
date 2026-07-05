@@ -2,9 +2,9 @@
   "date": "2026-07-05",
   "day": 1,
   "total": 10,
-  "answered": 0,
-  "known_graded": 0,
-  "ok": 0,
+  "answered": 10,
+  "known_graded": 10,
+  "ok": 1,
   "items": [
     {
       "idx": 1,
@@ -12,10 +12,10 @@
       "year": "2025",
       "q": 35,
       "source": "review",
-      "pick": "",
+      "pick": "B",
       "answer": "C",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "wrong"
     },
     {
       "idx": 2,
@@ -23,10 +23,10 @@
       "year": "2025",
       "q": 37,
       "source": "review",
-      "pick": "",
+      "pick": "A",
       "answer": "B",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "wrong"
     },
     {
       "idx": 3,
@@ -34,10 +34,10 @@
       "year": "2024",
       "q": 35,
       "source": "review",
-      "pick": "",
+      "pick": "D",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": true,
+      "status": "right"
     },
     {
       "idx": 4,
@@ -45,10 +45,10 @@
       "year": "2024",
       "q": 36,
       "source": "review",
-      "pick": "",
+      "pick": "unknown",
       "answer": "B",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     },
     {
       "idx": 5,
@@ -56,10 +56,10 @@
       "year": "2024",
       "q": 38,
       "source": "review",
-      "pick": "",
+      "pick": "unknown",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     },
     {
       "idx": 6,
@@ -67,10 +67,10 @@
       "year": "2025",
       "q": 5,
       "source": "review",
-      "pick": "",
+      "pick": "B",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "wrong"
     },
     {
       "idx": 7,
@@ -78,10 +78,10 @@
       "year": "2025",
       "q": 8,
       "source": "review",
-      "pick": "",
+      "pick": "unknown",
       "answer": "C",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     },
     {
       "idx": 8,
@@ -89,10 +89,10 @@
       "year": "2025",
       "q": 12,
       "source": "new",
-      "pick": "",
+      "pick": "unknown",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     },
     {
       "idx": 9,
@@ -100,10 +100,10 @@
       "year": "2025",
       "q": 13,
       "source": "new",
-      "pick": "",
+      "pick": "unknown",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     },
     {
       "idx": 10,
@@ -111,10 +111,10 @@
       "year": "2025",
       "q": 14,
       "source": "new",
-      "pick": "",
+      "pick": "unknown",
       "answer": "D",
-      "ok": null,
-      "status": "blank"
+      "ok": false,
+      "status": "unknown"
     }
   ]
 }

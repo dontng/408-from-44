@@ -60,5 +60,5 @@
     "core_year",
     "recent_year"
   ],
-  "answer_tokens": ["A", "B", "C", "D", "不会"]
+  "answer_tokens": ["A", "B", "C", "D", "?"]
 }
