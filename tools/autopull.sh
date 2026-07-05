@@ -31,15 +31,18 @@ if not path.exists():
     raise SystemExit
 cutoff = dt.datetime.now() - dt.timedelta(days=7)
 kept = []
+keep_current_block = False
 for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
     if len(line) >= 21 and line[0] == "[" and line[20] == "]":
         try:
-            if dt.datetime.strptime(line[1:20], "%Y-%m-%d %H:%M:%S") >= cutoff:
+            keep_current_block = dt.datetime.strptime(line[1:20], "%Y-%m-%d %H:%M:%S") >= cutoff
+            if keep_current_block:
                 kept.append(line)
             continue
         except ValueError:
             pass
-    kept.append(line)
+    if keep_current_block:
+        kept.append(line)
 path.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
 PY
 }

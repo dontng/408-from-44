@@ -48,16 +48,19 @@ def prune_log(path, days=7):
         return
     cutoff = dt.datetime.now() - dt.timedelta(days=days)
     kept = []
+    keep_current_block = False
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if len(line) >= 21 and line[0] == "[" and line[20] == "]":
             try:
                 stamp = dt.datetime.strptime(line[1:20], "%Y-%m-%d %H:%M:%S")
-                if stamp >= cutoff:
+                keep_current_block = stamp >= cutoff
+                if keep_current_block:
                     kept.append(line)
                 continue
             except ValueError:
                 pass
-        kept.append(line)
+        if keep_current_block:
+            kept.append(line)
     path.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
 
 
