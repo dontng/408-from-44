@@ -15,6 +15,8 @@
 3. 打开当天 MD：`src/july/0705-day01.md`。MD 顶部有“打开答题卡”链接，建议 VS Code 左右分屏：左边看题图，右边点 `A/B/C/D/?`，其中 `?` 表示不会，空着表示还没答。
 4. 答完后，在答题卡底部点“完成今日答题”。它会生成结果和教练流入口数据。
 
+生成题单、完成今日答题、生成 `coach/current.md`、标记 `pass/revisit/pin` 这些节点会自动提交并 push 白名单内容，方便另一台机器上的 Codex 直接拿到最新上下文。本地 `.sync.log` / `.autopull.log` 只保留最近 7 天。
+
 ## 关键文件
 
 ```text
@@ -35,6 +37,7 @@ coach/pins/                  考前必须拔掉的长期钉子
 | `bash answer.sh` | 启动答题卡服务 |
 | `python3 tools/grade_today.py --date 0705` | 手动生成结果和 `coach/today` |
 | `python3 tools/coach_next.py --date 0705` | 从 `coach/today` 取下一题生成 `coach/current.md` |
+| `python3 tools/coach_mark.py --date 0705 --decision revisit` | 标记当前题为 `pass/revisit/pin` |
 
 答题卡地址固定为 `http://127.0.0.1:8409/?date=0705`，日期换成当天 `MMDD`。
 
