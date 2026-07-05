@@ -136,6 +136,27 @@ def load_coach_feedback(date_iso):
     return feedback
 
 
+def load_prior_rostered(date_iso):
+    """Return qids already assigned by the MD-first roster flow before date_iso."""
+    target = dt.date.fromisoformat(date_iso)
+    used = set()
+    for path in sorted(ROSTER_DIR.glob("*.json")):
+        data = read_json(path, {})
+        day = data.get("date")
+        if not day:
+            continue
+        try:
+            if dt.date.fromisoformat(day) >= target:
+                continue
+        except ValueError:
+            continue
+        for item in data.get("items", []):
+            qid = item.get("qid")
+            if qid:
+                used.add(qid)
+    return used
+
+
 def review_rank(qid, state, questions, date_iso, tiers, coach_feedback=None):
     s = state.get(qid, {})
     q = questions[qid]
@@ -167,6 +188,7 @@ def select_roster(date_iso, policy, state, questions):
     limits = limits_for_day(day_no, policy)
     tiers = tier_map(policy)
     coach_feedback = load_coach_feedback(date_iso)
+    prior_rostered = load_prior_rostered(date_iso)
     allowed_new_years = {
         year
         for year, tier in tiers.items()
@@ -179,6 +201,8 @@ def select_roster(date_iso, policy, state, questions):
         s = state.get(qid)
         if qid in coach_feedback:
             review_candidates.append(qid)
+        elif qid in prior_rostered:
+            continue
         elif s:
             if s.get("stuck") or s.get("last_ok") is False or s.get("due", "9999-12-31") <= date_iso:
                 review_candidates.append(qid)
