@@ -1,0 +1,107 @@
+{
+  "date": "2026-07-06",
+  "day": 2,
+  "open": 10,
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2025-09",
+      "pick": "D",
+      "answer": "A",
+      "grade": "wrong",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 2,
+      "qid": "2025-10",
+      "pick": "unknown",
+      "answer": "D",
+      "grade": "unknown",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 3,
+      "qid": "2024-05",
+      "pick": "A",
+      "answer": "D",
+      "grade": "wrong",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 4,
+      "qid": "2024-09",
+      "pick": "unknown",
+      "answer": "B",
+      "grade": "unknown",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 5,
+      "qid": "2024-10",
+      "pick": "unknown",
+      "answer": "C",
+      "grade": "unknown",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 6,
+      "qid": "2024-11",
+      "pick": "unknown",
+      "answer": "D",
+      "grade": "unknown",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 7,
+      "qid": "2024-12",
+      "pick": "unknown",
+      "answer": "B",
+      "grade": "unknown",
+      "source": "review",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 8,
+      "qid": "2025-15",
+      "pick": "unknown",
+      "answer": "C",
+      "grade": "unknown",
+      "source": "new",
+      "priority": 1,
+      "decision": "open"
+    },
+    {
+      "idx": 9,
+      "qid": "2025-16",
+      "pick": "B",
+      "answer": "B",
+      "grade": "right",
+      "source": "new",
+      "priority": 2,
+      "decision": "open"
+    },
+    {
+      "idx": 10,
+      "qid": "2025-17",
+      "pick": "C",
+      "answer": "C",
+      "grade": "right",
+      "source": "new",
+      "priority": 2,
+      "decision": "open"
+    }
+  ]
+}
