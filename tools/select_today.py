@@ -80,9 +80,9 @@ def load_questions():
 
 
 def load_norm():
-    """Return qid -> normalized display width in px for consistent image text size."""
+    """Return normalized display widths and metadata for consistent image text size."""
     data = read_json(NORM_FILE, {})
-    return data.get("items", {})
+    return data
 
 
 def day_index(date_iso, policy):
@@ -287,9 +287,16 @@ def write_roster_json(date_iso, day_no, limits, roster, sources, questions):
 
 def md_img_tag(md_path, qid, q, norm):
     src = f"../../{md_rel_img(md_path, q)}"
-    width = norm.get(qid)
+    items = norm.get("items", {})
+    base_w = norm.get("_meta", {}).get("max_w", 760)
+    width = items.get(qid)
     if width:
-        return f'<img src="{src}" width="{width}" style="max-width:100%; height:auto;">'
+        pct = width / base_w * 100
+        return (
+            f'<div style="width:min(100%, {base_w}px);">'
+            f'<img src="{src}" style="width:{pct:.4g}%; height:auto;">'
+            f'</div>'
+        )
     return f'<img src="{src}" style="max-width:100%; height:auto;">'
 
 
@@ -315,8 +322,6 @@ def write_md(date_iso, day_no, roster, questions, norm):
         q = questions[qid]
         lines += [
             f"### {i:02d} · {qid}",
-            "",
-            "作答：",
             "",
             md_img_tag(md_path, qid, q, norm),
             "",
