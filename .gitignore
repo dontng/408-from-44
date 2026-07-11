@@ -2,6 +2,9 @@
 
 __pycache__/
 
+# Claude Code 本机/项目状态
+.claude/
+
 # 深色模式偏好（每机本地）
 .studio-theme
 
