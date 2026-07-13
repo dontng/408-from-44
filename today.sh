@@ -4,7 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 day="${1:-$(date +%m%d)}"
-python3 tools/select_today.py --date "$day"
+mode="${2:-auto}"
+python3 tools/select_today.py --date "$day" --mode "$mode"
 
 echo
 echo "答题卡服务：bash answer.sh $day"

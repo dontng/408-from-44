@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+import progress
+
 
 REPO = Path(__file__).resolve().parent.parent
 ROSTER_DIR = REPO / "data" / "rosters"
@@ -110,7 +112,8 @@ def build_outputs(date_key_value):
     roster = read_json(ROSTER_DIR / f"{date_key_value}.json", None)
     if roster is None:
         raise SystemExit(f"missing roster: data/rosters/{date_key_value}.json")
-    answers = read_json(ANSWER_DIR / f"{date_key_value}.json", {"answers": {}}).get("answers", {})
+    answer_data = read_json(ANSWER_DIR / f"{date_key_value}.json", {"answers": {}, "diagnoses": {}})
+    answers = answer_data.get("answers", {})
     answer_cache = {}
     results = [grade_item(item, answers.get(item["qid"], ""), answer_cache) for item in roster["items"]]
     done = sum(1 for r in results if r["status"] != "blank")
@@ -144,7 +147,7 @@ def build_outputs(date_key_value):
         "open": sum(1 for item in today_items if item["grade"] != "blank"),
         "items": today_items,
     }
-    return roster, result_data, today_data
+    return roster, result_data, today_data, answer_data.get("diagnoses", {})
 
 
 def result_mark(result):
@@ -185,16 +188,22 @@ def update_md(result_data):
         return None
     text = md_path.read_text(encoding="utf-8")
     marker = "\n## 结果\n"
-    section = "\n\n" + result_section(result_data)
+    section = result_section(result_data).rstrip()
     if marker in text:
-        text = text[: text.index(marker)] + section
+        head = text[: text.index(marker)].rstrip()
+        tail = text[text.index(marker):].rstrip().splitlines()
+        bottom_nav = tail[-1] if tail and tail[-1].startswith("[") else ""
+        text = head + "\n\n" + section
+        if bottom_nav:
+            text += "\n\n" + bottom_nav
+        text += "\n"
     else:
         # Keep the bottom navigation at the very end when present.
         lines = text.rstrip().splitlines()
         bottom_nav = ""
         if lines and lines[-1].startswith("["):
             bottom_nav = lines.pop()
-        text = "\n".join(lines).rstrip() + section
+        text = "\n".join(lines).rstrip() + "\n\n" + section
         if bottom_nav:
             text += "\n" + bottom_nav + "\n"
     md_path.write_text(text, encoding="utf-8")
@@ -206,11 +215,12 @@ def main():
     parser.add_argument("--date", default=dt.date.today().strftime("%m%d"), help="MMDD, e.g. 0705")
     args = parser.parse_args()
     key = args.date
-    roster, result_data, today_data = build_outputs(key)
+    roster, result_data, today_data, diagnoses = build_outputs(key)
     result_path = RESULT_DIR / f"{key}.json"
     today_path = COACH_TODAY_DIR / f"{key}.json"
     write_json(result_path, result_data)
     write_json(today_path, today_data)
+    progress.record_day(result_data, diagnoses)
     md_path = update_md(result_data)
     print(f"wrote {result_path.relative_to(REPO)}")
     print(f"wrote {today_path.relative_to(REPO)}")

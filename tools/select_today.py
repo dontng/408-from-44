@@ -91,8 +91,10 @@ def day_index(date_iso, policy):
     return (current - start).days + 1
 
 
-def limits_for_day(day_no, policy):
+def limits_for_day(day_no, policy, mode="auto"):
     daily = policy["daily_limits"]
+    if mode != "auto":
+        return daily[mode]
     if day_no <= daily["restart_days"]:
         return daily["restart"]
     return daily["stable"]
@@ -167,6 +169,8 @@ def load_prior_rostered(date_iso):
 def review_rank(qid, state, questions, date_iso, tiers, coach_feedback=None):
     s = state.get(qid, {})
     q = questions[qid]
+    target = tiers.get(q["year"], {}).get("target_passes", 0)
+    remaining = max(0, target - s.get("seen", 0))
     coach_feedback = coach_feedback or {}
     due = s.get("due", "9999-12-31")
     due_days = 999
@@ -184,15 +188,17 @@ def review_rank(qid, state, questions, date_iso, tiers, coach_feedback=None):
         risk -= 100
     if s.get("last_ok") is False:
         risk -= 70
+    if remaining:
+        risk -= min(120, remaining * 20)
     if due <= date_iso:
         risk -= 40
     risk += max(-30, min(30, due_days))
     return (risk, *year_rank(q["year"], tiers), q["q"])
 
 
-def select_roster(date_iso, policy, state, questions):
+def select_roster(date_iso, policy, state, questions, mode="auto"):
     day_no = day_index(date_iso, policy)
-    limits = limits_for_day(day_no, policy)
+    limits = limits_for_day(day_no, policy, mode)
     tiers = tier_map(policy)
     coach_feedback = load_coach_feedback(date_iso)
     prior_rostered = load_prior_rostered(date_iso)
@@ -208,11 +214,12 @@ def select_roster(date_iso, policy, state, questions):
         s = state.get(qid)
         if qid in coach_feedback:
             review_candidates.append(qid)
+        elif s:
+            target = tiers.get(q["year"], {}).get("target_passes", 0)
+            if (target and s.get("seen", 0) < target) or s.get("stuck") or s.get("last_ok") is False or s.get("due", "9999-12-31") <= date_iso:
+                review_candidates.append(qid)
         elif qid in prior_rostered:
             continue
-        elif s:
-            if s.get("stuck") or s.get("last_ok") is False or s.get("due", "9999-12-31") <= date_iso:
-                review_candidates.append(qid)
         elif q["year"] in allowed_new_years:
             new_candidates.append(qid)
 
@@ -224,16 +231,17 @@ def select_roster(date_iso, policy, state, questions):
     used = set(review_ids)
     new_ids = [qid for qid in new_candidates if qid not in used][: limits["new"]]
 
-    # If one pool is short, let the other fill up to total, still respecting the hard daily total.
+    # Fill only from the review pool. The new-question ceiling is a hard capacity
+    # constraint, especially for low-energy and recovery days.
     total = min(limits["total"], policy["daily_limits"]["hard_cap"])
     roster = review_ids + new_ids
     sources = {qid: "review" for qid in review_ids}
     sources.update({qid: "new" for qid in new_ids})
     if len(roster) < total:
-        for qid in review_candidates + new_candidates:
+        for qid in review_candidates:
             if qid not in used and qid not in roster:
                 roster.append(qid)
-                sources[qid] = "review" if qid in review_candidates else "new"
+                sources[qid] = "review"
                 if len(roster) >= total:
                     break
     roster = roster[:total]
@@ -261,11 +269,12 @@ def nav_line(day_no, date_obj):
     return " | ".join(parts)
 
 
-def write_roster_json(date_iso, day_no, limits, roster, sources, questions):
+def write_roster_json(date_iso, day_no, limits, roster, sources, questions, mode):
     ROSTER_DIR.mkdir(parents=True, exist_ok=True)
     data = {
         "date": date_iso,
         "day": day_no,
+        "mode": mode,
         "limits": limits,
         "items": [
             {
@@ -334,6 +343,7 @@ def write_md(date_iso, day_no, roster, questions, norm):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=dt.date.today().strftime("%m%d"))
+    parser.add_argument("--mode", choices=["auto", "restart", "stable", "main", "low_energy"], default="auto")
     args = parser.parse_args()
     date_iso = normalize_date(args.date)
 
@@ -341,8 +351,8 @@ def main():
     state = read_json(STATE_FILE, {})
     questions = load_questions()
     norm = load_norm()
-    roster, sources, day_no, limits = select_roster(date_iso, policy, state, questions)
-    json_path = write_roster_json(date_iso, day_no, limits, roster, sources, questions)
+    roster, sources, day_no, limits = select_roster(date_iso, policy, state, questions, args.mode)
+    json_path = write_roster_json(date_iso, day_no, limits, roster, sources, questions, args.mode)
     md_path = write_md(date_iso, day_no, roster, questions, norm)
     print(f"wrote {md_path.relative_to(REPO)}")
     print(f"wrote {json_path.relative_to(REPO)}")

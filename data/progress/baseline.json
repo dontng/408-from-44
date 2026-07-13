@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "as_of": "2026-06-30",
+  "questions": {
+    "2025-01": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 3,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "B",
+      "stuck": true
+    },
+    "2024-01": {
+      "box": 2,
+      "due": "2026-07-05",
+      "seen": 2,
+      "right": 2,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "D"
+    },
+    "2024-02": {
+      "box": 2,
+      "due": "2026-07-05",
+      "seen": 2,
+      "right": 2,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "A"
+    },
+    "2025-02": {
+      "box": 1,
+      "due": "2026-07-01",
+      "seen": 2,
+      "right": 1,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "D"
+    },
+    "2024-06": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 4,
+      "right": 3,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "A"
+    },
+    "2024-03": {
+      "box": 2,
+      "due": "2026-07-05",
+      "seen": 2,
+      "right": 2,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "A"
+    },
+    "2025-03": {
+      "box": 2,
+      "due": "2026-07-05",
+      "seen": 2,
+      "right": 2,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "D"
+    },
+    "2025-04": {
+      "box": 2,
+      "due": "2026-07-05",
+      "seen": 2,
+      "right": 2,
+      "last": "2026-06-27",
+      "last_ok": true,
+      "last_pick": "B"
+    },
+    "2025-05": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 4,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "B",
+      "stuck": true
+    },
+    "2024-04": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 2,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "B"
+    },
+    "2024-33": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "A"
+    },
+    "2024-34": {
+      "box": 1,
+      "due": "2026-06-21",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-17",
+      "last_ok": true,
+      "last_pick": "C"
+    },
+    "2025-33": {
+      "box": 0,
+      "due": "2026-06-29",
+      "seen": 2,
+      "right": 0,
+      "last": "2026-06-27",
+      "last_ok": false,
+      "last_pick": "A"
+    },
+    "2024-35": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "C",
+      "stuck": true
+    },
+    "2024-36": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "C",
+      "stuck": true
+    },
+    "2024-37": {
+      "box": 1,
+      "due": "2026-06-21",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-17",
+      "last_ok": true,
+      "last_pick": "D"
+    },
+    "2025-34": {
+      "box": 1,
+      "due": "2026-06-21",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-17",
+      "last_ok": true,
+      "last_pick": "C"
+    },
+    "2025-35": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2025-37": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-38": {
+      "box": 0,
+      "due": "2026-06-19",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-17",
+      "last_ok": false,
+      "last_pick": "B",
+      "stuck": true
+    },
+    "2024-12": {
+      "box": 0,
+      "due": "2026-07-02",
+      "seen": 2,
+      "right": 0,
+      "last": "2026-06-30",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-14": {
+      "box": 0,
+      "due": "2026-07-02",
+      "seen": 2,
+      "right": 0,
+      "last": "2026-06-30",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-15": {
+      "box": 0,
+      "due": "2026-07-02",
+      "seen": 2,
+      "right": 1,
+      "last": "2026-06-30",
+      "last_ok": false,
+      "last_pick": "A"
+    },
+    "2025-06": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "C"
+    },
+    "2024-05": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-07": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "D"
+    },
+    "2025-07": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "C"
+    },
+    "2025-08": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2025-09": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "D",
+      "stuck": true
+    },
+    "2024-08": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "A"
+    },
+    "2024-09": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-10": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2024-11": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2025-10": {
+      "box": 0,
+      "due": "2026-07-01",
+      "seen": 1,
+      "right": 0,
+      "last": "2026-06-29",
+      "last_ok": false,
+      "last_pick": "A",
+      "stuck": true
+    },
+    "2025-11": {
+      "box": 1,
+      "due": "2026-07-03",
+      "seen": 1,
+      "right": 1,
+      "last": "2026-06-29",
+      "last_ok": true,
+      "last_pick": "A",
+      "stuck": true
+    }
+  }
+}

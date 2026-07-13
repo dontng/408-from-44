@@ -17,7 +17,9 @@ SYNC_PATHS = [
     "coach",
     "data",
     "docs",
+    "review",
     "src",
+    "t1",
     "today.sh",
     "answer.sh",
     "tools/answer.html",
@@ -26,6 +28,7 @@ SYNC_PATHS = [
     "tools/coach_mark.py",
     "tools/coach_next.py",
     "tools/grade_today.py",
+    "tools/progress.py",
     "tools/select_today.py",
     "tools/sync_now.py",
 ]
