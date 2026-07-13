@@ -18,9 +18,9 @@ ZOOM = DPI / 72.0
 
 def open_year(year):
     import glob
-    pdfs = glob.glob(f"真题pdf/{year}*.pdf")
+    pdfs = glob.glob(f"past_papers/{year}*.pdf")
     if not pdfs:
-        sys.exit(f"找不到 真题pdf/{year}*.pdf")
+        sys.exit(f"找不到 past_papers/{year}*.pdf")
     return fitz.open(pdfs[0])
 
 

@@ -37,8 +37,8 @@
 ## 常用命令
 ```bash
 bash studio.sh                                       # 启动刷题台
-python3 tools/slice_paper.py     真题pdf/XXXX.pdf XXXX   # 文字层切某年
-python3 tools/slice_paper_ocr.py 真题pdf/XXXX.pdf XXXX   # OCR 切某年(扫描/坏编码)
+python3 tools/slice_paper.py     past_papers/XXXX.pdf XXXX   # 文字层切某年
+python3 tools/slice_paper_ocr.py past_papers/XXXX.pdf XXXX   # OCR 切某年(扫描/坏编码)
 python3 tools/patch_q.py XXXX scan <页>                 # 找漏题的 y 坐标
 python3 tools/patch_q.py XXXX cut  <题号> <页> <y0> <y1>          # 补切单题
 python3 tools/patch_q.py XXXX cut2 <题号> <页> <y0> 1.0 <页+1> 0 <y1>  # 跨页题

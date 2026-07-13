@@ -4,7 +4,7 @@
 用于文字层是坏编码/纯扫描/图片页的年份(2009/10/12页0/13/15/16/18/2023/2025)。
 OCR 只用来找题号的 y 坐标——题面成品仍是原始渲染图，正文 OCR 错误不影响结果。
 
-用法: python3 tools/slice_paper_ocr.py 真题pdf/2015年计算机408统考真题.pdf 2015
+用法: python3 tools/slice_paper_ocr.py past_papers/2015年计算机408统考真题.pdf 2015
 输出: bank/<year>/qNN.png  (与 slice_paper.py 同格式，可混用)
 """
 import sys, re, os, subprocess, tempfile

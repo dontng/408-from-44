@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "answers": true,
+    "bank": true,
+    "coach": true,
+    "data": true,
+    "docs": true,
+    "review": true,
+    "sessions": true,
+    "tags": true,
+    "tools": true
+  }
+}

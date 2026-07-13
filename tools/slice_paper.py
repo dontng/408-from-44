@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """把一份 408 真题 PDF 的单项选择题(01~40)切成单题 PNG。
 
-用法: python3 tools/slice_paper.py 真题pdf/2022年计算机408统考真题.pdf 2022
+用法: python3 tools/slice_paper.py past_papers/2022年计算机408统考真题.pdf 2022
 输出: bank/<year>/qNN.png
 依赖文字层中的题号坐标定位切割点；纯扫描无文字层的年份(2023/2025)用本脚本切不了。
 """

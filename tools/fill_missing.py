@@ -16,7 +16,7 @@ REPO   = os.path.join(os.path.dirname(__file__), "..")
 
 
 def open_pdf(year):
-    pdfs = glob.glob(os.path.join(REPO, f"真题pdf/{year}*.pdf"))
+    pdfs = glob.glob(os.path.join(REPO, f"past_papers/{year}*.pdf"))
     return fitz.open(pdfs[0]) if pdfs else None
 
 
