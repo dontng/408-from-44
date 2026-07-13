@@ -51,3 +51,22 @@ If `coach/current.md` says there is no open item, tell the user to answer today'
 ```bash
 python3 tools/coach_next.py --date MMDD
 ```
+
+## T1 world
+
+T1 is the evidence-driven training control layer in `t1/`. It is not a second
+question bank, scheduler, note system, or a replacement for one-problem
+coaching. Read it only when the user explicitly asks for T1 work.
+
+- T0 remains the source of truth: `src/`, `data/results/`, `review/state.json`,
+  and reviewed coaching outcomes.
+- Add a T1 fingerprint only after at least two independent, reviewed pieces of
+  evidence establish the same first divergence point. A wrong answer alone is
+  not sufficient evidence.
+- A fingerprint must name one trigger, one first divergence point, one
+  corrective action, and its evidence question IDs. It may not be a broad topic
+  label such as a course name or chapter.
+- T1 can propose verification questions from the existing bank. It must not
+  create a parallel daily plan or silently alter the scheduler.
+- Archive a fingerprint when it has enough contrary evidence; do not preserve
+  it as permanent baggage.
