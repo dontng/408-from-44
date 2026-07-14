@@ -2,12 +2,13 @@
   "files.exclude": {
     "answers": true,
     "bank": true,
-    "coach": true,
+    "coach": false,
     "data": true,
-    "docs": true,
+    "docs": false,
     "review": true,
     "sessions": true,
     "tags": true,
-    "tools": true
+    "tools": true,
+    "past_papers": true
   }
 }
