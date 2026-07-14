@@ -1,17 +1,12 @@
-# Coach Notes
+# Notes
 
-Durable notes from the one-problem coaching flow.
+Notes are the downstream daily presentation of coaching output.
 
-Keep the structure parallel to `src/`:
+Their directory must mirror `src/` by month:
 
 ```text
-coach/notes/<month>/MMDD-dayNN-note.md
+src/july/0714-day10.md
+coach/notes/july/0714.md
 ```
 
-Only preserve notes worth seeing again:
-
-- first divergence point
-- rule that fixed it
-- next recognition signal
-
-Do not turn every solved problem into a long knowledge base entry.
+A daily note records completion and references the `analysis`, `knowledge`, and `ability` assets produced or used by that day's problems. It must not duplicate their body or become a second knowledge base.
