@@ -1,43 +1,25 @@
-# Coach Flow
+# Coach
 
-Coach 只做一件事：把当天做过的题逐题过账，给出下一步处置。
+Coach is the root of the 408 learning architecture. It processes one real problem at a time and delivers the result into stable assets rather than leaving it in chat context or old-paper annotations.
 
-它不是自由知识库，不记录所有知识点，不复刻 `cprune`。复杂内容只有在升级为 pin 时才长期保留。
+The authority is [CONSTITUTION.md](CONSTITUTION.md).
 
-## today
+## Runtime entry
 
-`coach/today/MMDD.json` 是当天过账清单。
+- `today/MMDD.json`: T0's processed daily-question list.
+- `current.md`: the single problem currently being handled.
 
-来源是当天判分结果。当天做过的每道题都会进入 `today`，不能因为答对就自动跳过。
+Do not read the whole queue by default.
 
-字段含义：
+## Asset layers
 
-- `grade`：判分结果，可能是 `right` / `wrong` / `unknown` / `blank` / `self_check`。
-- `priority`：处理顺序。`1` 最高，通常是错题、不会、自判；`2` 是答对但仍需检查的新题；`3` 是答对且暂时低风险的题。
-- `decision`：Codex 处理后的处置，初始为 `open`。
+- `knowledge/`: textbook-style 408 content, organized by subject and chapter.
+- `analysis/<year>/qNN.md`: hard analysis of one original problem. The body starts by solving the problem directly and auditing options; it invokes knowledge rather than copying a course.
+- `ability/`: personal problem-solving abilities proven by real-question evidence.
+- `notes/<month>/MMDD.md`: downstream daily output, parallel to `src/<month>/`. Notes cite assets; they do not repeat their body.
 
-## current
+## Pass
 
-`coach/current.md` 是当前正在通关的一题或一个问题。
+`pass` is the completed delivery of one problem. It means the problem is understood and its valuable result has a home in existing or newly created assets. It does not mean every related subject has been exhausted.
 
-Codex 默认只读 `current.md`，不要一次读完整 `today` 和所有历史。处理完当前题后，再进入下一题。
-
-## pins
-
-`coach/pins/` 是考前必须拔掉的钉子。
-
-只有反复不过、核心题型不稳、同类题连续炸、考场风险高的问题，才升级为 pin。
-
-## decisions
-
-每题最终只允许三种处置：
-
-```text
-pass < revisit < pin
-```
-
-- `pass`：今晚收口，回正常调度。
-- `revisit`：短期回炉，近期必须再出现。
-- `pin`：长期悬挂，考前必须拔掉。
-
-答对不是自动 `pass`。Codex 需要判断这题是否真的进入包围圈、是否能说明关键规则、是否还需要短期回炉。
+`revisit` and `pin` are reserved relationship markers. They are not directories, queues, or standalone notes.
