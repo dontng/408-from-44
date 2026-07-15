@@ -1,7 +1,7 @@
 {
   "date": "2026-07-05",
   "day": 1,
-  "open": 10,
+  "open": 9,
   "items": [
     {
       "idx": 1,
@@ -11,7 +11,7 @@
       "grade": "wrong",
       "source": "review",
       "priority": 1,
-      "decision": "open"
+      "decision": "pass"
     },
     {
       "idx": 2,
