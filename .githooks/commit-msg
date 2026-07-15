@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+message_file="$1"
+
+for heading in 'Implemented:' 'Why:' 'Verified:'; do
+  if ! grep -q "^${heading}$" "$message_file"; then
+    echo "Commit message must include a '${heading}' section." >&2
+    exit 1
+  fi
+done
+
+if ! awk '
+  /^Implemented:$/ { section = "implemented"; next }
+  /^Why:$/ { section = "why"; next }
+  /^Verified:$/ { section = "verified"; next }
+  /^Co-authored-by:/ { section = ""; next }
+  /^[-*] +[^[:space:]]/ { if (section != "") seen[section] = 1 }
+  END { exit !(seen["implemented"] && seen["why"] && seen["verified"]) }
+' "$message_file"; then
+  echo "Implemented, Why, and Verified each need at least one bullet." >&2
+  exit 1
+fi
