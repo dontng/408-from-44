@@ -1,7 +1,7 @@
 #!/bin/bash
 # 每日 02:00 与 20:00 的 Git 恢复安全网。
 # 由 tools/setup-git-safety-net.sh 安装 crontab。仅在工作区有未提交改动时
-# 且连续 10 分钟无活动时创建完整 checkpoint；失败时保留本地状态并记日志。
+# 且连续 10 分钟无活动时创建完整 checkpoint；02:00 最多等到 04:00，20:00 最多等到 21:00。
 
 set -u -o pipefail
 
@@ -12,6 +12,16 @@ LOCK_FILE="$REPO_DIR/.autopull.lock"
 ACTIVITY_FILE="$REPO_DIR/.git-safety-net.active"
 QUIET_SECONDS="${QUIET_SECONDS:-600}"
 RECHECK_SECONDS="${RECHECK_SECONDS:-120}"
+
+deadline_epoch() {
+    case "$(date +%H)" in
+        02|03) date -d 'today 04:00' +%s ;;
+        20) date -d 'today 21:00' +%s ;;
+        *) date +%s ;;
+    esac
+}
+
+DEADLINE_EPOCH="${SAFETY_NET_DEADLINE_EPOCH:-$(deadline_epoch)}"
 
 log() {
     printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG_FILE"
@@ -75,12 +85,19 @@ project_is_active() {
 }
 
 wait_until_idle() {
+    local now remaining
     while has_changes; do
         if ! project_is_active; then
             return 0
         fi
-        log "项目仍在活动；${RECHECK_SECONDS} 秒后重查"
-        sleep "$RECHECK_SECONDS"
+        now=$(date +%s)
+        if (( now >= DEADLINE_EPOCH )); then
+            log "已到等待截止点；不再判断活动状态"
+            return 2
+        fi
+        remaining=$(( DEADLINE_EPOCH - now ))
+        log "项目仍在活动；${RECHECK_SECONDS} 秒后重查，截止点剩余 ${remaining} 秒"
+        (( remaining < RECHECK_SECONDS )) && sleep "$remaining" || sleep "$RECHECK_SECONDS"
     done
     log "工作区已恢复干净；无需创建恢复点"
     return 1
@@ -99,7 +116,7 @@ checkpoint() {
     fi
 
     if [[ "${SAFETY_NET_DRY_RUN:-0}" == "1" ]]; then
-        log "DRY RUN: 工作区空闲且有改动；此时会创建恢复点"
+        log "DRY RUN: 已满足提交条件；此时会创建恢复点"
         return 0
     fi
 
@@ -148,11 +165,20 @@ EOF
 }
 
 run_when_idle() {
+    local wait_result force_checkpoint
     while true; do
-        wait_until_idle || return 0
+        force_checkpoint=0
+        wait_until_idle
+        wait_result=$?
+        case "$wait_result" in
+            0) ;;
+            1) return 0 ;;
+            2) force_checkpoint=1 ;;
+            *) return 1 ;;
+        esac
         (
             flock -n 9 || exit 75
-            if project_is_active; then
+            if (( ! force_checkpoint )) && project_is_active; then
                 exit 76
             fi
             checkpoint
