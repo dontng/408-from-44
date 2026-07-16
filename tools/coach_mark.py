@@ -4,8 +4,6 @@ import argparse
 import datetime as dt
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 
@@ -100,7 +98,6 @@ def main():
         append_pin(today, item, args.note)
     print(f"{qid} -> {args.decision}")
     print(f"open {today['open']}")
-    subprocess.run([sys.executable, str(REPO / "tools" / "sync_now.py"), f"sync decision {date_key} {qid} {args.decision}"], cwd=REPO)
 
 
 if __name__ == "__main__":

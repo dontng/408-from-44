@@ -15,7 +15,9 @@
 3. 打开当天 MD：`src/july/0705-day01.md`。MD 顶部有“打开答题卡”链接，建议 VS Code 左右分屏：左边看题图，右边点 `A/B/C/D/?`，其中 `?` 表示不会，空着表示还没答。
 4. 答完后，在答题卡底部点“完成今日答题”。它会生成结果和教练流入口数据。
 
-生成题单、完成今日答题、生成 `coach/current.md`、标记 `pass/revisit/pin` 这些节点会自动提交并 push 白名单内容，方便另一台机器上的 Codex 直接拿到最新上下文。本地 `.sync.log` / `.autopull.log` 只保留最近 7 天。
+生成题单、完成今日答题和逐题教练流程只更新本地工作区；知识正文、文档、代码和布局改动也默认留在本地。除非明确 handoff，否则它们不会立即提交。本地 `.sync.log` / `.autopull.log` 只保留最近 7 天。
+
+另外，Git 安全网会在每天 02:00 与 20:00 检查一次工作区；**仅当“已到该时点”且“存在未提交改动”同时成立**，才创建一个完整恢复点并推送。它不替代正常的 handoff，只避免白天或睡前忘记同步而让工作只能留在一台机器上。
 
 ## 关键文件
 
@@ -61,4 +63,4 @@ pass < revisit < pin
 
 ## 资产
 
-保留 Claude Code 已经做好的资产：`bank/` 是 2009-2025 选择题切图，`answers/` 是答案文本，`review/imgnorm.json` 是题图字号显示配置，`tools/studio.*` 是旧网页刷题台，暂作备用。当前主入口不是 `studio.sh`，而是 `bash today.sh` 和 `bash answer.sh`。
+`bank/` 是 2009-2025 选择题切图，`answers/` 是答案文本，`review/imgnorm.json` 是题图显示配置。当前入口只有 `bash today.sh` 和 `bash answer.sh`。

@@ -2,7 +2,6 @@
 """Minimal local answer card for MD-first daily rosters."""
 import json
 import mimetypes
-import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
@@ -103,7 +102,6 @@ class H(BaseHTTPRequestHandler):
             grade_today.write_json(today_path, today_data)
             grade_today.update_md(result_data)
             grade_today.progress.record_day(result_data, diagnoses)
-            subprocess.run([sys.executable, str(REPO / "tools" / "sync_now.py"), f"sync completed {date}"], cwd=REPO)
             return self.send_body(200, {
                 "ok": True,
                 "date": date,

@@ -4,8 +4,6 @@ import argparse
 import datetime as dt
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 
@@ -108,7 +106,6 @@ def main():
     write_current(key, today, item, roster)
     print(f"wrote {CURRENT_FILE.relative_to(REPO)}")
     print(f"{item['idx']:02d} {item['qid']} {item.get('grade')} priority={item.get('priority')}")
-    subprocess.run([sys.executable, str(REPO / "tools" / "sync_now.py"), f"sync current {key} {item['qid']}"], cwd=REPO)
 
 
 if __name__ == "__main__":

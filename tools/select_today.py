@@ -9,8 +9,6 @@ import argparse
 import datetime as dt
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 
@@ -357,7 +355,6 @@ def main():
     print(f"wrote {md_path.relative_to(REPO)}")
     print(f"wrote {json_path.relative_to(REPO)}")
     print(" ".join(roster))
-    subprocess.run([sys.executable, str(REPO / "tools" / "sync_now.py"), f"sync roster {date_iso[5:7]}{date_iso[8:10]}"], cwd=REPO)
 
 
 if __name__ == "__main__":

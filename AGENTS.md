@@ -9,7 +9,9 @@ This repository has two modes of work:
 
 GitHub is the shared source of truth. At the start of any maintenance or coaching turn, sync the local work copy before making decisions. Do not turn coaching into sync management unless the user asks.
 
-Do not keep Codex-created state private to one machine. If you create or update workflow files, commit and push them when ready unless the user explicitly asks not to. Local-only files are limited to ignored machine logs and preferences such as `.sync.log`, `.autopull.log`, and `.studio-theme`.
+All agent-authored code, documentation, knowledge, analysis, layout, and workflow changes stay local by default. Do not infer permission to commit or push from “ready”, a completed subtask, a natural pause, or a switch of topic. Commit or push those changes only when the user explicitly asks to commit, push, sync, or close out the current work. Near a genuine handoff, report uncommitted changes once and offer a handoff commit; do not create one without confirmation.
+
+The scheduled safety net is the sole automatic exception: `tools/autocommit.sh` runs at 02:00 and 20:00 local time. A recovery commit is created only when both conditions hold: a scheduled time has arrived and the worktree has changes. It then pushes one checkpoint containing all non-ignored changes. Its purpose is off-machine recovery, not normal delivery; agents and workflow commands must not invoke it early or treat a changed worktree as permission for an immediate commit.
 
 ## Agent commit standard
 
