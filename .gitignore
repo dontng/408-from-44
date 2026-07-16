@@ -12,4 +12,5 @@ __pycache__/
 .autocommit.log
 .autopull.log
 .autopull.lock
+.git-safety-net.active
 .sync.log

@@ -1,7 +1,7 @@
 #!/bin/bash
 # 每日 02:00 与 20:00 的 Git 恢复安全网。
 # 由 tools/setup-git-safety-net.sh 安装 crontab。仅在工作区有未提交改动时
-# 创建一个完整 checkpoint；失败时保留本地状态并记日志，等待下次执行。
+# 且连续 10 分钟无活动时创建完整 checkpoint；失败时保留本地状态并记日志。
 
 set -u -o pipefail
 
@@ -9,6 +9,9 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_FILE="$REPO_DIR/.autocommit.log"
 # 与 autopull.sh 共用锁，避免整点同时 fetch/rebase/push。
 LOCK_FILE="$REPO_DIR/.autopull.lock"
+ACTIVITY_FILE="$REPO_DIR/.git-safety-net.active"
+QUIET_SECONDS="${QUIET_SECONDS:-600}"
+RECHECK_SECONDS="${RECHECK_SECONDS:-120}"
 
 log() {
     printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG_FILE"
@@ -46,15 +49,57 @@ git_is_busy() {
         || [[ -d "$REPO_DIR/.git/rebase-apply" ]]
 }
 
+has_changes() {
+    cd "$REPO_DIR" || return 1
+    [[ -n "$(git status --porcelain)" ]]
+}
+
+latest_activity() {
+    local latest=0 stamp path
+    if [[ -e "$ACTIVITY_FILE" ]]; then
+        latest=$(stat -c %Y "$ACTIVITY_FILE")
+    fi
+    while IFS= read -r -d '' path; do
+        [[ -e "$REPO_DIR/$path" ]] || continue
+        stamp=$(stat -c %Y "$REPO_DIR/$path")
+        (( stamp > latest )) && latest=$stamp
+    done < <(cd "$REPO_DIR" && git ls-files -m -o --exclude-standard -z)
+    printf '%s\n' "$latest"
+}
+
+project_is_active() {
+    local now latest
+    now=$(date +%s)
+    latest=$(latest_activity)
+    (( latest > 0 && now - latest < QUIET_SECONDS ))
+}
+
+wait_until_idle() {
+    while has_changes; do
+        if ! project_is_active; then
+            return 0
+        fi
+        log "项目仍在活动；${RECHECK_SECONDS} 秒后重查"
+        sleep "$RECHECK_SECONDS"
+    done
+    log "工作区已恢复干净；无需创建恢复点"
+    return 1
+}
+
 checkpoint() {
     cd "$REPO_DIR" || return 1
     if git_is_busy; then
-        log "git 正忙；跳过，本地改动保留到下一次安全网"
+        log "git 正忙；继续等待"
+        return 77
+    fi
+
+    if ! has_changes; then
+        log "工作区干净；无需创建恢复点"
         return 0
     fi
 
-    if [[ -z "$(git status --porcelain)" ]]; then
-        log "工作区干净；无需创建恢复点"
+    if [[ "${SAFETY_NET_DRY_RUN:-0}" == "1" ]]; then
+        log "DRY RUN: 工作区空闲且有改动；此时会创建恢复点"
         return 0
     fi
 
@@ -102,8 +147,26 @@ EOF
     log "已推送恢复点"
 }
 
-(
-    flock -n 9 || { log "另一个 Git 同步任务正在运行；跳过"; exit 0; }
-    prune_log
-    checkpoint
-) 9>"$LOCK_FILE"
+run_when_idle() {
+    while true; do
+        wait_until_idle || return 0
+        (
+            flock -n 9 || exit 75
+            if project_is_active; then
+                exit 76
+            fi
+            checkpoint
+        ) 9>"$LOCK_FILE"
+        case $? in
+            0) return 0 ;;
+            75) log "另一个 Git 同步任务正在运行；${RECHECK_SECONDS} 秒后重查" ;;
+            76) log "项目恢复活动；继续等待空闲" ;;
+            77) log "Git 操作结束后继续重查" ;;
+            *) return 1 ;;
+        esac
+        sleep "$RECHECK_SECONDS"
+    done
+}
+
+prune_log
+run_when_idle
