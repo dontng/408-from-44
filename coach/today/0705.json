@@ -1,7 +1,7 @@
 {
   "date": "2026-07-05",
   "day": 1,
-  "open": 9,
+  "open": 5,
   "items": [
     {
       "idx": 1,
@@ -21,7 +21,7 @@
       "grade": "wrong",
       "source": "review",
       "priority": 1,
-      "decision": "open"
+      "decision": "pass"
     },
     {
       "idx": 3,
@@ -31,7 +31,7 @@
       "grade": "right",
       "source": "review",
       "priority": 3,
-      "decision": "open"
+      "decision": "pass"
     },
     {
       "idx": 4,
@@ -41,7 +41,7 @@
       "grade": "unknown",
       "source": "review",
       "priority": 1,
-      "decision": "open"
+      "decision": "pass"
     },
     {
       "idx": 5,
@@ -51,7 +51,7 @@
       "grade": "unknown",
       "source": "review",
       "priority": 1,
-      "decision": "open"
+      "decision": "pass"
     },
     {
       "idx": 6,
