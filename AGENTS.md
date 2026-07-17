@@ -15,11 +15,19 @@ The scheduled safety net is the sole automatic exception: `tools/autocommit.sh` 
 
 ## Agent commit standard
 
-Agent-created commits are collaborative records, not opaque user commits. Keep the configured agent identity as the commit author; do not replace it with the user's identity. Add the user as a Git co-author trailer when the agent is committing work requested or directed by the user:
+Agent-created commits are collaborative records, not opaque user commits. Attribution depends on the publishing path:
+
+- For a local Git commit, keep the configured agent identity as the commit author and add the user as co-author.
+- When a connected GitHub interface necessarily records the user as the commit author, do not repeat the user as co-author. Instead, identify the agent in the commit body and add the agent as co-author.
+
+Use the applicable trailer, never both for the same person:
 
 ```text
 Co-authored-by: dontng <djology.w@icloud.com>
+Co-authored-by: Codex <codex@openai.com>
 ```
+
+For GitHub-interface commits completed by Codex, include `Generated with Codex` immediately before the Codex trailer. This mirrors agent-assisted commit attribution without claiming that Codex is a linked GitHub account.
 
 Every commit message must contain a specific subject and these non-empty sections:
 

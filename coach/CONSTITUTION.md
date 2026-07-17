@@ -11,6 +11,13 @@ coach/
   current.md
   today/
   knowledge/
+    network/
+      00-media-infrastructure/
+      01-physical/
+      02-data-link/
+      03-network/
+      04-transport/
+      05-application/
   ability/
   analysis/
   notes/<month>/<MMDD>.md
@@ -21,6 +28,19 @@ coach/
 - `ability/` 保存已经由真实题目证实的个人解题能力内容。它不重讲学科知识，也不预建分类树。
 - `notes/` 是下游呈现。目录必须与 `src/` 一致，按月份管理；每日 note 引用当天题目沉淀出的 analysis、knowledge、ability，不复制它们的正文。
 - `today/` 与 `current.md` 仍是 T0 到 coach 的运行入口。
+
+计算机网络知识按国内 408 教学使用的五层体系归档，并在物理层之前保留非正规的“第 0 层”。数字固定自底向上的教学顺序，不依赖英文名称的字母排序：
+
+- `00-media-infrastructure/`：非正规第 0 层，保存传输介质和基础设施环境，如双绞线、同轴电缆、光纤与无线介质；介质承载信号，但本身不执行物理层协议功能；
+- `01-physical/`：第 1 层，物理层，保存接口特性、信号、编码与调制、比特率与码元速率、复用等机制；
+- `02-data-link/`：第 2 层，数据链路层；
+- `03-network/`：第 3 层，网络层；
+- `04-transport/`：第 4 层，运输层；
+- `05-application/`：第 5 层，应用层。
+
+目录编号是教学索引，不改写正式分层：物理层仍是第 1 层，“第 0 层”只是不属于 OSI 层次的非正规称呼。遇到用户用语与正式模型表面冲突时，必须先辨析它指向的机制与边界，不能按字面直接建立目录。
+
+知识页按它主要解释的机制归档。跨层知识不拆成多份：例如 NAT 即使涉及 UDP 端口和校验和，主要机制仍是网络层路由器的地址转换，因此归入 `03-network/`，正文再解释必要的跨层影响。
 
 ## Content ownership
 
