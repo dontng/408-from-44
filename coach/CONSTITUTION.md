@@ -20,7 +20,7 @@ coach/
       05-application/
   ability/
   analysis/
-  notes/<month>/<MMDD>.md
+  notes/<month>/<MMDD-dayXX-note>.md
 ```
 
 - `knowledge/` 是唯一的 408 学科正文。它按科目与章节生长，写成可持续修订的教材，不按年份堆叠。

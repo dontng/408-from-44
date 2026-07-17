@@ -1,30 +1,26 @@
-# Day 01 · 2026-07-05
+# Day 1 · 2026-07-05
 
-- [题单](../../../src/july/0705-day01.md)
-
-## 已完成
-
-### 2025-35 · BaseT 以太网退避窗口
+## 2025-35 · BaseT 以太网退避窗口
 
 - 作答：B；答案：C；处置：pass。
 - [逐题解析](../../analysis/2025/q35.md) · [二进制指数退避](../../knowledge/network/02-data-link/ethernet-csma-cd.md)。
 
-### 2025-37 · NAT 转发 UDP
+## 2025-37 · NAT 转发 UDP
 
 - 作答：A；答案：B；处置：pass。
 - [逐题解析](../../analysis/2025/q37.md) · [NAT：地址与端口转换、UDP 校验和](../../knowledge/network/03-network/nat.md)。
 
-### 2024-35 · VLAN 与 ARP 表
+## 2024-35 · VLAN 与 ARP 表
 
 - 作答：D；答案：D；处置：pass。
 - [逐题解析](../../analysis/2024/q35.md) · [VLAN：广播域与 ARP 可见范围](../../knowledge/network/02-data-link/vlan-arp.md)。
 
-### 2024-36 · CTS 中的 NAV
+## 2024-36 · CTS 中的 NAV
 
 - 作答：不会；答案：B；处置：pass。
 - [逐题解析](../../analysis/2024/q36.md) · [802.11 CSMA/CA：RTS/CTS 与 NAV](../../knowledge/network/02-data-link/wifi-csma-ca-rts-cts-nav.md)。
 
-### 2024-38 · TCP 全流程计时
+## 2024-38 · TCP 全流程计时
 
 - 作答：不会；答案：D；处置：pass。
 - [逐题解析](../../analysis/2024/q38.md) · [TCP：慢开始、连接建立与主动关闭计时](../../knowledge/network/04-transport/tcp-lifecycle-timing.md)。
