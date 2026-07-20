@@ -1,6 +1,7 @@
 {
   "date": "2026-07-08",
   "day": 4,
+  "mode": "auto",
   "limits": {
     "total": 10,
     "new": 3,
@@ -9,91 +10,91 @@
   "items": [
     {
       "idx": 1,
-      "qid": "2024-34",
-      "year": "2024",
-      "q": 34,
-      "image": "bank/2024/q34.png",
+      "qid": "2025-12",
+      "year": "2025",
+      "q": 12,
+      "image": "bank/2025/q12.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 2,
-      "qid": "2024-37",
-      "year": "2024",
-      "q": 37,
-      "image": "bank/2024/q37.png",
+      "qid": "2025-13",
+      "year": "2025",
+      "q": 13,
+      "image": "bank/2025/q13.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 3,
-      "qid": "2025-02",
+      "qid": "2025-14",
       "year": "2025",
-      "q": 2,
-      "image": "bank/2025/q02.png",
+      "q": 14,
+      "image": "bank/2025/q14.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 4,
-      "qid": "2025-06",
+      "qid": "2025-15",
       "year": "2025",
-      "q": 6,
-      "image": "bank/2025/q06.png",
+      "q": 15,
+      "image": "bank/2025/q15.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 5,
-      "qid": "2025-07",
+      "qid": "2025-08",
       "year": "2025",
-      "q": 7,
-      "image": "bank/2025/q07.png",
+      "q": 8,
+      "image": "bank/2025/q08.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 6,
-      "qid": "2024-04",
-      "year": "2024",
-      "q": 4,
-      "image": "bank/2024/q04.png",
+      "qid": "2025-35",
+      "year": "2025",
+      "q": 35,
+      "image": "bank/2025/q35.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 7,
-      "qid": "2024-06",
-      "year": "2024",
-      "q": 6,
-      "image": "bank/2024/q06.png",
+      "qid": "2025-37",
+      "year": "2025",
+      "q": 37,
+      "image": "bank/2025/q37.png",
       "answer_known": true,
       "source": "review"
     },
     {
       "idx": 8,
-      "qid": "2025-21",
+      "qid": "2025-24",
       "year": "2025",
-      "q": 21,
-      "image": "bank/2025/q21.png",
+      "q": 24,
+      "image": "bank/2025/q24.png",
       "answer_known": true,
       "source": "new"
     },
     {
       "idx": 9,
-      "qid": "2025-22",
+      "qid": "2025-25",
       "year": "2025",
-      "q": 22,
-      "image": "bank/2025/q22.png",
+      "q": 25,
+      "image": "bank/2025/q25.png",
       "answer_known": true,
       "source": "new"
     },
     {
       "idx": 10,
-      "qid": "2025-23",
+      "qid": "2025-26",
       "year": "2025",
-      "q": 23,
-      "image": "bank/2025/q23.png",
+      "q": 26,
+      "image": "bank/2025/q26.png",
       "answer_known": true,
       "source": "new"
     }
