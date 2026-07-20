@@ -7,27 +7,30 @@
     "last": "2026-07-07",
     "last_ok": true,
     "last_pick": "B",
-    "stuck": true,
-    "last_diagnosis": "",
+    "stuck": false,
     "answer_confidence": "provisional"
   },
   "2024-01": {
-    "box": 2,
-    "due": "2026-07-05",
-    "seen": 2,
-    "right": 2,
-    "last": "2026-06-27",
+    "box": 3,
+    "due": "2026-07-25",
+    "seen": 3,
+    "right": 3,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "D"
+    "last_pick": "D",
+    "answer_confidence": "official",
+    "stuck": false
   },
   "2024-02": {
-    "box": 2,
-    "due": "2026-07-05",
-    "seen": 2,
-    "right": 2,
-    "last": "2026-06-27",
+    "box": 3,
+    "due": "2026-07-25",
+    "seen": 3,
+    "right": 3,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "A"
+    "last_pick": "A",
+    "answer_confidence": "official",
+    "stuck": false
   },
   "2025-02": {
     "box": 1,
@@ -48,31 +51,37 @@
     "last_pick": "A"
   },
   "2024-03": {
-    "box": 2,
-    "due": "2026-07-05",
-    "seen": 2,
-    "right": 2,
-    "last": "2026-06-27",
+    "box": 3,
+    "due": "2026-07-25",
+    "seen": 3,
+    "right": 3,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "A"
+    "last_pick": "A",
+    "answer_confidence": "official",
+    "stuck": false
   },
   "2025-03": {
-    "box": 2,
-    "due": "2026-07-05",
-    "seen": 2,
-    "right": 2,
-    "last": "2026-06-27",
+    "box": 3,
+    "due": "2026-07-25",
+    "seen": 3,
+    "right": 3,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "D"
+    "last_pick": "D",
+    "answer_confidence": "provisional",
+    "stuck": false
   },
   "2025-04": {
-    "box": 2,
-    "due": "2026-07-05",
-    "seen": 2,
-    "right": 2,
-    "last": "2026-06-27",
+    "box": 3,
+    "due": "2026-07-25",
+    "seen": 3,
+    "right": 3,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "B"
+    "last_pick": "B",
+    "answer_confidence": "provisional",
+    "stuck": false
   },
   "2025-05": {
     "box": 0,
@@ -83,7 +92,6 @@
     "last_ok": false,
     "last_pick": "B",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "ungraded"
   },
   "2024-04": {
@@ -103,8 +111,8 @@
     "last": "2026-07-07",
     "last_ok": true,
     "last_pick": "B",
-    "last_diagnosis": "",
-    "answer_confidence": "official"
+    "answer_confidence": "official",
+    "stuck": false
   },
   "2024-34": {
     "box": 1,
@@ -123,7 +131,6 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "stuck": true
   },
@@ -135,8 +142,7 @@
     "last": "2026-07-05",
     "last_ok": true,
     "last_pick": "D",
-    "stuck": true,
-    "last_diagnosis": "",
+    "stuck": false,
     "answer_confidence": "official"
   },
   "2024-36": {
@@ -148,7 +154,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-37": {
@@ -168,7 +173,6 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "stuck": true
   },
@@ -181,7 +185,6 @@
     "last_ok": false,
     "last_pick": "B",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "provisional"
   },
   "2025-37": {
@@ -192,8 +195,7 @@
     "last": "2026-07-08",
     "last_ok": true,
     "last_pick": "B",
-    "stuck": true,
-    "last_diagnosis": "",
+    "stuck": false,
     "answer_confidence": "provisional"
   },
   "2024-38": {
@@ -205,7 +207,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-12": {
@@ -217,7 +218,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-14": {
@@ -229,7 +229,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-15": {
@@ -240,7 +239,6 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "official",
     "stuck": true
   },
@@ -262,17 +260,18 @@
     "last_ok": false,
     "last_pick": "A",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-07": {
-    "box": 1,
-    "due": "2026-07-03",
-    "seen": 1,
-    "right": 1,
-    "last": "2026-06-29",
+    "box": 2,
+    "due": "2026-07-17",
+    "seen": 2,
+    "right": 2,
+    "last": "2026-07-09",
     "last_ok": true,
-    "last_pick": "D"
+    "last_pick": "D",
+    "answer_confidence": "official",
+    "stuck": false
   },
   "2025-07": {
     "box": 1,
@@ -291,8 +290,7 @@
     "last": "2026-07-08",
     "last_ok": true,
     "last_pick": "C",
-    "stuck": true,
-    "last_diagnosis": "",
+    "stuck": false,
     "answer_confidence": "provisional_low"
   },
   "2025-09": {
@@ -304,17 +302,18 @@
     "last_ok": false,
     "last_pick": "D",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "provisional"
   },
   "2024-08": {
-    "box": 1,
-    "due": "2026-07-03",
-    "seen": 1,
+    "box": 0,
+    "due": "2026-07-11",
+    "seen": 2,
     "right": 1,
-    "last": "2026-06-29",
-    "last_ok": true,
-    "last_pick": "A"
+    "last": "2026-07-09",
+    "last_ok": false,
+    "last_pick": "unknown",
+    "answer_confidence": "official",
+    "stuck": true
   },
   "2024-09": {
     "box": 0,
@@ -325,7 +324,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-10": {
@@ -337,7 +335,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2024-11": {
@@ -349,7 +346,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "official"
   },
   "2025-10": {
@@ -361,7 +357,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "provisional"
   },
   "2025-11": {
@@ -373,7 +368,6 @@
     "last_ok": false,
     "last_pick": "unknown",
     "stuck": true,
-    "last_diagnosis": "",
     "answer_confidence": "provisional"
   },
   "2025-12": {
@@ -383,7 +377,6 @@
     "last": "2026-07-08",
     "last_ok": false,
     "last_pick": "C",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-10",
     "stuck": true
@@ -395,7 +388,6 @@
     "last": "2026-07-08",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-10",
     "stuck": true
@@ -407,10 +399,9 @@
     "last": "2026-07-08",
     "last_ok": true,
     "last_pick": "D",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-12",
-    "stuck": true
+    "stuck": false
   },
   "2025-15": {
     "box": 1,
@@ -419,10 +410,9 @@
     "last": "2026-07-08",
     "last_ok": true,
     "last_pick": "C",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-12",
-    "stuck": true
+    "stuck": false
   },
   "2025-16": {
     "box": 1,
@@ -431,9 +421,9 @@
     "last": "2026-07-06",
     "last_ok": true,
     "last_pick": "B",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
-    "due": "2026-07-10"
+    "due": "2026-07-10",
+    "stuck": false
   },
   "2025-17": {
     "box": 1,
@@ -442,9 +432,9 @@
     "last": "2026-07-06",
     "last_ok": true,
     "last_pick": "C",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
-    "due": "2026-07-10"
+    "due": "2026-07-10",
+    "stuck": false
   },
   "2025-18": {
     "box": 0,
@@ -453,7 +443,6 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-09",
     "stuck": true
@@ -465,7 +454,6 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-09",
     "stuck": true
@@ -477,44 +465,42 @@
     "last": "2026-07-07",
     "last_ok": false,
     "last_pick": "unknown",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
     "due": "2026-07-09",
     "stuck": true
   },
   "2025-24": {
-    "box": 0,
-    "seen": 1,
-    "right": 0,
-    "last": "2026-07-08",
-    "last_ok": false,
-    "last_pick": "B",
-    "last_diagnosis": "",
-    "answer_confidence": "provisional",
-    "due": "2026-07-10",
-    "stuck": true
-  },
-  "2025-25": {
     "box": 1,
-    "seen": 1,
+    "seen": 2,
     "right": 1,
-    "last": "2026-07-08",
+    "last": "2026-07-09",
     "last_ok": true,
     "last_pick": "C",
-    "last_diagnosis": "",
     "answer_confidence": "provisional",
-    "due": "2026-07-12"
+    "due": "2026-07-13",
+    "stuck": false
+  },
+  "2025-25": {
+    "box": 2,
+    "seen": 2,
+    "right": 2,
+    "last": "2026-07-09",
+    "last_ok": true,
+    "last_pick": "C",
+    "answer_confidence": "provisional",
+    "due": "2026-07-17",
+    "stuck": false
   },
   "2025-26": {
-    "box": 1,
-    "seen": 1,
+    "box": 0,
+    "seen": 2,
     "right": 1,
-    "last": "2026-07-08",
-    "last_ok": true,
-    "last_pick": "B",
-    "last_diagnosis": "",
+    "last": "2026-07-09",
+    "last_ok": false,
+    "last_pick": "unknown",
     "answer_confidence": "provisional",
-    "due": "2026-07-12"
+    "due": "2026-07-11",
+    "stuck": true
   },
   "_progress": {
     "2026-06-17": {

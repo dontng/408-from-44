@@ -164,6 +164,29 @@ def load_prior_rostered(date_iso):
     return used
 
 
+def roster_path(date_iso):
+    return ROSTER_DIR / f"{date_iso[5:7]}{date_iso[8:10]}.json"
+
+
+def load_existing_roster(date_iso):
+    """Return an already-generated roster, or None when this date is new.
+
+    A daily roster is the user's exam paper for that date.  Once present, it is
+    immutable: changing review state or invoking the command with another mode
+    must not silently replace the questions under an open answer card.
+    """
+    path = roster_path(date_iso)
+    data = read_json(path, None)
+    if data is None:
+        return None
+    items = data.get("items") if isinstance(data, dict) else None
+    if not isinstance(data, dict) or data.get("date") != date_iso or not isinstance(items, list) or not items:
+        raise SystemExit(f"existing roster is invalid; refusing to replace {path.relative_to(REPO)}")
+    if any(not isinstance(item, dict) or not item.get("qid") for item in items):
+        raise SystemExit(f"existing roster is invalid; refusing to replace {path.relative_to(REPO)}")
+    return data
+
+
 def review_rank(qid, state, questions, date_iso, tiers, coach_feedback=None):
     s = state.get(qid, {})
     q = questions[qid]
@@ -287,7 +310,7 @@ def write_roster_json(date_iso, day_no, limits, roster, sources, questions, mode
             for i, qid in enumerate(roster, 1)
         ],
     }
-    path = ROSTER_DIR / f"{date_iso[5:7]}{date_iso[8:10]}.json"
+    path = roster_path(date_iso)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     return path
 
@@ -344,6 +367,13 @@ def main():
     parser.add_argument("--mode", choices=["auto", "restart", "stable", "main", "low_energy"], default="auto")
     args = parser.parse_args()
     date_iso = normalize_date(args.date)
+
+    existing = load_existing_roster(date_iso)
+    if existing is not None:
+        path = roster_path(date_iso)
+        print(f"kept existing {path.relative_to(REPO)}")
+        print(" ".join(item["qid"] for item in existing["items"]))
+        return
 
     policy = read_json(POLICY_FILE, {})
     state = read_json(STATE_FILE, {})

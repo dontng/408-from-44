@@ -56,7 +56,7 @@ def answer_confidence(year, question):
     return "official"
 
 
-def record_day(result_data, diagnostics):
+def record_day(result_data):
     """Replace one day's events, making re-grading deterministic and idempotent."""
     bootstrap_baseline()
     events = []
@@ -75,7 +75,6 @@ def record_day(result_data, diagnostics):
             "answer": result["answer"],
             "status": result["status"],
             "ok": result["ok"],
-            "diagnosis": diagnostics.get(qid, ""),
             "answer_confidence": answer_confidence(result["year"], result["q"]),
         })
     write_json(EVENT_DIR / f"{result_data['date'][5:7]}{result_data['date'][8:10]}.json", {
@@ -101,13 +100,9 @@ def rebuild_state():
         item["last"] = event["date"]
         item["last_ok"] = correct
         item["last_pick"] = event["pick"]
-        item["last_diagnosis"] = event["diagnosis"]
         item["answer_confidence"] = event["answer_confidence"]
         item["due"] = (dt.date.fromisoformat(event["date"]) + dt.timedelta(days=INTERVALS[item["box"]])).isoformat()
-        if event["diagnosis"] == "solid":
-            item["stuck"] = False
-        elif event["diagnosis"] in {"outside", "misselect", "hesitant"} or not correct:
-            item["stuck"] = True
+        item["stuck"] = not correct
     if "_progress" in previous:
         state["_progress"] = previous["_progress"]
     write_json(STATE_FILE, state)

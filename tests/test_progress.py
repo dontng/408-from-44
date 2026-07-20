@@ -29,8 +29,8 @@ class ProgressLedgerTest(unittest.TestCase):
         }]}
 
     def test_regrading_replaces_the_daily_event(self):
-        self.progress.record_day(self.result(), {"2024-01": "solid"})
-        self.progress.record_day(self.result(), {"2024-01": "solid"})
+        self.progress.record_day(self.result())
+        self.progress.record_day(self.result())
         state = self.progress.read_json(self.progress.STATE_FILE, {})
         events = self.progress.read_json(self.progress.EVENT_DIR / "0705.json", {})["events"]
         self.assertEqual(state["2024-01"]["seen"], 1)
@@ -38,6 +38,6 @@ class ProgressLedgerTest(unittest.TestCase):
         self.assertFalse(state["2024-01"]["stuck"])
 
     def test_provisional_answers_are_not_marked_official(self):
-        self.progress.record_day(self.result(year="2025", q=8), {})
+        self.progress.record_day(self.result(year="2025", q=8))
         state = self.progress.read_json(self.progress.STATE_FILE, {})
         self.assertEqual(state["2025-08"]["answer_confidence"], "provisional_low")

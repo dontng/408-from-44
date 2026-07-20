@@ -95,13 +95,13 @@ class H(BaseHTTPRequestHandler):
             date = safe_date(data.get("date", ""))
             if not date:
                 return self.send_body(400, {"error": "bad date"})
-            _, result_data, today_data, diagnoses = grade_today.build_outputs(date)
+            _, result_data, today_data = grade_today.build_outputs(date)
             result_path = REPO / "data" / "results" / f"{date}.json"
             today_path = REPO / "coach" / "today" / f"{date}.json"
             grade_today.write_json(result_path, result_data)
             grade_today.write_json(today_path, today_data)
             grade_today.update_md(result_data)
-            grade_today.progress.record_day(result_data, diagnoses)
+            grade_today.progress.record_day(result_data)
             return self.send_body(200, {
                 "ok": True,
                 "date": date,
@@ -112,37 +112,26 @@ class H(BaseHTTPRequestHandler):
                 "today_open": today_data["open"],
             })
         if self.path != "/api/answer":
-            if self.path != "/api/diagnosis":
-                return self.send_body(404, {"error": "not found"})
+            return self.send_body(404, {"error": "not found"})
         n = int(self.headers.get("Content-Length", 0))
         data = json.loads(self.rfile.read(n) or "{}")
         date = safe_date(data.get("date", ""))
         qid = data.get("qid", "")
         pick = data.get("pick", "")
-        diagnosis = data.get("diagnosis", "")
         if not date or not qid:
             return self.send_body(400, {"error": "bad payload"})
         path = ANSWER_DIR / f"{date}.json"
-        ans = read_json(path, {"date": date, "answers": {}, "diagnoses": {}})
+        ans = read_json(path, {"date": date, "answers": {}})
         ans["date"] = date
         ans.setdefault("answers", {})
-        ans.setdefault("diagnoses", {})
-        if self.path == "/api/answer":
-            if pick not in TOKENS:
-                return self.send_body(400, {"error": "bad payload"})
-            if pick:
-                ans["answers"][qid] = pick
-            else:
-                ans["answers"].pop(qid, None)
+        if pick not in TOKENS:
+            return self.send_body(400, {"error": "bad payload"})
+        if pick:
+            ans["answers"][qid] = pick
         else:
-            if diagnosis not in {"", "outside", "misselect", "hesitant", "solid"}:
-                return self.send_body(400, {"error": "bad diagnosis"})
-            if diagnosis:
-                ans["diagnoses"][qid] = diagnosis
-            else:
-                ans["diagnoses"].pop(qid, None)
+            ans["answers"].pop(qid, None)
         write_json(path, ans)
-        return self.send_body(200, {"ok": True, "date": date, "qid": qid, "pick": pick, "diagnosis": diagnosis})
+        return self.send_body(200, {"ok": True, "date": date, "qid": qid, "pick": pick})
 
 
 def main():
