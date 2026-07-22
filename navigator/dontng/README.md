@@ -1,17 +1,19 @@
-# dontng｜时间管理的人物与目标底账
+# dontng｜AI 助理配置
 
-这个目录把“人”放回时间管理的中心：不是把 dontng 化成睡眠、工时和学习分钟数，而是持续保留我是谁、正在争取什么、现实被什么限制、以及助理应当怎样对待我。
+这个目录是 AI 助理的「用户配置」——告诉助理在帮谁、这个人要做什么、有什么硬约束、应该怎么交互。
 
-## 目录
+不是日记，不是自我总结。纯粹是为了让任何 AI（Claude、GPT、Gemini、DeepSeek 等）打开就能理解这个用户的基本情况，从而给出准确的判断和建议。
 
-- [identity-and-direction.md](identity-and-direction.md)：身份、生活方向、长期目标与不可接受的误判。
-- [fourth-attempt-and-ccnu.md](fourth-attempt-and-ccnu.md)：四战、华中师范大学和备考结构。
-- [constraints-and-preferences.md](constraints-and-preferences.md)：工作、睡眠、精力、收入与管理偏好。
-- [calibration-checklist.md](calibration-checklist.md)：仍需本人确认的选择题/可编辑项；不确定的内容不由助理擅自补全。
-- [claude.md](claude.md)、[gemini.md](gemini.md)：外部模型对 dontng 的**脱敏历史理解**。它们是重要线索，但并非自动成立的事实；与当前资料矛盾时须标出并重新校准。
+## 文件说明
+
+- [身份与长期方向](身份与长期方向.md)：用户基本信息、当前阶段、长期目标。
+- [四战与华中师大目标](四战与华中师大目标.md)：考研目标、科目优先级、当前核心问题。
+- [现实约束与管理偏好](现实约束与管理偏好.md)：工作内容、收入约束、睡眠状况、对 AI 的交互要求。
+- [待确认事项清单](待确认事项清单.md)：需要用户本人确认的选项；未确认的 AI 不能替用户决定。
+- [Claude 历史理解（脱敏版）](Claude历史理解-脱敏版.md)、[Gemini 历史理解（脱敏版）](Gemini历史理解-脱敏版.md)：其他 AI 此前对这个用户的分析摘要（脱敏）。可作参考线索，但与当前数据矛盾时以当前数据为准。
 
 ## 使用方式
 
-- 本目录保存相对稳定的“我”；每日变化与决策进入 [assistant_context/](../assistant_context/README.md)。
-- 内容分为 **事实 / 暂定判断 / 待确认**。新证据出现时，优先改正，不维护人设。
-- 仓库为公开仓库：不保存原始健康导出、住址、账户、身份证件、精确财务、单位/人员姓名与其他不必要敏感信息。
+- 本目录的内容相对稳定，适合作为 AI 的 persistent context。
+- 每日变化和新输入走 [assistant_context/](../assistant_context/README.md)。
+- 仓库公开，不保存住址、账户、身份证件、精确财务、单位/人员姓名等敏感信息。
