@@ -8,10 +8,10 @@
 - [fourth-attempt-and-ccnu.md](fourth-attempt-and-ccnu.md)：四战、华中师范大学和备考结构。
 - [constraints-and-preferences.md](constraints-and-preferences.md)：工作、睡眠、精力、收入与管理偏好。
 - [calibration-checklist.md](calibration-checklist.md)：仍需本人确认的选择题/可编辑项；不确定的内容不由助理擅自补全。
-- [claude.md](claude.md)、[gemini.md](gemini.md)：其他模型对 dontng 的历史理解。它们是重要线索，但并非自动成立的事实；与当前资料矛盾时须标出并重新校准。
+- [claude.md](claude.md)、[gemini.md](gemini.md)：外部模型对 dontng 的**脱敏历史理解**。它们是重要线索，但并非自动成立的事实；与当前资料矛盾时须标出并重新校准。
 
 ## 使用方式
 
 - 本目录保存相对稳定的“我”；每日变化与决策进入 [assistant_context/](../assistant_context/README.md)。
 - 内容分为 **事实 / 暂定判断 / 待确认**。新证据出现时，优先改正，不维护人设。
-- 仓库为公开仓库：不保存原始健康导出、住址、账户、身份证件、精确财务和其他不必要敏感信息。
+- 仓库为公开仓库：不保存原始健康导出、住址、账户、身份证件、精确财务、单位/人员姓名与其他不必要敏感信息。
