@@ -14,4 +14,4 @@
 3. 睡眠数据不直接证明学习效果；它首先定义当天可以安排多少高认知负荷任务的上限。
 4. 每条时间规则必须能回链到数据或后续复盘，不能凭一次状态好坏永久固化。
 
-当前入口见 [sleep/2026-07-22-analysis.md](sleep/2026-07-22-analysis.md)。
+当前入口见 [sleep/2026-ytd-analysis.md](sleep/2026-ytd-analysis.md)；最近状态另见 [sleep/2026-07-22-analysis.md](sleep/2026-07-22-analysis.md)。
