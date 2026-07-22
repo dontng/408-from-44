@@ -4,6 +4,7 @@
 
     sleep/       睡眠与恢复：原始导出 → 可复核的夜间汇总 → 对学习容量的约束
     work/        工作、加班、夜班与可用时间（待导入）
+    work/        工作、加班、夜班与可用时间（已导入 2026-01—07 截图）
     study/       各科实际投入、启动成本、交付量（待导入）
     decisions/   根据数据已经作出的排程规则（待建立）
 
@@ -14,4 +15,4 @@
 3. 睡眠数据不直接证明学习效果；它首先定义当天可以安排多少高认知负荷任务的上限。
 4. 每条时间规则必须能回链到数据或后续复盘，不能凭一次状态好坏永久固化。
 
-当前入口见 [sleep/2026-ytd-analysis.md](sleep/2026-ytd-analysis.md)；最近状态另见 [sleep/2026-07-22-analysis.md](sleep/2026-07-22-analysis.md)。
+当前入口见 [sleep/2026-ytd-analysis.md](sleep/2026-ytd-analysis.md)；工作约束见 [work/2026-ytd-attendance-analysis.md](work/2026-ytd-attendance-analysis.md)。
