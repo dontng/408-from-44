@@ -1,0 +1,8 @@
+month,ordinary_day_shift_days,overtime_days,night_shift_days,offsite_days,leave_days,coverage_note
+2026-01,21,8,0,0,0,"full month screenshot; New Year overtime included"
+2026-02,13,5,0,0,3,"Spring Festival blank days not treated as work or free study time"
+2026-03,16,8,5,5,1,"night shift 2026-03-23 to 2026-03-27; offsite overlaps nights 24-28"
+2026-04,21,8,0,0,0,"full month screenshot"
+2026-05,13,8,0,3,2,"offsite 18-20; leave 6-7; incomplete overtime records at month start"
+2026-06,20,5,0,1,1,"offsite 24; leave 22"
+2026-07-01_to_22,15,2,0,0,0,"22nd is missing-card status and excluded"
