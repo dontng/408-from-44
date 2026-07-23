@@ -14,4 +14,4 @@
 - 睡眠窗口增加后，次日的启动时间和有效学习时长是否可观察改善。
 - 具体的下班后过渡方式，能否减少「知道该学却打不开资料」的摩擦。
 
-每次验证要回到 [friction-log.md](friction-log.md) 记录事实与结果；没有结果不升级为规则。
+每次验证要回到 [observations/](observations/README.md)、[frictions/](frictions/README.md) 与 [decisions/](decisions/README.md) 留下事实和结果；没有结果不升级为规则。
