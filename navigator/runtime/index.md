@@ -2,6 +2,11 @@
 
 这是时间助理和 dontng 打开 runtime 时的入口。它只保留仍在发生的事情，不承担历史记录。
 
+## 当次安排的依据
+
+- [审视标准](decision-review.md)｜任何初案先接受反驳，再给最终安排。
+- [408 决策攻略](../../coach/speedrun/README.md)｜攻略只提供可验收的考场判断入口；题单仍由 coach 的 `current.md` 与 `today/` 决定。
+
 ## 最近日记
 
 - [2026-07-23](diary/july/0723-diary.md)｜7 月 20—23 日连续事件记录，等待助理判断。
