@@ -142,7 +142,7 @@ async function save(qid, pick, statusEl){
 }
 
 async function grade(){
-  if(!confirm("生成今日处理清单？这会更新结果区和 coach/today。")) return;
+  if(!confirm("完成今日答题？这会更新题单结果区和 data/results。")) return;
   const btn = $("#grade");
   const summary = $("#summary");
   btn.disabled = true;
@@ -152,7 +152,7 @@ async function grade(){
       body:JSON.stringify({date})});
     if(!r.ok) throw new Error(await r.text());
     const j = await r.json();
-    summary.textContent = `已答 ${j.answered}/${j.total} · 对 ${j.correct}/${j.known_graded} · 今日清单 ${j.today_open}`;
+    summary.textContent = `已答 ${j.answered}/${j.total} · 对 ${j.correct}/${j.known_graded}`;
   }catch(e){
     summary.textContent = "生成失败";
   }finally{

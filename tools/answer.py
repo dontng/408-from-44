@@ -95,11 +95,9 @@ class H(BaseHTTPRequestHandler):
             date = safe_date(data.get("date", ""))
             if not date:
                 return self.send_body(400, {"error": "bad date"})
-            _, result_data, today_data = grade_today.build_outputs(date)
+            _, result_data = grade_today.build_outputs(date)
             result_path = REPO / "data" / "results" / f"{date}.json"
-            today_path = REPO / "coach" / "today" / f"{date}.json"
             grade_today.write_json(result_path, result_data)
-            grade_today.write_json(today_path, today_data)
             grade_today.update_md(result_data)
             grade_today.progress.record_day(result_data)
             return self.send_body(200, {
@@ -109,7 +107,6 @@ class H(BaseHTTPRequestHandler):
                 "total": result_data["total"],
                 "known_graded": result_data["known_graded"],
                 "correct": result_data["ok"],
-                "today_open": today_data["open"],
             })
         if self.path != "/api/answer":
             return self.send_body(404, {"error": "not found"})
