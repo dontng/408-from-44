@@ -5,7 +5,7 @@
 ## 当次安排的依据
 
 - [审视标准](decision-review.md)｜任何初案先接受反驳，再给最终安排。
-- [408 决策攻略](../../coach/speedrun/README.md)｜攻略只提供可验收的考场判断入口；题单仍由 coach 的 `current.md` 与 `today/` 决定。
+- [408 speedrun](../../speedrun/README.md)｜真实题单决定学习对象；速通页负责机制、选项裁决与可验证验收。
 
 ## 最近日记
 

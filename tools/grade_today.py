@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Grade one day's answer card and build the coach today ledger."""
+"""Grade one day's answer card and persist the factual result."""
 import argparse
 import datetime as dt
 import json
@@ -13,7 +13,6 @@ REPO = Path(__file__).resolve().parent.parent
 ROSTER_DIR = REPO / "data" / "rosters"
 ANSWER_DIR = REPO / "data" / "answers"
 RESULT_DIR = REPO / "data" / "results"
-COACH_TODAY_DIR = REPO / "coach" / "today"
 SRC_DIR = REPO / "src"
 
 MONTHS = [
@@ -84,30 +83,6 @@ def grade_item(item, pick, answer_cache):
     }
 
 
-def grade_label(result):
-    if result["status"] == "blank":
-        return "blank"
-    if result["status"] == "unknown":
-        return "unknown"
-    if result["status"] == "self_check":
-        return "self_check"
-    return "right" if result["ok"] else "wrong"
-
-
-def priority_for(result):
-    if result["status"] == "unknown":
-        return 1
-    if result["status"] == "wrong":
-        return 1
-    if result["status"] == "self_check":
-        return 1
-    if result["status"] == "right" and result["source"] == "new":
-        return 2
-    if result["status"] == "right":
-        return 3
-    return 9
-
-
 def build_outputs(date_key_value):
     roster = read_json(ROSTER_DIR / f"{date_key_value}.json", None)
     if roster is None:
@@ -128,26 +103,7 @@ def build_outputs(date_key_value):
         "ok": ok_count,
         "items": results,
     }
-    today_items = [
-        {
-            "idx": r["idx"],
-            "qid": r["qid"],
-            "pick": r["pick"],
-            "answer": r["answer"],
-            "grade": grade_label(r),
-            "source": r["source"],
-            "priority": priority_for(r),
-            "decision": "open",
-        }
-        for r in results
-    ]
-    today_data = {
-        "date": roster["date"],
-        "day": roster["day"],
-        "open": sum(1 for item in today_items if item["grade"] != "blank"),
-        "items": today_items,
-    }
-    return roster, result_data, today_data
+    return roster, result_data
 
 
 def result_mark(result):
@@ -215,19 +171,15 @@ def main():
     parser.add_argument("--date", default=dt.date.today().strftime("%m%d"), help="MMDD, e.g. 0705")
     args = parser.parse_args()
     key = args.date
-    roster, result_data, today_data = build_outputs(key)
+    roster, result_data = build_outputs(key)
     result_path = RESULT_DIR / f"{key}.json"
-    today_path = COACH_TODAY_DIR / f"{key}.json"
     write_json(result_path, result_data)
-    write_json(today_path, today_data)
     progress.record_day(result_data)
     md_path = update_md(result_data)
     print(f"wrote {result_path.relative_to(REPO)}")
-    print(f"wrote {today_path.relative_to(REPO)}")
     if md_path:
         print(f"updated {md_path.relative_to(REPO)}")
     print(f"answered {result_data['answered']}/{result_data['total']} ok {result_data['ok']}/{result_data['known_graded']}")
-    print("today open", today_data["open"])
 
 
 if __name__ == "__main__":

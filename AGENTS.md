@@ -3,11 +3,11 @@
 This repository has two modes of work:
 
 1. Project maintenance: code, scripts, data layout, and documentation.
-2. Study coaching: processing one current 408 problem after the user has answered the daily roster.
+2. Study speedrun: turning real 408 attempts into usable mechanisms, verification, and transfer.
 
 ## Sync discipline
 
-GitHub is the shared source of truth. At the start of any maintenance or coaching turn, sync the local work copy before making decisions. Do not turn coaching into sync management unless the user asks.
+GitHub is the shared source of truth. At the start of any maintenance or speedrun turn, sync the local work copy before making decisions. Do not turn study work into sync management unless the user asks.
 
 All agent-authored code, documentation, knowledge, analysis, layout, and workflow changes stay local by default. Do not infer permission to commit or push from “ready”, a completed subtask, a natural pause, or a switch of topic. Commit or push those changes only when the user explicitly asks to commit, push, sync, or close out the current work. Near a genuine handoff, report uncommitted changes once and offer a handoff commit; do not create one without confirmation.
 
@@ -46,29 +46,21 @@ Verified:
 
 Before committing, inspect the staged diff and stage only work in scope. Install the repository commit policy with `bash tools/setup-git-policy.sh`; it supplies the template and rejects messages without the required implementation, rationale, and verification sections.
 
-## Coach architecture
+## Speedrun architecture
 
-`coach/CONSTITUTION.md` is the authority for coaching structure and quality. It defines the ownership of:
+`speedrun/README.md` is the authority for study structure and quality. `speedrun/TEMPLATE.md` fixes the minimum per-question shape; completed daily work lives under `speedrun/sessions/YYYY-MM/MMDD.md`.
 
-- `coach/knowledge/`: 408 textbook-style knowledge by subject and chapter.
-- `coach/analysis/`: direct, question-specific reasoning and option elimination by year/question.
-- `coach/ability/`: evidence-backed personal problem-solving ability.
-- `coach/notes/<month>/`: downstream daily notes, parallel to `src/<month>/`.
-
-For study coaching, start from the narrow handoff:
+For a study turn, read only:
 
 ```text
-coach/CONSTITUTION.md
-coach/ENTRY.md
-coach/current.md
+speedrun/README.md
+data/results/MMDD.json
+src/<month>/MMDD-dayNN.md
+speedrun/sessions/YYYY-MM/MMDD.md  # when continuing an existing session
 ```
 
-Do not bulk-read queues, notes, or the three asset layers. Read only the sections required by the current problem.
+The user's first attempt is evidence and must never be overwritten. Independently solve and diagnose before consulting the reference answer. Build only the mechanism needed to read the problem, adjudicate every option, and survive a nearby change of conditions. Use external authority to settle facts or boundaries, not to display research.
 
-A `pass` is the completed delivery of a problem: the problem is understood and valuable output is no longer trapped in chat context or old-paper annotations. `revisit` and `pin` remain future relationship markers; do not create directories, queues, or standalone notes for them.
+Writing an explanation can advance a problem only to `explained`. Advance it to `verified`, `transferred`, or `automatic` only after the corresponding user performance exists. Never ask whether the user understood; design the cheapest falsifiable check instead.
 
-If `coach/current.md` says there is no open item, tell the user to answer today's roster and complete the answer card first, or run:
-
-```bash
-python3 tools/coach_next.py --date MMDD
-```
+The tenth problem in a batch receives the same standard as the first. If that quality cannot fit in one pass, split the delivery and preserve explicit progress rather than compressing later problems.

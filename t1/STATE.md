@@ -10,7 +10,7 @@ T0 is the source of truth and remains unchanged:
 - `src/` records each daily roster.
 - `data/results/` records answer outcomes.
 - `review/state.json` owns spaced-repetition scheduling.
-- `coach/` records the one-question review flow and durable pins.
+- `speedrun/sessions/` records question-driven explanations and falsifiable checks.
 
 T1 does not duplicate any of those systems. It cannot create a new daily plan,
 change a due date, or promote a one-off wrong answer into a lasting weakness.
