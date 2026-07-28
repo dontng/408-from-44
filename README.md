@@ -14,6 +14,7 @@
 2. 启动答题卡：`./ans 0705`。
 3. 打开当天 MD：`src/july/0705-day01.md`。MD 顶部有“打开答题卡”链接，建议 VS Code 左右分屏：左边看题图，右边点 `A/B/C/D/?`，其中 `?` 表示不会，空着表示还没答。
 4. 答完后，在答题卡底部点“完成今日答题”。它会固化首次作答和判分结果；随后按 [speedrun 协议](speedrun/README.md)处理当天题目。
+5. 执行 `./speedrun.sh MMDD` 生成当天骨架；逐题闭合后执行 `./speedrun.sh --check MMDD`。检查通过只代表达到结构交付线，验证题仍需实际作答。
 
 生成题单、完成今日答题和逐题速通只更新本地工作区；速通正文、文档、代码和布局改动也默认留在本地。除非明确 handoff，否则它们不会立即提交。本地 `.sync.log` / `.autopull.log` 只保留最近 7 天。
 
@@ -38,6 +39,8 @@ speedrun/sessions/YYYY-MM/   每日完整速通与验证
 | `./tod 0705` | 生成当天 MD 和机器题单 |
 | `./ans 0705` | 启动答题卡服务 |
 | `python3 tools/grade_today.py --date 0705` | 手动固化结果并更新题单 |
+| `./speedrun.sh 0712` | 从真实判分生成当天 speedrun 骨架 |
+| `./speedrun.sh --check 0712` | 核对当天 speedrun 是否达到结构交付线 |
 
 答题卡地址固定为 `http://127.0.0.1:8409/?date=0705`，日期换成当天 `MMDD`。
 

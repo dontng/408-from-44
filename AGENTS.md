@@ -61,6 +61,8 @@ speedrun/sessions/YYYY-MM/MMDD.md  # when continuing an existing session
 
 The user's first attempt is evidence and must never be overwritten. Independently solve and diagnose before consulting the reference answer. Build only the mechanism needed to read the problem, adjudicate every option, and survive a nearby change of conditions. Use external authority to settle facts or boundaries, not to display research.
 
+After a complete `data/results/MMDD.json` exists, create the daily scaffold with `./speedrun.sh MMDD`. A generated `draft` is not a study state and must not be delivered. After every question is independently closed, run `./speedrun.sh --check MMDD`; treat a passing structural check as necessary but not sufficient, then perform the protocol's content review.
+
 Writing an explanation can advance a problem only to `explained`. Advance it to `verified`, `transferred`, or `automatic` only after the corresponding user performance exists. Never ask whether the user understood; design the cheapest falsifiable check instead.
 
 The tenth problem in a batch receives the same standard as the first. If that quality cannot fit in one pass, split the delivery and preserve explicit progress rather than compressing later problems.
