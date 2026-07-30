@@ -1,14 +1,14 @@
 {
   "files.exclude": {
-    "answers": true,
-    "bank": true,
+    "answers": false,
+    "bank": false,
     "speedrun": false,
-    "data": true,
+    "data": false,
     "docs": false,
-    "review": true,
-    "sessions": true,
-    "tags": true,
-    "tools": true,
-    "past_papers": true
+    "review": false,
+    "sessions": false,
+    "tags": false,
+    "tools": false,
+    "past_papers": false
   }
 }
