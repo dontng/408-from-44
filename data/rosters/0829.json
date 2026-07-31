@@ -1,0 +1,208 @@
+{
+  "date": "2026-08-29",
+  "day": 30,
+  "mode": "ability_line",
+  "line_id": "30-page-policy",
+  "line_title": "页面驻留：置换、工作集与缺页代价",
+  "md_path": "src/0829.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-29",
+      "year": "2010",
+      "q": 29,
+      "image": "bank/2010/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2011-28",
+      "year": "2011",
+      "q": 28,
+      "image": "bank/2011/q28.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2011-29",
+      "year": "2011",
+      "q": 29,
+      "image": "bank/2011/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-24",
+      "year": "2012",
+      "q": 24,
+      "image": "bank/2012/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2013-30",
+      "year": "2013",
+      "q": 30,
+      "image": "bank/2013/q30.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2014-30",
+      "year": "2014",
+      "q": 30,
+      "image": "bank/2014/q30.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2014-32",
+      "year": "2014",
+      "q": 32,
+      "image": "bank/2014/q32.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2015-29",
+      "year": "2015",
+      "q": 29,
+      "image": "bank/2015/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2016-26",
+      "year": "2016",
+      "q": 26,
+      "image": "bank/2016/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2016-29",
+      "year": "2016",
+      "q": 29,
+      "image": "bank/2016/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2019-29",
+      "year": "2019",
+      "q": 29,
+      "image": "bank/2019/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2020-28",
+      "year": "2020",
+      "q": 28,
+      "image": "bank/2020/q28.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2021-28",
+      "year": "2021",
+      "q": 28,
+      "image": "bank/2021/q28.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2021-29",
+      "year": "2021",
+      "q": 29,
+      "image": "bank/2021/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2022-29",
+      "year": "2022",
+      "q": 29,
+      "image": "bank/2022/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2022-30",
+      "year": "2022",
+      "q": 30,
+      "image": "bank/2022/q30.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2023-25",
+      "year": "2023",
+      "q": 25,
+      "image": "bank/2023/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2023-28",
+      "year": "2023",
+      "q": 28,
+      "image": "bank/2023/q28.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2024-25",
+      "year": "2024",
+      "q": 25,
+      "image": "bank/2024/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 20,
+      "qid": "2025-26",
+      "year": "2025",
+      "q": 26,
+      "image": "bank/2025/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 21,
+      "qid": "2025-27",
+      "year": "2025",
+      "q": 27,
+      "image": "bank/2025/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 22,
+      "qid": "2025-30",
+      "year": "2025",
+      "q": 30,
+      "image": "bank/2025/q30.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
