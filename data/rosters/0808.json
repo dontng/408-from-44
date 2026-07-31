@@ -1,0 +1,145 @@
+{
+  "date": "2026-08-08",
+  "day": 9,
+  "mode": "ability_line",
+  "line_id": "09-search-hash",
+  "line_title": "查找落点：折半、分块与散列",
+  "md_path": "src/0808.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-09",
+      "year": "2010",
+      "q": 9,
+      "image": "bank/2010/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2011-09",
+      "year": "2011",
+      "q": 9,
+      "image": "bank/2011/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2014-08",
+      "year": "2014",
+      "q": 8,
+      "image": "bank/2014/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2015-07",
+      "year": "2015",
+      "q": 7,
+      "image": "bank/2015/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2016-09",
+      "year": "2016",
+      "q": 9,
+      "image": "bank/2016/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2017-08",
+      "year": "2017",
+      "q": 8,
+      "image": "bank/2017/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2017-09",
+      "year": "2017",
+      "q": 9,
+      "image": "bank/2017/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2018-09",
+      "year": "2018",
+      "q": 9,
+      "image": "bank/2018/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2019-08",
+      "year": "2019",
+      "q": 8,
+      "image": "bank/2019/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2022-09",
+      "year": "2022",
+      "q": 9,
+      "image": "bank/2022/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2023-08",
+      "year": "2023",
+      "q": 8,
+      "image": "bank/2023/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2023-09",
+      "year": "2023",
+      "q": 9,
+      "image": "bank/2023/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2024-05",
+      "year": "2024",
+      "q": 5,
+      "image": "bank/2024/q05.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2025-07",
+      "year": "2025",
+      "q": 7,
+      "image": "bank/2025/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2025-09",
+      "year": "2025",
+      "q": 9,
+      "image": "bank/2025/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
