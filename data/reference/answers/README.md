@@ -1,4 +1,4 @@
-# answers — 真题标准答案
+# reference/answers — 真题标准答案
 
 每年一个文件：`<年份>.txt`，每行 `题号 答案`，例如：
 

@@ -34,7 +34,7 @@ def write_json(path, data):
 
 
 def load_answers(year):
-    path = REPO / "answers" / f"{year}.txt"
+    path = REPO / "data" / "reference" / "answers" / f"{year}.txt"
     out = {}
     if not path.exists():
         return out

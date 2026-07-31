@@ -23,23 +23,19 @@
     - [rosters/](data/rosters/)：答题卡读取的节点题目
     - [answers/](data/answers/)：你的作答记录
     - [results/](data/results/)：判分结果
-    - [progress/](data/progress/)：不可覆盖的进度事件
+    - [progress/](data/progress/)：不可覆盖的进度事件及其派生状态
+    - [reference/answers/](data/reference/answers/)：判分程序读取的标准答案
   - [tools/](tools/)：构建、答题、判分和维护脚本；目前没有再划分 `runtime/`、`build/`
   - [tests/](tests/)：能力线链和 TLDR 工具的自动检查
-  - [review/](review/)：旧调度系统留下的目录；其中仍有当前程序使用的派生状态，暂不能整体归档
   - [navigator/](navigator/)：独立的时间助理子系统
-  - [docs/](docs/)：历史设计记录，不是当前操作入口
-  - [sessions/](sessions/)：TLDR 之前的旧解析记录，待归档
-  - [src/july/](src/july/)：能力线题单之前的等长日题单，待归档
-  - [t1/](t1/)：旧训练控制层，待归档
-  - [tags/](tags/)：旧 `studio` 分块/交错抽题标签，当前主线未使用，待退役
+  - [archive/](archive/)：已经从当前程序中切除的旧题单、旧调度和历史设计
 
 <details>
 <summary>原始材料：日常不必直接进入</summary>
 
 - [past_papers/](past_papers/)：2009—2025 年真题原卷。
 - [bank/](bank/)：从原卷切出的 680 道选择题图片，题单通过相对路径引用。
-- [answers/](answers/)：按年份保存的选择题标准答案。你不直接使用，但当前判分程序会读取。
+- [data/reference/answers/](data/reference/answers/)：按年份保存的选择题标准答案。它已从根目录折叠到机器数据层，日常不必直接进入。
 
 </details>
 
@@ -59,13 +55,14 @@
 
 - 当前运行链：[show_question_node.py](tools/show_question_node.py)、[answer.py](tools/answer.py)、[grade_today.py](tools/grade_today.py)、[progress.py](tools/progress.py)、[new_tldr.py](tools/new_tldr.py)、[check_tldr.py](tools/check_tldr.py)。
 - 题库与能力线构建：[slice_paper.py](tools/slice_paper.py)、[slice_paper_ocr.py](tools/slice_paper_ocr.py)、[extract_answers.py](tools/extract_answers.py)、[build_question_chain.py](tools/build_question_chain.py)。
-- 图片与仓库维护：[imgtrim.py](tools/imgtrim.py)、[imgnorm.py](tools/imgnorm.py)、[patch_q.py](tools/patch_q.py) 及 Git 辅助脚本。
-- 旧流程候选：[select_today.py](tools/select_today.py)、[studio.html](tools/studio.html) 等。归档前仍需检查是否存在间接调用。
+- 图片与仓库维护：[imgtrim.py](tools/imgtrim.py)、[patch_q.py](tools/patch_q.py) 及 Git 辅助脚本。
+
+旧 `select_today`、`studio`、固定配额策略及其测试已经整体移入
+[archive/scheduler-v1/](archive/scheduler-v1/)，当前程序不再兼容这套调度。
 
 ## 整理原则
 
 1. `src/` 与 `tldr/` 是当前学习主线，整理不能改变它们的入口。
-2. 原始材料可以在地图中折叠，但暂不移动；大量题单已经引用 `bank/`，判分脚本也读取 `answers/`。
-3. 历史文件进入 `archive/` 前要修复相对链接，不能只为视觉整齐而破坏旧记录。
-4. `review/` 是“旧目录中夹着活动状态”的典型混合区，应先迁移活动数据，再归档剩余内容。
-5. 项目结构以是否降低学习摩擦为标准；没有运行收益的目录重命名不优先。
+2. 大量题单已经引用 `bank/`，因此题图暂不移动；不直接使用的标准答案收在 `data/reference/`。
+3. `archive/` 是冻结区，不承担运行兼容；当前代码不得反向依赖归档内容。
+4. 项目结构以是否降低学习摩擦为标准；没有运行收益的目录重命名不优先。

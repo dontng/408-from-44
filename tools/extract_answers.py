@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 answers/<year>答案.pdf 抽取选择题(1~40)标准答案 → answers/<year>.txt。
+"""从标准答案 PDF 抽取选择题(1~40)答案到 data/reference/answers/。
 
 优先用逐题"N.【正确答案】X"，回退到顶部答案总表"N．X"。
 """
@@ -42,7 +42,7 @@ def extract(text):
 
 
 def main():
-    for pdf in sorted(glob.glob("answers/*答案.pdf")):
+    for pdf in sorted(glob.glob("data/reference/answers/*答案.pdf")):
         m = re.search(r'(\d{4})', os.path.basename(pdf))
         if not m:
             continue
@@ -53,7 +53,7 @@ def main():
             continue
         ans = extract(text)
         missing = [q for q in range(1, 41) if q not in ans]
-        out = f"answers/{year}.txt"
+        out = f"data/reference/answers/{year}.txt"
         with open(out, "w", encoding="utf-8") as f:
             f.write(f"# {year} 408 选择题答案（自动抽取自答案PDF）\n")
             for q in range(1, 41):

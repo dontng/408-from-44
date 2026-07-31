@@ -8,7 +8,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 EVENT_DIR = REPO / "data" / "progress"
 BASELINE_FILE = EVENT_DIR / "baseline.json"
-STATE_FILE = REPO / "review" / "state.json"
+STATE_FILE = EVENT_DIR / "state.json"
 INTERVALS = [2, 4, 8, 16, 30, 45]
 
 
