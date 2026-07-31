@@ -1,0 +1,127 @@
+{
+  "date": "2026-08-27",
+  "day": 28,
+  "mode": "ability_line",
+  "line_id": "28-deadlock",
+  "line_title": "资源闭环：死锁、避免与检测",
+  "md_path": "src/0827.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-25",
+      "year": "2009",
+      "q": 25,
+      "image": "bank/2009/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2011-27",
+      "year": "2011",
+      "q": 27,
+      "image": "bank/2011/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2012-27",
+      "year": "2012",
+      "q": 27,
+      "image": "bank/2012/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-31",
+      "year": "2012",
+      "q": 31,
+      "image": "bank/2012/q31.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2013-32",
+      "year": "2013",
+      "q": 32,
+      "image": "bank/2013/q32.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2015-26",
+      "year": "2015",
+      "q": 26,
+      "image": "bank/2015/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2015-27",
+      "year": "2015",
+      "q": 27,
+      "image": "bank/2015/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2016-25",
+      "year": "2016",
+      "q": 25,
+      "image": "bank/2016/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2018-26",
+      "year": "2018",
+      "q": 26,
+      "image": "bank/2018/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2019-30",
+      "year": "2019",
+      "q": 30,
+      "image": "bank/2019/q30.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2020-27",
+      "year": "2020",
+      "q": 27,
+      "image": "bank/2020/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2021-31",
+      "year": "2021",
+      "q": 31,
+      "image": "bank/2021/q31.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2022-26",
+      "year": "2022",
+      "q": 26,
+      "image": "bank/2022/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
