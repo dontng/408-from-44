@@ -1,0 +1,181 @@
+{
+  "date": "2026-09-03",
+  "day": 35,
+  "mode": "ability_line",
+  "line_id": "35-link-reliability",
+  "line_title": "链路可靠性：帧、窗口与重传状态",
+  "md_path": "src/0903.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-35",
+      "year": "2009",
+      "q": 35,
+      "image": "bank/2009/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2011-35",
+      "year": "2011",
+      "q": 35,
+      "image": "bank/2011/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2012-36",
+      "year": "2012",
+      "q": 36,
+      "image": "bank/2012/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-37",
+      "year": "2012",
+      "q": 37,
+      "image": "bank/2012/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2013-15",
+      "year": "2013",
+      "q": 15,
+      "image": "bank/2013/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2013-37",
+      "year": "2013",
+      "q": 37,
+      "image": "bank/2013/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2014-36",
+      "year": "2014",
+      "q": 36,
+      "image": "bank/2014/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2014-37",
+      "year": "2014",
+      "q": 37,
+      "image": "bank/2014/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2015-35",
+      "year": "2015",
+      "q": 35,
+      "image": "bank/2015/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2016-35",
+      "year": "2016",
+      "q": 35,
+      "image": "bank/2016/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2017-35",
+      "year": "2017",
+      "q": 35,
+      "image": "bank/2017/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2018-35",
+      "year": "2018",
+      "q": 35,
+      "image": "bank/2018/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2018-36",
+      "year": "2018",
+      "q": 36,
+      "image": "bank/2018/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2019-35",
+      "year": "2019",
+      "q": 35,
+      "image": "bank/2019/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2020-36",
+      "year": "2020",
+      "q": 36,
+      "image": "bank/2020/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2022-33",
+      "year": "2022",
+      "q": 33,
+      "image": "bank/2022/q33.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2023-35",
+      "year": "2023",
+      "q": 35,
+      "image": "bank/2023/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2023-37",
+      "year": "2023",
+      "q": 37,
+      "image": "bank/2023/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2024-37",
+      "year": "2024",
+      "q": 37,
+      "image": "bank/2024/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
