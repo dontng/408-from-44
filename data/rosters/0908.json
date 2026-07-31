@@ -1,0 +1,163 @@
+{
+  "date": "2026-09-08",
+  "day": 40,
+  "mode": "ability_line",
+  "line_id": "40-application",
+  "line_title": "应用会话：DNS、Web、邮件与文件传输",
+  "md_path": "src/0908.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-40",
+      "year": "2009",
+      "q": 40,
+      "image": "bank/2009/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2010-40",
+      "year": "2010",
+      "q": 40,
+      "image": "bank/2010/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2012-40",
+      "year": "2012",
+      "q": 40,
+      "image": "bank/2012/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2013-40",
+      "year": "2013",
+      "q": 40,
+      "image": "bank/2013/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2014-40",
+      "year": "2014",
+      "q": 40,
+      "image": "bank/2014/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2015-33",
+      "year": "2015",
+      "q": 33,
+      "image": "bank/2015/q33.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2015-40",
+      "year": "2015",
+      "q": 40,
+      "image": "bank/2015/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2016-38",
+      "year": "2016",
+      "q": 38,
+      "image": "bank/2016/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2016-40",
+      "year": "2016",
+      "q": 40,
+      "image": "bank/2016/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2017-40",
+      "year": "2017",
+      "q": 40,
+      "image": "bank/2017/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2018-33",
+      "year": "2018",
+      "q": 33,
+      "image": "bank/2018/q33.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2018-40",
+      "year": "2018",
+      "q": 40,
+      "image": "bank/2018/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2019-40",
+      "year": "2019",
+      "q": 40,
+      "image": "bank/2019/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2020-40",
+      "year": "2020",
+      "q": 40,
+      "image": "bank/2020/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2022-40",
+      "year": "2022",
+      "q": 40,
+      "image": "bank/2022/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2024-40",
+      "year": "2024",
+      "q": 40,
+      "image": "bank/2024/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2025-40",
+      "year": "2025",
+      "q": 40,
+      "image": "bank/2025/q40.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
