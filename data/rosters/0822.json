@@ -1,0 +1,172 @@
+{
+  "date": "2026-08-22",
+  "day": 23,
+  "mode": "ability_line",
+  "line_id": "23-bus-time",
+  "line_title": "传输时间：宽度、频率、事务与瓶颈",
+  "md_path": "src/0822.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-20",
+      "year": "2009",
+      "q": 20,
+      "image": "bank/2009/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2010-20",
+      "year": "2010",
+      "q": 20,
+      "image": "bank/2010/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2010-22",
+      "year": "2010",
+      "q": 22,
+      "image": "bank/2010/q22.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2011-20",
+      "year": "2011",
+      "q": 20,
+      "image": "bank/2011/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2012-19",
+      "year": "2012",
+      "q": 19,
+      "image": "bank/2012/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2012-20",
+      "year": "2012",
+      "q": 20,
+      "image": "bank/2012/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2014-19",
+      "year": "2014",
+      "q": 19,
+      "image": "bank/2014/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2014-20",
+      "year": "2014",
+      "q": 20,
+      "image": "bank/2014/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2015-19",
+      "year": "2015",
+      "q": 19,
+      "image": "bank/2015/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2016-21",
+      "year": "2016",
+      "q": 21,
+      "image": "bank/2016/q21.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2017-20",
+      "year": "2017",
+      "q": 20,
+      "image": "bank/2017/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2018-21",
+      "year": "2018",
+      "q": 21,
+      "image": "bank/2018/q21.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2019-19",
+      "year": "2019",
+      "q": 19,
+      "image": "bank/2019/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2020-19",
+      "year": "2020",
+      "q": 19,
+      "image": "bank/2020/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2021-19",
+      "year": "2021",
+      "q": 19,
+      "image": "bank/2021/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2023-20",
+      "year": "2023",
+      "q": 20,
+      "image": "bank/2023/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2024-20",
+      "year": "2024",
+      "q": 20,
+      "image": "bank/2024/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2025-20",
+      "year": "2025",
+      "q": 20,
+      "image": "bank/2025/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
