@@ -2,7 +2,7 @@
   "files.exclude": {
     "answers": false,
     "bank": false,
-    "speedrun": false,
+    "tldr": false,
     "data": false,
     "docs": false,
     "review": false,
