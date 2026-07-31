@@ -1,0 +1,199 @@
+{
+  "date": "2026-09-04",
+  "day": 36,
+  "mode": "ability_line",
+  "line_id": "36-lan",
+  "line_title": "局域网转发：介质竞争、MAC与交换机",
+  "md_path": "src/0904.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-36",
+      "year": "2009",
+      "q": 36,
+      "image": "bank/2009/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2009-37",
+      "year": "2009",
+      "q": 37,
+      "image": "bank/2009/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2010-38",
+      "year": "2010",
+      "q": 38,
+      "image": "bank/2010/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2011-36",
+      "year": "2011",
+      "q": 36,
+      "image": "bank/2011/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2012-38",
+      "year": "2012",
+      "q": 38,
+      "image": "bank/2012/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2013-36",
+      "year": "2013",
+      "q": 36,
+      "image": "bank/2013/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2013-38",
+      "year": "2013",
+      "q": 38,
+      "image": "bank/2013/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2014-34",
+      "year": "2014",
+      "q": 34,
+      "image": "bank/2014/q34.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2015-36",
+      "year": "2015",
+      "q": 36,
+      "image": "bank/2015/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2015-37",
+      "year": "2015",
+      "q": 37,
+      "image": "bank/2015/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2016-36",
+      "year": "2016",
+      "q": 36,
+      "image": "bank/2016/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2018-37",
+      "year": "2018",
+      "q": 37,
+      "image": "bank/2018/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2019-34",
+      "year": "2019",
+      "q": 34,
+      "image": "bank/2019/q34.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2019-36",
+      "year": "2019",
+      "q": 36,
+      "image": "bank/2019/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2020-35",
+      "year": "2020",
+      "q": 35,
+      "image": "bank/2020/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2020-37",
+      "year": "2020",
+      "q": 37,
+      "image": "bank/2020/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2022-37",
+      "year": "2022",
+      "q": 37,
+      "image": "bank/2022/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2023-36",
+      "year": "2023",
+      "q": 36,
+      "image": "bank/2023/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2024-35",
+      "year": "2024",
+      "q": 35,
+      "image": "bank/2024/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 20,
+      "qid": "2024-36",
+      "year": "2024",
+      "q": 36,
+      "image": "bank/2024/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 21,
+      "qid": "2025-35",
+      "year": "2025",
+      "q": 35,
+      "image": "bank/2025/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
