@@ -1,0 +1,37 @@
+{
+  "date": "2026-08-11",
+  "day": 12,
+  "mode": "ability_line",
+  "line_id": "12-external-sort",
+  "line_title": "外存归并：内存装不下以后怎样排序",
+  "md_path": "src/0811.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2016-11",
+      "year": "2016",
+      "q": 11,
+      "image": "bank/2016/q11.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2019-11",
+      "year": "2019",
+      "q": 11,
+      "image": "bank/2019/q11.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2024-11",
+      "year": "2024",
+      "q": 11,
+      "image": "bank/2024/q11.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

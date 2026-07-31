@@ -2,7 +2,7 @@
 """Generate the Markdown roster for one day.
 
 This is the lightweight MD-first entry point. It does not grade answers or
-write a speedrun session. It only turns the fixed roster policy into today's
+write a tldr session. It only turns the fixed roster policy into today's
 work file under src/<month>/MMDD-dayNN.md.
 """
 import argparse

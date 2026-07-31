@@ -1,0 +1,172 @@
+{
+  "date": "2026-09-06",
+  "day": 38,
+  "mode": "ability_line",
+  "line_id": "38-routing",
+  "line_title": "控制转发路径：ARP、路由协议与下一跳",
+  "md_path": "src/0906.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-35",
+      "year": "2010",
+      "q": 35,
+      "image": "bank/2010/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2010-36",
+      "year": "2010",
+      "q": 36,
+      "image": "bank/2010/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2011-37",
+      "year": "2011",
+      "q": 37,
+      "image": "bank/2011/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-37",
+      "year": "2012",
+      "q": 37,
+      "image": "bank/2012/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2012-38",
+      "year": "2012",
+      "q": 38,
+      "image": "bank/2012/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2013-34",
+      "year": "2013",
+      "q": 34,
+      "image": "bank/2013/q34.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2013-35",
+      "year": "2013",
+      "q": 35,
+      "image": "bank/2013/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2014-34",
+      "year": "2014",
+      "q": 34,
+      "image": "bank/2014/q34.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2015-38",
+      "year": "2015",
+      "q": 38,
+      "image": "bank/2015/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2016-37",
+      "year": "2016",
+      "q": 37,
+      "image": "bank/2016/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2017-37",
+      "year": "2017",
+      "q": 37,
+      "image": "bank/2017/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2018-38",
+      "year": "2018",
+      "q": 38,
+      "image": "bank/2018/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2021-36",
+      "year": "2021",
+      "q": 36,
+      "image": "bank/2021/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2021-37",
+      "year": "2021",
+      "q": 37,
+      "image": "bank/2021/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2023-38",
+      "year": "2023",
+      "q": 38,
+      "image": "bank/2023/q38.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2024-35",
+      "year": "2024",
+      "q": 35,
+      "image": "bank/2024/q35.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2025-36",
+      "year": "2025",
+      "q": 36,
+      "image": "bank/2025/q36.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2025-37",
+      "year": "2025",
+      "q": 37,
+      "image": "bank/2025/q37.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

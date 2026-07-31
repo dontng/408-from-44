@@ -1,0 +1,91 @@
+{
+  "date": "2026-08-16",
+  "day": 17,
+  "mode": "ability_line",
+  "line_id": "17-virtual-address",
+  "line_title": "地址翻译链：虚拟地址怎样到达数据",
+  "md_path": "src/0816.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-17",
+      "year": "2010",
+      "q": 17,
+      "image": "bank/2010/q17.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2013-16",
+      "year": "2013",
+      "q": 16,
+      "image": "bank/2013/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2015-16",
+      "year": "2015",
+      "q": 16,
+      "image": "bank/2015/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2019-14",
+      "year": "2019",
+      "q": 14,
+      "image": "bank/2019/q14.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2020-15",
+      "year": "2020",
+      "q": 15,
+      "image": "bank/2020/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2022-15",
+      "year": "2022",
+      "q": 15,
+      "image": "bank/2022/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2024-16",
+      "year": "2024",
+      "q": 16,
+      "image": "bank/2024/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2024-17",
+      "year": "2024",
+      "q": 17,
+      "image": "bank/2024/q17.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2024-18",
+      "year": "2024",
+      "q": 18,
+      "image": "bank/2024/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

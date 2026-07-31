@@ -1,0 +1,235 @@
+{
+  "date": "2026-08-24",
+  "day": 25,
+  "mode": "ability_line",
+  "line_id": "25-os-boundary",
+  "line_title": "系统边界：应用如何进入内核",
+  "md_path": "src/0824.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-23",
+      "year": "2010",
+      "q": 23,
+      "image": "bank/2010/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2012-23",
+      "year": "2012",
+      "q": 23,
+      "image": "bank/2012/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2013-25",
+      "year": "2013",
+      "q": 25,
+      "image": "bank/2013/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2013-28",
+      "year": "2013",
+      "q": 28,
+      "image": "bank/2013/q28.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2014-25",
+      "year": "2014",
+      "q": 25,
+      "image": "bank/2014/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2015-23",
+      "year": "2015",
+      "q": 23,
+      "image": "bank/2015/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2015-24",
+      "year": "2015",
+      "q": 24,
+      "image": "bank/2015/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2016-23",
+      "year": "2016",
+      "q": 23,
+      "image": "bank/2016/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2017-24",
+      "year": "2017",
+      "q": 24,
+      "image": "bank/2017/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2018-29",
+      "year": "2018",
+      "q": 29,
+      "image": "bank/2018/q29.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2019-25",
+      "year": "2019",
+      "q": 25,
+      "image": "bank/2019/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2020-18",
+      "year": "2020",
+      "q": 18,
+      "image": "bank/2020/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2020-25",
+      "year": "2020",
+      "q": 25,
+      "image": "bank/2020/q25.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2021-23",
+      "year": "2021",
+      "q": 23,
+      "image": "bank/2021/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2021-32",
+      "year": "2021",
+      "q": 32,
+      "image": "bank/2021/q32.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2022-24",
+      "year": "2022",
+      "q": 24,
+      "image": "bank/2022/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2022-27",
+      "year": "2022",
+      "q": 27,
+      "image": "bank/2022/q27.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2022-31",
+      "year": "2022",
+      "q": 31,
+      "image": "bank/2022/q31.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2023-21",
+      "year": "2023",
+      "q": 21,
+      "image": "bank/2023/q21.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 20,
+      "qid": "2023-23",
+      "year": "2023",
+      "q": 23,
+      "image": "bank/2023/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 21,
+      "qid": "2023-24",
+      "year": "2023",
+      "q": 24,
+      "image": "bank/2023/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 22,
+      "qid": "2023-26",
+      "year": "2023",
+      "q": 26,
+      "image": "bank/2023/q26.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 23,
+      "qid": "2024-23",
+      "year": "2024",
+      "q": 23,
+      "image": "bank/2024/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 24,
+      "qid": "2025-23",
+      "year": "2025",
+      "q": 23,
+      "image": "bank/2025/q23.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 25,
+      "qid": "2025-24",
+      "year": "2025",
+      "q": 24,
+      "image": "bank/2025/q24.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

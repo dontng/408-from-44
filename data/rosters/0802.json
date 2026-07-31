@@ -1,0 +1,190 @@
+{
+  "date": "2026-08-02",
+  "day": 3,
+  "mode": "ability_line",
+  "line_id": "03-stack-queue",
+  "line_title": "受限容器：栈与队列的状态推进",
+  "md_path": "src/0802.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-01",
+      "year": "2009",
+      "q": 1,
+      "image": "bank/2009/q01.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2009-02",
+      "year": "2009",
+      "q": 2,
+      "image": "bank/2009/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2010-01",
+      "year": "2010",
+      "q": 1,
+      "image": "bank/2010/q01.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2010-02",
+      "year": "2010",
+      "q": 2,
+      "image": "bank/2010/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2011-02",
+      "year": "2011",
+      "q": 2,
+      "image": "bank/2011/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2011-03",
+      "year": "2011",
+      "q": 3,
+      "image": "bank/2011/q03.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2012-02",
+      "year": "2012",
+      "q": 2,
+      "image": "bank/2012/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2013-02",
+      "year": "2013",
+      "q": 2,
+      "image": "bank/2013/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2014-02",
+      "year": "2014",
+      "q": 2,
+      "image": "bank/2014/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2014-03",
+      "year": "2014",
+      "q": 3,
+      "image": "bank/2014/q03.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2015-01",
+      "year": "2015",
+      "q": 1,
+      "image": "bank/2015/q01.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2016-03",
+      "year": "2016",
+      "q": 3,
+      "image": "bank/2016/q03.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2017-02",
+      "year": "2017",
+      "q": 2,
+      "image": "bank/2017/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2018-01",
+      "year": "2018",
+      "q": 1,
+      "image": "bank/2018/q01.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2018-02",
+      "year": "2018",
+      "q": 2,
+      "image": "bank/2018/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2020-02",
+      "year": "2020",
+      "q": 2,
+      "image": "bank/2020/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2021-02",
+      "year": "2021",
+      "q": 2,
+      "image": "bank/2021/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2022-02",
+      "year": "2022",
+      "q": 2,
+      "image": "bank/2022/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2024-02",
+      "year": "2024",
+      "q": 2,
+      "image": "bank/2024/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 20,
+      "qid": "2025-02",
+      "year": "2025",
+      "q": 2,
+      "image": "bank/2025/q02.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

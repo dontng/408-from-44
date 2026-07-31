@@ -1,0 +1,217 @@
+{
+  "date": "2026-08-05",
+  "day": 6,
+  "mode": "ability_line",
+  "line_id": "06-search-tree",
+  "line_title": "有序树：从局部旋转到多路分裂",
+  "md_path": "src/0805.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-04",
+      "year": "2009",
+      "q": 4,
+      "image": "bank/2009/q04.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2009-08",
+      "year": "2009",
+      "q": 8,
+      "image": "bank/2009/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2010-04",
+      "year": "2010",
+      "q": 4,
+      "image": "bank/2010/q04.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2011-07",
+      "year": "2011",
+      "q": 7,
+      "image": "bank/2011/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2012-04",
+      "year": "2012",
+      "q": 4,
+      "image": "bank/2012/q04.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2012-09",
+      "year": "2012",
+      "q": 9,
+      "image": "bank/2012/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2013-03",
+      "year": "2013",
+      "q": 3,
+      "image": "bank/2013/q03.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2013-06",
+      "year": "2013",
+      "q": 6,
+      "image": "bank/2013/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2013-10",
+      "year": "2013",
+      "q": 10,
+      "image": "bank/2013/q10.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2014-09",
+      "year": "2014",
+      "q": 9,
+      "image": "bank/2014/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2015-04",
+      "year": "2015",
+      "q": 4,
+      "image": "bank/2015/q04.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2016-10",
+      "year": "2016",
+      "q": 10,
+      "image": "bank/2016/q10.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2018-06",
+      "year": "2018",
+      "q": 6,
+      "image": "bank/2018/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2018-08",
+      "year": "2018",
+      "q": 8,
+      "image": "bank/2018/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2019-04",
+      "year": "2019",
+      "q": 4,
+      "image": "bank/2019/q04.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2020-05",
+      "year": "2020",
+      "q": 5,
+      "image": "bank/2020/q05.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2020-10",
+      "year": "2020",
+      "q": 10,
+      "image": "bank/2020/q10.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 18,
+      "qid": "2021-06",
+      "year": "2021",
+      "q": 6,
+      "image": "bank/2021/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 19,
+      "qid": "2021-09",
+      "year": "2021",
+      "q": 9,
+      "image": "bank/2021/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 20,
+      "qid": "2022-08",
+      "year": "2022",
+      "q": 8,
+      "image": "bank/2022/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 21,
+      "qid": "2023-07",
+      "year": "2023",
+      "q": 7,
+      "image": "bank/2023/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 22,
+      "qid": "2024-07",
+      "year": "2024",
+      "q": 7,
+      "image": "bank/2024/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 23,
+      "qid": "2025-08",
+      "year": "2025",
+      "q": 8,
+      "image": "bank/2025/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

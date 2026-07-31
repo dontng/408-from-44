@@ -3,11 +3,11 @@
 This repository has two modes of work:
 
 1. Project maintenance: code, scripts, data layout, and documentation.
-2. Study speedrun: turning real 408 attempts into usable mechanisms, verification, and transfer.
+2. TLDR study: turning real 408 attempts into usable mechanisms, verification, and transfer.
 
 ## Sync discipline
 
-GitHub is the shared source of truth. At the start of any maintenance or speedrun turn, sync the local work copy before making decisions. Do not turn study work into sync management unless the user asks.
+GitHub is the shared source of truth. At the start of any maintenance or TLDR turn, sync the local work copy before making decisions. Do not turn study work into sync management unless the user asks.
 
 All agent-authored code, documentation, knowledge, analysis, layout, and workflow changes stay local by default. Do not infer permission to commit or push from “ready”, a completed subtask, a natural pause, or a switch of topic. Commit or push those changes only when the user explicitly asks to commit, push, sync, or close out the current work. Near a genuine handoff, report uncommitted changes once and offer a handoff commit; do not create one without confirmation.
 
@@ -46,22 +46,23 @@ Verified:
 
 Before committing, inspect the staged diff and stage only work in scope. Install the repository commit policy with `bash tools/setup-git-policy.sh`; it supplies the template and rejects messages without the required implementation, rationale, and verification sections.
 
-## Speedrun architecture
+## Question-chain and TLDR architecture
 
-`speedrun/README.md` is the authority for study structure and quality. `speedrun/TEMPLATE.md` fixes the minimum per-question shape; completed daily work lives under `speedrun/sessions/YYYY-MM/MMDD.md`.
+`src/MMDD.md` contains the current ability-line question chain. `tldr/README.md` is the authority for analysis quality; `tldr/TEMPLATE.md` fixes the minimum per-question shape, and completed analysis lives under `tldr/sessions/YYYY-MM/MMDD-tldr.md`.
 
 For a study turn, read only:
 
 ```text
-speedrun/README.md
+tldr/README.md
+data/question_chain.json
 data/results/MMDD.json
-src/<month>/MMDD-dayNN.md
-speedrun/sessions/YYYY-MM/MMDD.md  # when continuing an existing session
+src/MMDD.md
+tldr/sessions/YYYY-MM/MMDD-tldr.md  # when continuing an existing session
 ```
 
 The user's first attempt is evidence and must never be overwritten. Independently solve and diagnose before consulting the reference answer. Build only the mechanism needed to read the problem, adjudicate every option, and survive a nearby change of conditions. Use external authority to settle facts or boundaries, not to display research.
 
-After a complete `data/results/MMDD.json` exists, create the daily scaffold with `./speedrun.sh MMDD`. A generated `draft` is not a study state and must not be delivered. After every question is independently closed, run `./speedrun.sh --check MMDD`; treat a passing structural check as necessary but not sufficient, then perform the protocol's content review.
+After a complete `data/results/MMDD.json` exists, create the analysis scaffold with `./tldr.sh MMDD`. A generated `draft` is not a study state and must not be delivered. After every question is independently closed, run `./tldr.sh --check MMDD`; treat a passing structural check as necessary but not sufficient, then perform the protocol's content review.
 
 Writing an explanation can advance a problem only to `explained`. Advance it to `verified`, `transferred`, or `automatic` only after the corresponding user performance exists. Never ask whether the user understood; design the cheapest falsifiable check instead.
 

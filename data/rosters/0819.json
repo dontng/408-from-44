@@ -1,0 +1,118 @@
+{
+  "date": "2026-08-19",
+  "day": 20,
+  "mode": "ability_line",
+  "line_id": "20-datapath",
+  "line_title": "数据通路：状态元件、操作元件与控制信号",
+  "md_path": "src/0819.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-19",
+      "year": "2009",
+      "q": 19,
+      "image": "bank/2009/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2010-18",
+      "year": "2010",
+      "q": 18,
+      "image": "bank/2010/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2011-19",
+      "year": "2011",
+      "q": 19,
+      "image": "bank/2011/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-18",
+      "year": "2012",
+      "q": 18,
+      "image": "bank/2012/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2014-18",
+      "year": "2014",
+      "q": 18,
+      "image": "bank/2014/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2016-18",
+      "year": "2016",
+      "q": 18,
+      "image": "bank/2016/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2016-20",
+      "year": "2016",
+      "q": 20,
+      "image": "bank/2016/q20.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2019-17",
+      "year": "2019",
+      "q": 17,
+      "image": "bank/2019/q17.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2021-18",
+      "year": "2021",
+      "q": 18,
+      "image": "bank/2021/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2022-22",
+      "year": "2022",
+      "q": 22,
+      "image": "bank/2022/q22.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2023-18",
+      "year": "2023",
+      "q": 18,
+      "image": "bank/2023/q18.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2025-19",
+      "year": "2025",
+      "q": 19,
+      "image": "bank/2025/q19.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

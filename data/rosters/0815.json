@@ -1,0 +1,118 @@
+{
+  "date": "2026-08-15",
+  "day": 16,
+  "mode": "ability_line",
+  "line_id": "16-cache",
+  "line_title": "Cache访问：地址切分、局部性与替换",
+  "md_path": "src/0815.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2009-14",
+      "year": "2009",
+      "q": 14,
+      "image": "bank/2009/q14.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2009-21",
+      "year": "2009",
+      "q": 21,
+      "image": "bank/2009/q21.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2012-17",
+      "year": "2012",
+      "q": 17,
+      "image": "bank/2012/q17.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2014-16",
+      "year": "2014",
+      "q": 16,
+      "image": "bank/2014/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2015-15",
+      "year": "2015",
+      "q": 15,
+      "image": "bank/2015/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2016-15",
+      "year": "2016",
+      "q": 15,
+      "image": "bank/2016/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2017-14",
+      "year": "2017",
+      "q": 14,
+      "image": "bank/2017/q14.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2018-17",
+      "year": "2018",
+      "q": 17,
+      "image": "bank/2018/q17.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2020-15",
+      "year": "2020",
+      "q": 15,
+      "image": "bank/2020/q15.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2021-16",
+      "year": "2021",
+      "q": 16,
+      "image": "bank/2021/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2022-16",
+      "year": "2022",
+      "q": 16,
+      "image": "bank/2022/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2024-16",
+      "year": "2024",
+      "q": 16,
+      "image": "bank/2024/q16.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}

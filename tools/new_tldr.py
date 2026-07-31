@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create one speedrun session scaffold from immutable daily results."""
+"""Create one TLDR session scaffold from immutable daily results."""
 import argparse
 import datetime as dt
 import json
@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 RESULT_DIR = REPO / "data" / "results"
-SESSION_DIR = REPO / "speedrun" / "sessions"
+SESSION_DIR = REPO / "tldr" / "sessions"
 
 
 def date_key(raw):
@@ -34,9 +34,9 @@ def render_session(result):
     wrong = sum(item.get("status") == "wrong" for item in result["items"])
     unknown = sum(item.get("status") == "unknown" for item in result["items"])
     lines = [
-        f"# {key}｜速通草稿",
+        f"# {key}｜TLDR 草稿",
         "",
-        "> 执行协议：[speedrun README](../../README.md)｜逐题骨架：[TEMPLATE](../../TEMPLATE.md)",
+        "> 执行协议：[TLDR README](../../README.md)｜逐题骨架：[TEMPLATE](../../TEMPLATE.md)",
         ">",
         "> 本文件由真实判分结果生成。`draft` 只表示骨架存在，不属于掌握状态；每题完成独立诊断、机制闭合、选项裁决和验证设计后，才可改为 `explained`。",
         "",
@@ -115,7 +115,7 @@ def main():
         raise SystemExit("daily result is incomplete; finish grading or pass --allow-incomplete")
 
     year_month = result["date"][:7]
-    output = Path(args.output) if args.output else SESSION_DIR / year_month / f"{key}.md"
+    output = Path(args.output) if args.output else SESSION_DIR / year_month / f"{key}-tldr.md"
     if output.exists() and not args.force:
         try:
             label = output.relative_to(REPO)
@@ -129,7 +129,7 @@ def main():
     except ValueError:
         label = output
     print(f"wrote {label}")
-    print("next: replace every draft section, then run speedrun.sh --check", key)
+    print("next: replace every draft section, then run tldr.sh --check", key)
 
 
 if __name__ == "__main__":

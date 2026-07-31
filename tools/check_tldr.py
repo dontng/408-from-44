@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Reject incomplete or result-inconsistent speedrun session deliveries."""
+"""Reject incomplete or result-inconsistent TLDR session deliveries."""
 import argparse
 import json
 import re
 from pathlib import Path
 
-from new_speedrun import REPO, RESULT_DIR, SESSION_DIR, date_key, pick_label
+from new_tldr import REPO, RESULT_DIR, SESSION_DIR, date_key, pick_label
 
 
 CORE_HEADINGS = (
@@ -66,13 +66,13 @@ def main():
     args = parser.parse_args()
     key = date_key(args.date)
     result = json.loads((RESULT_DIR / f"{key}.json").read_text(encoding="utf-8"))
-    session = SESSION_DIR / result["date"][:7] / f"{key}.md"
+    session = SESSION_DIR / result["date"][:7] / f"{key}-tldr.md"
     text = session.read_text(encoding="utf-8")
     errors = check(result, text)
     if errors:
         for error in errors:
             print("FAIL", error)
-        raise SystemExit(f"speedrun check failed: {len(errors)} issue(s)")
+        raise SystemExit(f"TLDR check failed: {len(errors)} issue(s)")
     print(f"PASS {session.relative_to(REPO)}: {len(result['items'])} questions closed")
 
 
