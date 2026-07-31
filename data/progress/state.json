@@ -1,13 +1,13 @@
 {
   "2025-01": {
-    "box": 2,
-    "due": "2026-07-15",
-    "seen": 4,
+    "box": 0,
+    "due": "2026-08-02",
+    "seen": 5,
     "right": 2,
-    "last": "2026-07-07",
-    "last_ok": true,
-    "last_pick": "B",
-    "stuck": false,
+    "last": "2026-07-31",
+    "last_ok": false,
+    "last_pick": "C",
+    "stuck": true,
     "answer_confidence": "provisional"
   },
   "2024-01": {
@@ -723,14 +723,14 @@
     "stuck": false
   },
   "2023-01": {
-    "box": 1,
-    "seen": 1,
-    "right": 1,
-    "last": "2026-07-12",
+    "box": 2,
+    "seen": 2,
+    "right": 2,
+    "last": "2026-07-31",
     "last_ok": true,
     "last_pick": "D",
     "answer_confidence": "official",
-    "due": "2026-07-16",
+    "due": "2026-08-08",
     "stuck": false
   },
   "2023-02": {
@@ -1160,6 +1160,83 @@
     "last_pick": "D",
     "answer_confidence": "official",
     "due": "2026-07-15",
+    "stuck": true
+  },
+  "2011-01": {
+    "box": 1,
+    "seen": 1,
+    "right": 1,
+    "last": "2026-07-31",
+    "last_ok": true,
+    "last_pick": "A",
+    "answer_confidence": "official",
+    "due": "2026-08-04",
+    "stuck": false
+  },
+  "2012-01": {
+    "box": 0,
+    "seen": 1,
+    "right": 0,
+    "last": "2026-07-31",
+    "last_ok": false,
+    "last_pick": "C",
+    "answer_confidence": "official",
+    "due": "2026-08-02",
+    "stuck": true
+  },
+  "2013-01": {
+    "box": 0,
+    "seen": 1,
+    "right": 0,
+    "last": "2026-07-31",
+    "last_ok": false,
+    "last_pick": "B",
+    "answer_confidence": "official",
+    "due": "2026-08-02",
+    "stuck": true
+  },
+  "2014-01": {
+    "box": 1,
+    "seen": 1,
+    "right": 1,
+    "last": "2026-07-31",
+    "last_ok": true,
+    "last_pick": "C",
+    "answer_confidence": "official",
+    "due": "2026-08-04",
+    "stuck": false
+  },
+  "2017-01": {
+    "box": 0,
+    "seen": 1,
+    "right": 0,
+    "last": "2026-07-31",
+    "last_ok": false,
+    "last_pick": "unknown",
+    "answer_confidence": "official",
+    "due": "2026-08-02",
+    "stuck": true
+  },
+  "2019-01": {
+    "box": 1,
+    "seen": 1,
+    "right": 1,
+    "last": "2026-07-31",
+    "last_ok": true,
+    "last_pick": "B",
+    "answer_confidence": "official",
+    "due": "2026-08-04",
+    "stuck": false
+  },
+  "2022-01": {
+    "box": 0,
+    "seen": 1,
+    "right": 0,
+    "last": "2026-07-31",
+    "last_ok": false,
+    "last_pick": "C",
+    "answer_confidence": "official",
+    "due": "2026-08-02",
     "stuck": true
   },
   "_progress": {

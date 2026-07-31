@@ -162,7 +162,10 @@ async function grade(){
 
 function render(roster){
   $("#title").textContent = `${date} 答题卡 · Day ${String(roster.day).padStart(2,"0")}`;
-  $("#meta").textContent = `${roster.items.length} 题 · ${roster.limits.review} 复习 / ${roster.limits.new} 新题`;
+  const limits = roster.limits;
+  $("#meta").textContent = limits
+    ? `${roster.items.length} 题 · ${limits.review} 复习 / ${limits.new} 新题`
+    : `${roster.items.length} 题 · ${roster.line_title || "能力线"}`;
   const card = $("#card");
   card.innerHTML = "";
   roster.items.forEach(it => {
