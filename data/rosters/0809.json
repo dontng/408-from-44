@@ -1,0 +1,37 @@
+{
+  "date": "2026-08-09",
+  "day": 10,
+  "mode": "ability_line",
+  "line_id": "10-kmp",
+  "line_title": "失配之后：KMP如何保留已经知道的部分",
+  "md_path": "src/0809.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2015-08",
+      "year": "2015",
+      "q": 8,
+      "image": "bank/2015/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2019-09",
+      "year": "2019",
+      "q": 9,
+      "image": "bank/2019/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2024-06",
+      "year": "2024",
+      "q": 6,
+      "image": "bank/2024/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
