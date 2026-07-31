@@ -1,0 +1,163 @@
+{
+  "date": "2026-08-07",
+  "day": 8,
+  "mode": "ability_line",
+  "line_id": "08-graph-path",
+  "line_title": "图上的推进：拓扑、最短路与关键路径",
+  "md_path": "src/0807.md",
+  "items": [
+    {
+      "idx": 1,
+      "qid": "2010-08",
+      "year": "2010",
+      "q": 8,
+      "image": "bank/2010/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 2,
+      "qid": "2012-06",
+      "year": "2012",
+      "q": 6,
+      "image": "bank/2012/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 3,
+      "qid": "2012-07",
+      "year": "2012",
+      "q": 7,
+      "image": "bank/2012/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 4,
+      "qid": "2012-08",
+      "year": "2012",
+      "q": 8,
+      "image": "bank/2012/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 5,
+      "qid": "2013-09",
+      "year": "2013",
+      "q": 9,
+      "image": "bank/2013/q09.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 6,
+      "qid": "2014-07",
+      "year": "2014",
+      "q": 7,
+      "image": "bank/2014/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 7,
+      "qid": "2015-06",
+      "year": "2015",
+      "q": 6,
+      "image": "bank/2015/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 8,
+      "qid": "2016-07",
+      "year": "2016",
+      "q": 7,
+      "image": "bank/2016/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 9,
+      "qid": "2016-08",
+      "year": "2016",
+      "q": 8,
+      "image": "bank/2016/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 10,
+      "qid": "2018-07",
+      "year": "2018",
+      "q": 7,
+      "image": "bank/2018/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 11,
+      "qid": "2019-05",
+      "year": "2019",
+      "q": 5,
+      "image": "bank/2019/q05.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 12,
+      "qid": "2020-07",
+      "year": "2020",
+      "q": 7,
+      "image": "bank/2020/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 13,
+      "qid": "2020-08",
+      "year": "2020",
+      "q": 8,
+      "image": "bank/2020/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 14,
+      "qid": "2021-07",
+      "year": "2021",
+      "q": 7,
+      "image": "bank/2021/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 15,
+      "qid": "2021-08",
+      "year": "2021",
+      "q": 8,
+      "image": "bank/2021/q08.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 16,
+      "qid": "2022-07",
+      "year": "2022",
+      "q": 7,
+      "image": "bank/2022/q07.png",
+      "answer_known": true,
+      "source": "ability_line"
+    },
+    {
+      "idx": 17,
+      "qid": "2023-06",
+      "year": "2023",
+      "q": 6,
+      "image": "bank/2023/q06.png",
+      "answer_known": true,
+      "source": "ability_line"
+    }
+  ]
+}
