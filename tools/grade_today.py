@@ -49,7 +49,12 @@ def date_key(date_iso):
     return date_iso[5:7] + date_iso[8:10]
 
 
-def md_path_for(date_iso, day_no):
+def md_path_for(date_iso, day_no, roster=None):
+    if roster and roster.get("md_path"):
+        path = (REPO / roster["md_path"]).resolve()
+        if REPO not in path.parents:
+            raise SystemExit("roster md_path escapes repository")
+        return path
     d = dt.date.fromisoformat(date_iso)
     return SRC_DIR / MONTHS[d.month - 1] / f"{d.strftime('%m%d')}-day{day_no:02d}.md"
 
@@ -97,6 +102,7 @@ def build_outputs(date_key_value):
     result_data = {
         "date": roster["date"],
         "day": roster["day"],
+        "md_path": roster.get("md_path"),
         "total": len(results),
         "answered": done,
         "known_graded": len(known),
@@ -139,7 +145,7 @@ def result_section(result_data):
 
 
 def update_md(result_data):
-    md_path = md_path_for(result_data["date"], result_data["day"])
+    md_path = md_path_for(result_data["date"], result_data["day"], result_data)
     if not md_path.exists():
         return None
     text = md_path.read_text(encoding="utf-8")
